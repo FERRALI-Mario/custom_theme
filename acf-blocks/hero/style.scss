@@ -1,0 +1,19 @@
+/* acf-blocks/hero/style.scss */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .hero {
+    @apply bg-cover bg-center;
+    &__overlay {
+      @apply bg-black opacity-50;
+    }
+    & h1 {
+      @apply leading-tight;
+    }
+    & p {
+      @apply mt-2;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{# acf-blocks/hero/template.twig #}
+<section
+  class="hero relative py-20 text-white"
+  {% if fields.hero_background %}
+    style="background-image: url('{{ fields.hero_background.url }}')"
+  {% endif %}
+>
+  <div class="hero__overlay absolute inset-0"></div>
+  <div class="container mx-auto relative z-10 text-center px-6">
+    {% if fields.hero_title %}
+      <h1 class="text-5xl font-bold mb-4">{{ fields.hero_title }}</h1>
+    {% endif %}
+    {% if fields.hero_subtitle %}
+      <p class="text-xl">{{ fields.hero_subtitle }}</p>
+    {% endif %}
+  </div>
+</section>

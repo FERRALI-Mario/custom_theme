@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .product-card-block {
+    @apply py-8 px-4;
+  }
+}
