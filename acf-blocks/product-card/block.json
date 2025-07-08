@@ -1,1 +1,17 @@
-/* block.json placeholder */
+{
+    "apiVersion": 2,
+    "name": "wp-theme-boilerplate/product-card",
+    "title": "Product-card",
+    "category": "common",
+    "icon": "admin-comments",
+    "description": "Product-card block",
+    "supports": {
+        "anchor": true,
+        "align": [
+            "wide",
+            "full"
+        ]
+    },
+    "textdomain": "wp-theme-boilerplate",
+    "renderCallback": "App\\\\Blocks\\\\ProductCard\\\\Controller::render"
+}

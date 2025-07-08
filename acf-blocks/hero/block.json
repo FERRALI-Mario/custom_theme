@@ -1,1 +1,17 @@
-/* block.json placeholder */
+{
+  "apiVersion": 2,
+  "name": "wp-theme-boilerplate/hero",
+  "title": "Hero",
+  "category": "layout",
+  "icon": "cover-image",
+  "description": "Bloc Hero pour présenter un grand visuel et un titre",
+  "keywords": ["hero", "bannière", "introduction"],
+  "supports": {
+    "anchor": true,
+    "align": ["wide", "full"],
+    "mode": false,
+    "jsx": false
+  },
+  "textdomain": "wp-theme-boilerplate",
+  "renderCallback": "App\\\\Blocks\\\\Hero\\\\Controller::render"
+}
