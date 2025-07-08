@@ -1,1 +1,8 @@
-/* cta.twig placeholder */
+{# views/blocks/cta.twig #}
+<section class="cta bg-blue-50 py-12">
+  <div class="container mx-auto text-center px-6">
+    <h2 class="text-3xl font-semibold mb-6">{{ block.title }}</h2>
+    {% from 'components/macros.twig' import button %}
+    {{ button(block.cta_text, block.cta_url, block.cta_class) }}
+  </div>
+</section>

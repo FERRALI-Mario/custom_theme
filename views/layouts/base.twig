@@ -1,1 +1,22 @@
-/* base.twig placeholder */
+{# views/layouts/base.twig #}
+{% import 'components/macros.twig' as ui %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ site.name }}{% if title %} | {{ title }}{% endif %}</title>
+  {{ function('wp_head') }}
+</head>
+<body class="antialiased text-gray-900">
+  {{ ui.header() }}
+
+  <main id="content" role="main">
+    {{ content }}
+  </main>
+
+  {{ ui.footer() }}
+  {{ function('wp_footer') }}
+</body>
+</html>

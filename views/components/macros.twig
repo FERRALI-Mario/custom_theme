@@ -1,0 +1,20 @@
+{# views/components/macros.twig #}
+{% macro icon(name, classes='h-6 w-6 inline-block') %}
+  <svg class="{{ classes }}" aria-hidden="true" role="img">
+    <use xlink:href="#icon-{{ name }}"></use>
+  </svg>
+{% endmacro %}
+
+{% macro button(text, url, classes='px-4 py-2 bg-blue-600 text-white rounded') %}
+  <a href="{{ url }}" class="inline-block {{ classes }}">
+    {{ text }}
+  </a>
+{% endmacro %}
+
+{% macro header() %}
+  {% include 'partials/header.twig' %}
+{% endmacro %}
+
+{% macro footer() %}
+  {% include 'partials/footer.twig' %}
+{% endmacro %}
