@@ -5,6 +5,8 @@ Author: Mario FERRALI
 Author URI: https://github.com/FERRALI-Mario
 Description: Thème WordPress moderne et flexible, conçu pour les sites e-commerce, vitrines professionnelles, blogs et portfolios. Il intègre Advanced Custom Fields (ACF) pour une gestion intuitive du contenu, utilise Tailwind CSS pour une personnalisation rapide du design, et Twig pour une structure de code propre et maintenable. Idéal pour les développeurs comme pour les utilisateurs finaux.
 Version: 1.0.0
+Requires at least: 6.8
+Requires PHP: 8.1
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: theme-personnel
