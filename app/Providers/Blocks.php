@@ -1,6 +1,5 @@
 <?php
 
-// app/Providers/Blocks.php
 namespace App\Providers;
 
 use App\Core\BlockFactory;

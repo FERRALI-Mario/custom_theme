@@ -1,6 +1,5 @@
 <?php
 
-// app/Support/Helpers.php
 namespace App\Support;
 
 class Helpers

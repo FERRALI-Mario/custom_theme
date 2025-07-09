@@ -1,6 +1,5 @@
 <?php 
 
-// app/Support/Cleanup.php
 namespace App\Support;
 
 class Cleanup

@@ -1,6 +1,5 @@
 <?php
 
-// app/Core/BlockFactory.php
 namespace App\Core;
 
 abstract class BlockFactory

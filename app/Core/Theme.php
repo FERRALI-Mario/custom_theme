@@ -1,6 +1,5 @@
 <?php
 
-// app/Core/Theme.php
 namespace App\Core;
 
 use Timber\Timber;

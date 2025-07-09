@@ -1,6 +1,5 @@
 <?php
 
-// app/Core/Context.php
 namespace App\Core;
 
 use Timber\Timber;
