@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-// bin/make-block.php
 
 if (PHP_SAPI !== 'cli') {
     exit("This script must be run from the command line.\n");
