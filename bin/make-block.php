@@ -25,7 +25,7 @@ if (!is_dir($blocksDir)) {
 // 2. block.json
 $blockJson = [
     "apiVersion"     => 2,
-    "name"           => "wp-theme-boilerplate/{$slug}",
+    "name"           => "acf/{$slug}",
     "title"          => ucfirst($block),
     "category"       => "common",
     "icon"           => "admin-comments",

@@ -1,6 +1,6 @@
 {
   "apiVersion": 2,
-  "name": "wp-theme-boilerplate/hero",
+  "name": "acf/hero",
   "title": "Hero",
   "category": "layout",
   "icon": "cover-image",

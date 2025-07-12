@@ -1,6 +1,6 @@
 {
     "apiVersion": 2,
-    "name": "wp-theme-boilerplate/product-card",
+    "name": "acf/product-card",
     "title": "Product-card",
     "category": "common",
     "icon": "admin-comments",
