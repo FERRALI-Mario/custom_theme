@@ -4,18 +4,95 @@
 
 @layer components {
   .hero-block {
-    @apply relative bg-cover bg-center py-8 text-white;
+    @apply relative min-h-screen bg-cover bg-center flex items-center justify-between text-white text-center px-4 py-16;
+
+    &::before {
+      @apply absolute inset-0 bg-black bg-opacity-60 content-[''] z-0;
+    }
+
+    .content {
+      @apply relative z-10;
+    }
 
     h1 {
-      @apply text-3xl md:text-5xl font-bold mb-4;
+      @apply text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4;
     }
 
     p {
-      @apply text-lg text-gray-200;
+      @apply text-xl md:text-2xl text-gray-100 mb-6;
     }
 
-    &::before {
-      @apply absolute inset-0 bg-black opacity-50 content-[''] z-0;
+    /* Bouton Call to Action */
+    .cta-button {
+      @apply bg-black text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-opacity-80 transition duration-300;
+    }
+
+    /* Image */
+    .image-wrapper {
+      @apply w-full md:w-1/4;
+
+      img {
+        @apply w-full h-auto object-cover opacity-90;
+      }
+    }
+
+    /* Espacement pour mobile */
+    @media (max-width: 767px) {
+      .hero-block {
+        @apply px-4 py-12;
+      }
+
+      .container {
+        @apply flex-col;
+      }
+
+      .image-wrapper {
+        @apply hidden;
+      }
+
+      h1 {
+        @apply text-5xl;
+      }
+
+      p {
+        @apply text-lg;
+      }
+    }
+
+    /* Ajouter des marges entre 1024px et 1280px (breakpoint lg) */
+    @media (min-width: 1024px) and (max-width: 1279px) {
+      .hero-block {
+        @apply px-12;
+        /* Ajouter du padding global */
+      }
+
+      .content {
+        @apply lg:ml-12lg lg:mr-12lg;
+        /* Appliquer les marges personnalisées pour le texte */
+      }
+
+      .image-wrapper {
+        @apply lg:ml-12lg lg:mr-12lg;
+        /* Appliquer les marges personnalisées pour l'image */
+      }
+    }
+
+    /* Ajouter des marges à partir de 1280px (breakpoint xl) */
+    @media (min-width: 1280px) {
+      .hero-block {
+        @apply px-20;
+        /* Ajouter un padding global */
+      }
+
+      .content {
+        @apply xl:ml-16xl xl:mr-16xl;
+        /* Appliquer les marges personnalisées pour les grands écrans */
+      }
+
+      .image-wrapper {
+        @apply xl:ml-20xl xl:mr-20xl;
+        /* Appliquer des marges personnalisées pour l'image */
+      }
     }
   }
 }

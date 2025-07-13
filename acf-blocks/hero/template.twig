@@ -1,16 +1,35 @@
-{% set image = get_attachment(fields.hero_background) %}
-<section class="hero-block relative py-8 bg-cover bg-center"
-  {% if image %}
-    style="background-image: url('{{ image.src }}')"
-  {% endif %}
->
-  <div class="container mx-auto px-6 text-center relative z-10">
-    {% if fields.hero_title %}
-      <h1 class="text-3xl md:text-5xl font-bold mb-4">{{ fields.hero_title }}</h1>
-    {% endif %}
-    {% if fields.hero_subtitle %}
-      <p class="text-lg text-gray-200">{{ fields.hero_subtitle }}</p>
-    {% endif %}
+{% set bg = fields.hero_background is iterable ? fields.hero_background.url : '' %}
+{% set second_image = fields.hero_second_image is iterable ? fields.hero_second_image.url : '' %}
+
+<section class="hero-block relative min-h-screen flex items-center justify-between text-center text-white px-4 py-16"
+  {% if bg %} style="background-image: url('{{ bg }}'); background-size: cover; background-position: center center;" {% endif %}>
+  
+  <!-- Overlay sombre avec opacité -->
+  <div class="absolute inset-0 bg-black/60" style="background-color: black; opacity: 0.5;"></div>
+
+  <div class="container mx-auto flex items-center justify-between relative z-10 lg:ml-12lg lg:mr-12lg xl:ml-16xl xl:mr-16xl">
+    
+    <!-- Contenu à gauche (titre, sous-titre, CTA) -->
+    <div class="w-full md:w-1/2 text-left mb-6 md:mb-0">
+      {% if fields.hero_title %}
+        <h1 class="text-3xl md:text-4xl xl:text-5xl font-extrabold mb-4">{{ fields.hero_title }}</h1>
+      {% endif %}
+      {% if fields.hero_subtitle %}
+        <p class="text-xl lg:text-2xl text-gray-100 mb-6">{{ fields.hero_subtitle }}</p>
+      {% endif %}
+      
+      {% if fields.hero_cta_text and fields.hero_cta_url %}
+        <a href="{{ fields.hero_cta_url }}" class="bg-black text-white px-4 py-2 rounded-full font-bold text-lg hover:bg-opacity-80 transition duration-300">
+          {{ fields.hero_cta_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Image à droite -->
+    <div class="image-wrapper w-full md:w-1/2 hidden md:block lg:ml-12lg lg:mr-12lg xl:ml-20xl xl:mr-20xl">
+      {% if second_image %}
+        <img src="{{ second_image }}" alt="Hero Image" class="w-full h-auto object-cover opacity-90">
+      {% endif %}
+    </div>
   </div>
-  <div class="absolute inset-0 bg-black opacity-50 z-0"></div>
 </section>
