@@ -1,30 +1,5 @@
 {% extends 'layouts/base.twig' %}
 
 {% block content %}
-  {# Hero block via context options or custom fields #}
-  {% include 'blocks/hero.twig' with {
-    title: options.hero_title,
-    subtitle: options.hero_subtitle,
-    background: options.hero_background_image
-  } %}
-
-  {# Call-to-action block #}
-  {% include 'blocks/cta.twig' with {
-    block: {
-      title: 'Prêt à démarrer ?',
-      cta_text: 'Contactez-nous',
-      cta_url: '/contact',
-      cta_class: 'mt-4'
-    }
-  } %}
-
-  {# Product cards example #}
-  {% include 'blocks/product-card.twig' with {
-    block: {
-      products: [
-        { title: 'Produit 1', description: 'Description du produit 1', image: { url: '/wp-content/uploads/prod1.jpg', alt: 'Produit 1' }, link: '/produit-1' },
-        { title: 'Produit 2', description: 'Description du produit 2', image: { url: '/wp-content/uploads/prod2.jpg', alt: 'Produit 2' }, link: '/produit-2' },
-      ]
-    }
-  } %}
+  {{ post.content }}
 {% endblock %}

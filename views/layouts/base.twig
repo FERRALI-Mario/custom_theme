@@ -1,7 +1,5 @@
-{% import 'components/macros.twig' as ui %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,13 +7,21 @@
   {{ function('wp_head') }}
 </head>
 <body class="antialiased text-gray-900">
-  {{ ui.header() }}
+
+  {% block header %}
+    {{ include('partials/header.twig') }}
+  {% endblock %}
 
   <main id="content" role="main">
-    {{ content }}
+    {% block content %}
+      {{ content | default(post.content) }}
+    {% endblock %}
   </main>
 
-  {{ ui.footer() }}
+  {% block footer %}
+    {{ include('partials/footer.twig') }}
+  {% endblock %}
+
   {{ function('wp_footer') }}
 </body>
 </html>
