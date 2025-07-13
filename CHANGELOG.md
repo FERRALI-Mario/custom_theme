@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.1.0...v1.2.0) (2025-07-13)
+
+
+### Features
+
+* **blocks:** create hero block with default styling and structure ([20513a4](https://github.com/FERRALI-Mario/basic_theme/commit/20513a4672072b4ed5f388eb3442bc44f5f6c6a6))
+
 ## [1.1.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.0.1...v1.1.0) (2025-07-13)
 
 
