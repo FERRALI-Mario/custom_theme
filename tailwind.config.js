@@ -6,7 +6,13 @@ module.exports = {
     './*.php'
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        '16xl': '4rem',
+        '20xl': '5rem',
+        '12lg': '3rem',
+      },
+    },
   },
   plugins: [],
 }
