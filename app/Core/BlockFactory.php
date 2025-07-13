@@ -5,30 +5,37 @@ namespace App\Core;
 use Timber\Timber;
 
 /**
- * Classe de base pour tout bloc ACF orienté objet.
+ * Base class for all ACF Blocks.
  */
 abstract class BlockFactory
 {
     protected string $slug;
 
-    /**
-     * Constructeur à appeler dans chaque bloc : parent::__construct('slug')
-     */
     public function __construct(string $slug)
     {
         $this->slug = $slug;
 
-        // Registre le bloc ACF au bon moment
+        // Chargement automatique des champs ACF si fichier présent
+        $fieldsPath = get_template_directory() . "/acf-blocks/{$slug}/fields.php";
+        if (file_exists($fieldsPath)) {
+            require_once $fieldsPath;
+        }
+
+        // Enregistrement automatique du bloc
         add_action('acf/init', [$this, 'register']);
     }
 
     /**
-     * Enregistrement du bloc ACF (appelé automatiquement).
+     * Enregistre le bloc ACF.
      */
     public function register(): void
     {
-        $settings = [
-            'name'            => $this->slug,
+        if (!function_exists('acf_register_block_type')) {
+            return;
+        }
+
+        acf_register_block_type([
+            'name'            => $this->getSlug(),
             'title'           => $this->getTitle(),
             'description'     => $this->getDescription(),
             'category'        => $this->getCategory(),
@@ -36,47 +43,46 @@ abstract class BlockFactory
             'keywords'        => $this->getKeywords(),
             'mode'            => 'preview',
             'align'           => 'full',
-            'supports'        => [
-                'anchor' => true,
-                'align'  => ['wide', 'full'],
-                'jsx'    => false,
-            ],
-            'render_callback' => $this->getRenderCallback(),
-        ];
-
-        if (function_exists('acf_register_block_type')) {
-            acf_register_block_type($settings);
-        }
+            'supports'        => $this->getSupports(),
+            'render_callback' => [$this, 'render'],
+        ]);
     }
 
     /**
-     * Rendu par défaut d’un bloc ACF avec Timber.
+     * Callback de rendu appelé automatiquement par ACF.
      */
-    public static function render(array $block): void
+    public function render(array $block): void
     {
         $context = Timber::context();
-        $context['fields'] = function_exists('get_fields') ? get_fields() : [];
-        $context['block']  = $block;
+        $context['block'] = $block;
+        $context['fields'] = $this->getFields();
 
-        $slug = $block['name'] ?? 'unknown';
-        $slug = str_replace('acf/', '', $slug);
-
-        $templatePath = "acf-blocks/{$slug}/template.twig";
-
-        if (file_exists(get_template_directory() . "/{$templatePath}")) {
-            Timber::render($templatePath, $context);
-        } else {
-            echo "<p style='color: red;'>Template introuvable : {$templatePath}</p>";
-        }
+        Timber::render($this->getTemplatePath(), $context);
     }
 
-    // ─────────────────────────────────────────────────────────────
-    // Méthodes personnalisables dans chaque bloc si besoin
-    // ─────────────────────────────────────────────────────────────
-
-    public function getRenderCallback(): callable
+    /**
+     * Retourne les champs ACF (ou [] si vide).
+     */
+    protected function getFields(): array
     {
-        return [static::class, 'render'];
+        return function_exists('get_fields') ? get_fields() ?: [] : [];
+    }
+
+    /**
+     * Récupère une image via Timber (helper).
+     */
+    protected function getImage(string $field): ?\Timber\Image
+    {
+        $image = get_field($field);
+        return $image ? new \Timber\Image($image) : null;
+    }
+
+    /**
+     * Permet à chaque bloc de spécifier son propre template si besoin.
+     */
+    protected function getTemplatePath(): string
+    {
+        return "acf-blocks/{$this->slug}/template.twig";
     }
 
     public function getTitle(): string
@@ -109,8 +115,12 @@ abstract class BlockFactory
         return $this->slug;
     }
 
-    public function getName(): string
+    public function getSupports(): array
     {
-        return 'acf/' . $this->slug;
+        return [
+            'anchor' => true,
+            'align'  => ['wide', 'full'],
+            'jsx'    => false,
+        ];
     }
 }
