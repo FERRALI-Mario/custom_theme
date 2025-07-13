@@ -1,0 +1,36 @@
+{# acf-blocks/cta/template.twig #}
+{% set title = fields.title %}
+{% set text = fields.text %}
+{% set btn_text = fields.button_text %}
+{% set btn_url = fields.button_url %}
+{% set bg_img = fields.background_image %}
+{% set bg_color = fields.background_color %}
+{% set fullscreen = fields.fullscreen ?? false %}
+
+<section class="cta-block relative {{ bg_color }} text-white {{ fullscreen ? 'min-h-screen' : 'py-16' }}">
+  {% if bg_img %}
+    <div
+      class="absolute inset-0 bg-cover bg-center opacity-30"
+      style="background-image: url('{{ bg_img.url }}');"
+    ></div>
+  {% endif %}
+
+  <div class="relative z-10 container mx-auto text-center px-6">
+    {% if title %}
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">{{ title }}</h2>
+    {% endif %}
+
+    {% if text %}
+      <p class="text-lg mb-6">{{ text }}</p>
+    {% endif %}
+
+    {% if btn_text and btn_url %}
+      <a
+        href="{{ btn_url }}"
+        class="inline-block bg-white text-{{ bg_color|replace({'bg-': ''}) }} font-semibold px-6 py-3 rounded shadow hover:opacity-90 transition"
+      >
+        {{ btn_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>

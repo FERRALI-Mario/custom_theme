@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .testimonial-slider {
+    @apply w-full bg-gray-50 rounded-lg shadow-md;
+  }
+
+  .testimonial-slider .slides {
+    @apply flex w-full;
+  }
+
+  .testimonial-slider .slide {
+    @apply flex-shrink-0 w-full;
+  }
+}

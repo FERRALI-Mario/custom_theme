@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .cta-block {
+    @apply relative overflow-hidden text-center;
+  }
+}

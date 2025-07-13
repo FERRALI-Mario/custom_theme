@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .contact-form-block {
+    @apply bg-gray-50;
+  }
+}
