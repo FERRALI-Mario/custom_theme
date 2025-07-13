@@ -1,21 +1,38 @@
 <?php
-namespace App\Blocks\ProductCard;
+
+namespace AcfBlocks\ProductCard;
 
 use App\Core\BlockFactory;
-use Timber\Timber;
 
 class Controller extends BlockFactory
 {
     public function __construct()
     {
         parent::__construct('product-card');
+
+        $fieldsFile = __DIR__ . '/fields.php';
+        if (file_exists($fieldsFile)) {
+            require_once $fieldsFile;
+        }
     }
 
-    public static function render(array $block): void
+    public function getTitle(): string
     {
-        $context = Timber::context();
-        $context['fields'] = get_fields();
-        $context['block']  = $block;
-        Timber::render("acf-blocks/product-card/template.twig", $context);
+        return 'Product Card';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Carte de produit e-commerce avec image, prix et bouton.';
+    }
+
+    public function getIcon(): string
+    {
+        return 'cart';
+    }
+
+    public function getKeywords(): array
+    {
+        return ['produit', 'ecommerce', 'shop'];
     }
 }

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-  .product-card-block {
-    @apply py-8 px-4;
+  .product-card {
+    @apply transition-all duration-300;
   }
 }

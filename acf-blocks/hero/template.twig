@@ -1,17 +1,16 @@
-{# acf-blocks/hero/template.twig #}
-<section
-  class="hero relative py-20 text-white"
-  {% if fields.hero_background %}
-    style="background-image: url('{{ fields.hero_background.url }}')"
+{% set image = get_attachment(fields.hero_background) %}
+<section class="hero-block relative py-8 bg-cover bg-center"
+  {% if image %}
+    style="background-image: url('{{ image.src }}')"
   {% endif %}
 >
-  <div class="hero__overlay absolute inset-0"></div>
-  <div class="container mx-auto relative z-10 text-center px-6">
+  <div class="container mx-auto px-6 text-center relative z-10">
     {% if fields.hero_title %}
-      <h1 class="text-5xl font-bold mb-4">{{ fields.hero_title }}</h1>
+      <h1 class="text-3xl md:text-5xl font-bold mb-4">{{ fields.hero_title }}</h1>
     {% endif %}
     {% if fields.hero_subtitle %}
-      <p class="text-xl">{{ fields.hero_subtitle }}</p>
+      <p class="text-lg text-gray-200">{{ fields.hero_subtitle }}</p>
     {% endif %}
   </div>
+  <div class="absolute inset-0 bg-black opacity-50 z-0"></div>
 </section>

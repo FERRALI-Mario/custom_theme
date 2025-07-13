@@ -1,4 +1,30 @@
 {# acf-blocks/product-card/template.twig #}
-<div class="product-card-block">
-  {# TODO: Add your markup and use {{ fields.your_field }} #}
+{% set img = fields.product_image %}
+{% set title = fields.product_title %}
+{% set price = fields.product_price %}
+{% set description = fields.product_description %}
+{% set align = fields.product_align ?? 'left' %}
+{% set padding = fields.product_padding ?? 'p-6' %}
+{% set bg = fields.product_bg ?? 'bg-white' %}
+
+<div class="product-card {{ bg }} {{ padding }} text-{{ align }} rounded shadow hover:shadow-md transition">
+  {% if img %}
+    <img src="{{ img.url }}" alt="{{ img.alt }}" class="mb-4 w-full object-cover h-48 rounded" />
+  {% endif %}
+
+  {% if title %}
+    <h2 class="text-xl font-bold mb-2">{{ title }}</h2>
+  {% endif %}
+
+  {% if price %}
+    <p class="text-lg text-blue-600 font-semibold mb-2">€{{ price|number_format(2, '.', ' ') }}</p>
+  {% endif %}
+
+  {% if description %}
+    <p class="text-gray-600 mb-4">{{ description }}</p>
+  {% endif %}
+
+  <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded">
+    Ajouter au panier
+  </button>
 </div>
