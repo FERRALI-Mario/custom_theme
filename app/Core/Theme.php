@@ -2,65 +2,54 @@
 
 namespace App\Core;
 
+use App\Providers\Blocks;
 use Timber\Timber;
 
 class Theme
 {
-    public static function init()
+    public static function init(): void
     {
-        // Autoload via composer
-        // Load textdomain, theme supports, hooks
-        add_action('after_setup_theme', [self::class, 'setupTheme']);
-        add_action('init', [self::class, 'registerFeatures']);
+        add_action('after_setup_theme', [self::class, 'setup']);
+        add_action('wp_enqueue_scripts', [self::class, 'enqueueAssets']);
+        add_filter('timber/context', [Context::class, 'extend']);
+
+        self::bootTimber();
+        Blocks::register();
     }
 
-    public static function setupTheme()
+    public static function setup(): void
     {
-        load_theme_textdomain('wp-theme-boilerplate', get_template_directory() . '/languages');
         add_theme_support('title-tag');
         add_theme_support('post-thumbnails');
-        add_theme_support('html5', ['search-form', 'gallery', 'caption']);
-        add_theme_support('custom-logo');
+        add_theme_support('menus');
+        add_theme_support('align-wide');
 
-        // Register menus
         register_nav_menus([
-            'main' => __('Main Menu', 'wp-theme-boilerplate'),
-            'footer' => __('Footer Menu', 'wp-theme-boilerplate'),
+            'main'   => 'Menu principal',
+            'footer' => 'Menu pied de page',
         ]);
     }
 
-    public static function registerFeatures()
+    public static function enqueueAssets(): void
     {
-        // Enqueue assets
-        add_action('wp_enqueue_scripts', [self::class, 'enqueueAssets'], 20);
+        $dist = get_template_directory_uri() . '/assets';
+        $js   = $dist . '/js/main.js';
+        $css  = $dist . '/css/tailwind.css';
 
-        // Initialize Timber
-        Timber::init();
+        wp_enqueue_script('theme-js', $js, [], filemtime(get_template_directory() . '/assets/js/main.js'), true);
+        wp_enqueue_style('theme-css', $css, [], filemtime(get_template_directory() . '/assets/css/tailwind.css'));
     }
 
-    public static function enqueueAssets()
+    public static function bootTimber(): void
     {
-        $theme = wp_get_theme();
-        $version = $theme->get('Version');
+        if (!class_exists(Timber::class)) {
+            add_action('admin_notices', function () {
+                echo '<div class="error"><p><strong>Timber n’est pas installé.</strong> Veuillez exécuter : <code>composer require timber/timber</code></p></div>';
+            });
+            return;
+        }
 
-        // Styles
-        wp_enqueue_style(
-            'tailwind',
-            get_stylesheet_directory_uri() . '/assets/css/tailwind.css',
-            [],
-            $version
-        );
-
-        // Main JS built by Vite
-        wp_enqueue_script(
-            'theme-main',
-            get_stylesheet_directory_uri() . '/assets/js/main.js',
-            [],
-            $version,
-            true
-        );
+        Timber::$dirname = ['views'];
+        Timber::$autoescape = false;
     }
 }
-
-// Bootstrap theme
-Theme::init();

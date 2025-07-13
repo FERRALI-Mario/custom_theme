@@ -3,30 +3,38 @@
 namespace App\Providers;
 
 use App\Core\BlockFactory;
-use DirectoryIterator;
 
 class Blocks
 {
-    public static function registerAll(): void
+    protected const NAMESPACE = 'AcfBlocks';
+
+    public static function register(): void
     {
-        $blocksDir = get_template_directory() . '/acf-blocks';
+        $basePath = get_template_directory() . '/acf-blocks/';
+        $folders = glob($basePath . '*', GLOB_ONLYDIR);
 
-        foreach (new DirectoryIterator($blocksDir) as $fileInfo) {
-            if ($fileInfo->isDot() || !$fileInfo->isDir()) {
-                continue;
-            }
-
-            $blockName = $fileInfo->getFilename();
-            $className = '\\App\\Blocks\\' . ucfirst($blockName) . '\\Controller';
-
-            if (class_exists($className)) {
-                new $className($blockName);
-            } else {
-                // Fallback metadata register
-                register_block_type_from_metadata($fileInfo->getPathname());
-            }
+        foreach ($folders as $folder) {
+            self::loadBlock(basename($folder));
         }
     }
-}
 
-add_action('init', ['App\\Providers\\Blocks', 'registerAll']);
+    protected static function loadBlock(string $slug): void
+    {
+        $className = self::resolveClassName($slug);
+        $controllerPath = get_template_directory() . "/acf-blocks/{$slug}/Controller.php";
+
+        if (file_exists($controllerPath)) {
+            require_once $controllerPath;
+        }
+
+        if (class_exists($className)) {
+            $instance = new $className();
+        }
+    }
+
+    protected static function resolveClassName(string $slug): string
+    {
+        $formatted = str_replace(' ', '', ucwords(str_replace('-', ' ', $slug)));
+        return self::NAMESPACE . "\\{$formatted}\\Controller";
+    }
+}
