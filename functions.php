@@ -1,18 +1,16 @@
 <?php
 /**
- * Bootstrap the theme.
- *
- * Loads Composer autoloader and initializes the theme.
+ * Point d’entrée du thème
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly.
+if (!defined('ABSPATH')) {
+    exit; // Sécurité : empêche l'accès direct
 }
 
-// Composer autoloader
+// Chargement de l'autoloader Composer (PSR-4)
 require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Core\Theme;
 
-// Initialize the theme (sets up theme support, menus, assets, Timber, blocks…)
+// Démarrage du thème
 Theme::init();

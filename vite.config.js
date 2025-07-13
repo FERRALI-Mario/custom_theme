@@ -37,6 +37,11 @@ export default defineConfig({
     },
   },
   css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '' // utile si tu as des variables globales SCSS
+      }
+    },
     postcss: {
       plugins: [
         require('tailwindcss'),
