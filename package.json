@@ -19,5 +19,10 @@
   "dependencies": {
     "@alpinejs/collapse": "^3.14.9",
     "alpinejs": "^3.14.9"
-  }
+  },
+  "description": "Thème WordPress moderne et modulaire, prêt pour des projets réutilisables ou clients, avec :\r - PHP 8.1+, WordPress 6.8+\r - Timber 2+, ACF PRO\r - Tailwind 3 + Vite.js pour le workflow front-end\r - Architecture PSR‑4 via Composer\r - Blocs ACF orientés objet avec CLI\r - Vues Twig (layouts, partials, components, pages)",
+  "main": "postcss.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
