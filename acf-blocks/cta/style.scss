@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .cta-block {
+    @apply relative bg-white text-center text-gray-900;
+
+    /* Cacher la marge par défaut */
+    &::before,
+    &::after {
+      @apply block content-[''];
+    }
+
+    /* Conteneur avec padding généreux */
+    @apply py-12 px-6;
+
+    /* Styles du titre */
+    h2 {
+      @apply text-3xl font-semibold text-white mb-4;
+    }
+
+    /* Styles du texte descriptif */
+    p {
+      @apply text-lg text-white mb-6;
+    }
+  }
+
+  /* Grille responsive mobile-first */
+  @media (min-width: 640px) {
+    .cta-block {
+      @apply sm:text-center; /* Centrage du texte sur petit écran */
+    }
+  }
+}
