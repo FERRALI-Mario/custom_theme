@@ -22,11 +22,7 @@ Thème WordPress moderne et modulaire, prêt pour des projets réutilisables ou 
    ```bash
    npm install
    ```
-4. Pour le développement (watch + live reload) :
-   ```bash
-   npm run dev
-   ```
-5. Pour construire les assets en production :
+4. Pour construire les assets :
    ```bash
    npm run build
    ```
@@ -35,9 +31,8 @@ Thème WordPress moderne et modulaire, prêt pour des projets réutilisables ou 
 ## 📁 Structure du thème
 
 ```python
-   wp-theme-boilerplate/
-   ├── acf-blocks/          # Dossiers de blocs ACF (block.json, Controller, twig, scss)
-   ├── acf-json/            # Champs ACF versionnés
+   basic-theme/
+   ├── acf-blocks/          # Dossiers de blocs ACF (fields, Controller, twig, scss)
    ├── app/                 # Code PHP (PSR‑4) : Core, Support, Providers
    ├── assets/              # CSS/JS/images
    ├── bin/                 # Scripts CLI (make-block.php)
@@ -66,5 +61,4 @@ Exemple :
 ```
 
 Cela génère :
-- acf-blocks/hero/ avec block.json, Controller.php, template.twig, style.scss
-- Un fichier vide acf-json/group_hero.json
+- acf-blocks/hero/ avec fields.php, Controller.php, template.twig, style.scss
