@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.4.0...v1.5.0) (2025-07-14)
+
+
+### Features
+
+* **blocks:** reintroduce CTA block with updated structure ([4015d2f](https://github.com/FERRALI-Mario/basic_theme/commit/4015d2f898dc80329a7cff818a87d0719794cbc2))
+* **core:** add Editor provider to manage editor settings ([b9e7159](https://github.com/FERRALI-Mario/basic_theme/commit/b9e7159d09466bc030e2e31b28109a8b9c53c2e1))
+
 ## [1.4.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.3.0...v1.4.0) (2025-07-14)
 
 
