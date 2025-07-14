@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .intro-text-block {
+    @apply bg-white text-gray-900; /* Fond blanc et texte gris par défaut */
+    @apply rounded-lg shadow-md; /* Ajouter des coins arrondis et une ombre */
+    
+    /* Assurer que le bloc a un fond blanc et une bonne espacement */
+    @apply py-8 px-4;
+    
+    h2 {
+      @apply text-3xl font-bold mb-4; /* Titre avec une grande taille de police */
+    }
+
+    p {
+      @apply text-xl; /* Paragraphe avec une taille de texte plus grande */
+    }
+
+    /* Assurez-vous que les marges sont nulles par défaut */
+    &::before,
+    &::after {
+      @apply block content-[''];
+    }
+    
+    /* Espacement mobile-first */
+    @media (max-width: 767px) {
+      h2 {
+        @apply text-2xl; /* Réduit la taille du titre sur les petits écrans */
+      }
+
+      p {
+        @apply text-lg; /* Réduit la taille du texte sur les petits écrans */
+      }
+    }
+  }
+}

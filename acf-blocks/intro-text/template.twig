@@ -1,0 +1,18 @@
+<section class="intro-text-block max-w-3xl mx-auto py-8 px-4">
+    <div class="text-{{ fields.intro_text_alignment }}">
+
+        {# Titre avec taille de texte responsive #}
+        {% if fields.intro_text_title %}
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-4">
+                {{ fields.intro_text_title }}
+            </h2>
+        {% endif %}
+
+        {# Paragraphe avec taille de texte responsive #}
+        {% if fields.intro_text_paragraph %}
+            <p class="text-lg sm:text-xl">
+                {{ fields.intro_text_paragraph }}
+            </p>
+        {% endif %}
+    </div>
+</section>
