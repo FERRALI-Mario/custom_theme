@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Providers\Blocks;
+use App\Providers\Editor;
 use Timber\Timber;
 
 class Theme
@@ -15,6 +16,7 @@ class Theme
 
         self::bootTimber();
         Blocks::register();
+        Editor::register();
     }
 
     public static function setup(): void
@@ -49,7 +51,12 @@ class Theme
             return;
         }
 
-        Timber::$dirname = ['views'];
+        Timber::$dirname = [
+            'views',
+            'views/components',
+            'views/partials',
+            'views/layouts',
+        ];
         Timber::$autoescape = false;
     }
 }

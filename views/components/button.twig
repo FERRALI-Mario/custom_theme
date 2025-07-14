@@ -1,2 +1,5 @@
-{% from 'components/macros.twig' import button %}
-{{ button(text, url, classes) }}
+<a href="{{ button_url }}" 
+   class="bg-black text-white px-4 py-2 rounded-full font-bold text-lg hover:bg-opacity-80 transition duration-300"
+   {% if open_in_new_tab %} target="_blank" {% endif %}>
+    {{ button_text }}
+</a>
