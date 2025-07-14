@@ -9,19 +9,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      spacing: {
-        '8': '2rem',
-        '4': '1rem',
-        '16xl': '4rem',
-        '20xl': '5rem',
-        '12lg': '3rem',
-      },
-      zIndex: {
-        '1': '1',
-        '10': '10',
-        '0': '0',
-        '-10': '-10',
-      },
     },
   },
   safelist: [
@@ -53,6 +40,7 @@ module.exports = {
     'pb-12',
     'will-change-transform',
     'duration-500',
+    'animate-carousel',
   ],
   plugins: [],
 }
