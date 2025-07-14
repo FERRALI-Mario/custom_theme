@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.5.0...v1.6.0) (2025-07-14)
+
+
+### Features
+
+* **blocks:** add new logos-carousel ACF block ([e717e13](https://github.com/FERRALI-Mario/basic_theme/commit/e717e135fba10a4be6e5705442342f25a29487e5))
+
 ## [1.5.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.4.0...v1.5.0) (2025-07-14)
 
 
