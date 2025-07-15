@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.6.0...v1.7.0) (2025-07-15)
+
+
+### Features
+
+* **blocks:** add new video-section ACF block ([660d032](https://github.com/FERRALI-Mario/basic_theme/commit/660d03277ec412bc5927827008d031ca2f6684ea))
+
 ## [1.6.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.5.0...v1.6.0) (2025-07-14)
 
 
