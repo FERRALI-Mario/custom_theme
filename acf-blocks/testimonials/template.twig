@@ -1,0 +1,45 @@
+<section class="relative overflow-hidden bg-white py-12 lg:py-20">
+  <div class="container mx-auto text-center px-4">
+    {% if fields.title %}
+      <h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
+    {% endif %}
+
+    {% if fields.intro %}
+      <p class="max-w-xl mx-auto text-gray-700 mb-10">
+        {{ fields.intro }}
+      </p>
+    {% endif %}
+
+    {% if testimonials is not empty %}
+      <div class="relative w-full overflow-hidden group">
+        <div class="flex animate-marquee w-fit gap-4 group-hover:[animation-play-state:paused]" style="animation-duration: {{ marquee_duration }}s;">
+          {% for i in 1..2 %}
+            {% for testimonial in testimonials %}
+              <figure class="w-64 shrink-0 inline-block rounded-xl border p-4 bg-gray-50 hover:bg-gray-100 transition-all text-left">
+                <div class="flex items-center gap-3 mb-3">
+                  {% if testimonial.client_photo %}
+                    <img src="{{ testimonial.client_photo.url }}" alt="{{ testimonial.client_name }}" class="w-10 h-10 rounded-full">
+                  {% endif %}
+                  <div class="text-left">
+                    <figcaption class="text-sm font-semibold">{{ testimonial.client_name }}</figcaption>
+                    {% if testimonial.client_job %}
+                      <p class="text-xs text-gray-500">{{ testimonial.client_job }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+                <blockquote class="text-sm text-gray-700 whitespace-normal">
+                  {{ testimonial.testimonial_text }}
+                </blockquote>
+              </figure>
+            {% endfor %}
+          {% endfor %}
+        </div>
+
+        <div class="pointer-events-none absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-white to-transparent z-10"></div>
+        <div class="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-white to-transparent z-10"></div>
+      </div>
+    {% else %}
+      <p class="text-gray-400">Aucun témoignage pour le moment.</p>
+    {% endif %}
+  </div>
+</section>
