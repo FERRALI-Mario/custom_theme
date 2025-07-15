@@ -12,6 +12,7 @@ module.exports = {
     },
   },
   safelist: [
+    'w-full',
     'fixed',
     'absolute',
     'relative',
