@@ -7,10 +7,10 @@
   <!-- Overlay sombre avec opacité -->
   <div class="absolute inset-0 bg-black/50"></div>
 
-  <div class="container mx-auto flex items-center justify-between relative z-10 lg:ml-12lg lg:mr-12lg xl:ml-16xl xl:mr-16xl">
+  <div class="container mx-auto flex items-center justify-between relative z-10 max-w-4xl xl:ml-16xl xl:mr-16xl">
     
     <!-- Contenu à gauche (titre, sous-titre, CTA) -->
-    <div class="w-full md:w-1/2 text-left mb-6 md:mb-0">
+    <div class="w-full sm:w-1/2 text-left mb-6 md:mb-0">
       {% if fields.hero_title %}
         <h1 class="text-3xl font-bold mb-4">{{ fields.hero_title }}</h1>
       {% endif %}
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Image à droite -->
-    <div class="image-wrapper w-full md:w-1/2 hidden md:block lg:ml-12lg lg:mr-12lg xl:ml-20xl xl:mr-20xl">
+    <div class="image-wrapper w-full md:w-1/2 hidden md:block xl:ml-20xl xl:mr-20xl">
       {% if second_image %}
         <img src="{{ second_image }}" alt="Hero Image" class="w-full h-auto object-cover opacity-90">
       {% endif %}

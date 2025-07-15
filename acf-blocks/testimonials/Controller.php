@@ -12,6 +12,9 @@ class Controller extends BlockFactory
         parent::__construct('testimonials');
     }
 
+    /**
+     * Injection de la durée du carousel en fonction du nombre d'avis
+     */
     public function render(array $block): void
     {
         $context = Timber::context();

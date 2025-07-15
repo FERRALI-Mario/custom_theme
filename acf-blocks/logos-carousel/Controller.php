@@ -3,6 +3,7 @@
 namespace AcfBlocks\LogosCarousel;
 
 use App\Core\BlockFactory;
+use Timber\Timber;
 
 class Controller extends BlockFactory
 {
@@ -10,6 +11,23 @@ class Controller extends BlockFactory
     {
         parent::__construct('logos-carousel');
     }
+
+    /**
+     * Injection de la durée du carousel en fonction du nombre de logos
+     */
+    public function render(array $block): void
+    {
+        $context = Timber::context();
+        $context['block'] = $block;
+        $context['fields'] = $this->getFields();
+        $logos = $context['fields']['logos'] ?? [];
+
+        $count = count($logos);
+        $context['marquee_duration'] = $duration = max(8, ceil(($count / 5) * 13));
+
+        Timber::render($this->getTemplatePath(), $context);
+    }
+
 
     /**
      * Récupère le titre du bloc

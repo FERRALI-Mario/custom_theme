@@ -49,7 +49,7 @@ acf_add_local_field_group([
                     'name' => 'client_photo',
                     'type' => 'image',
                     'return_format' => 'array',
-                    'required' => 0,
+                    'required' => 1,
                 ],
                 [
                     'key' => 'field_client_job',

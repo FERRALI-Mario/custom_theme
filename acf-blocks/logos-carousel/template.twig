@@ -1,24 +1,36 @@
-<section class="logos-carousel py-20 px-4">
-    <div class="container mx-auto text-center">
-        {# Affichage du titre et du texte #}
-        {% if fields.title %}
-            <h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
-        {% endif %}
+<section class="logos-carousel py-20 px-4 bg-white overflow-hidden">
+  <div class="container mx-auto text-center">
+    {% if fields.title %}
+      <h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
+    {% endif %}
 
-        {% if fields.text %}
-            <p class="max-w-xl mx-auto text-gray-700 mb-10">{{ fields.text }}</p>
-        {% endif %}
-        <div class="logos-wrapper flex justify-center space-x-4">
+    {% if fields.text %}
+      <p class="max-w-xl mx-auto text-gray-800 mb-10">{{ fields.text }}</p>
+    {% endif %}
+
+    {% if fields.logos is not empty %}
+      <div class="relative w-full overflow-hidden">
+        <div class="flex animate-marquee w-fit gap-10 hover:[animation-play-state:paused]" style="animation-duration: {{ marquee_duration }}s;">
+          {% for i in 1..2 %}
             {% for logo in fields.logos %}
-                <div class="group relative">
-                    <a href="{{ logo.logo_url }}" target="_blank">
-                        <img src="{{ logo.logo_image.url }}" alt="{{ logo.logo_image.alt }}" class="max-h-24 object-contain transition duration-300 group-hover:brightness-100 filter brightness-75">
-                        
-                        {# Filtre blanc sur chaque logo #}
-                        <div class="absolute inset-0 bg-white opacity-40 group-hover:opacity-0 transition duration-300"></div>
-                    </a>
-                </div>
+              <div class="relative shrink-0 w-40 h-24 flex items-center justify-center group">
+                <a href="{{ logo.logo_url ?: '#' }}" target="_blank" class="block relative w-full h-full">
+                  <img
+                    src="{{ logo.logo_image.url }}"
+                    alt="{{ logo.logo_image.alt }}"
+                    class="max-h-20 w-auto mx-auto object-contain brightness-75 group-hover:brightness-100 transition duration-300"
+                  />
+                  <div class="absolute inset-0 bg-white opacity-40 group-hover:opacity-0 transition duration-300"></div>
+                </a>
+              </div>
             {% endfor %}
+          {% endfor %}
         </div>
-    </div>
+
+        {# Fading Gradients (optionnel) #}
+        <div class="pointer-events-none absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-white to-transparent z-10"></div>
+        <div class="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-white to-transparent z-10"></div>
+      </div>
+    {% endif %}
+  </div>
 </section>
