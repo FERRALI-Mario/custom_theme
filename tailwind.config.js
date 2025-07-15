@@ -55,6 +55,7 @@ module.exports = {
     'flex-wrap',
     'items-center',
     'justify-center',
+    'italic',
     'text-left',
     'text-center',
     'text-right',
@@ -75,7 +76,8 @@ module.exports = {
     'animate-carousel',
     'transition-transform',
     'shadow',
-    'rounded'
+    'rounded',
+    'border',
   ],
   plugins: [],
 }
