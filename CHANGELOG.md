@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.8.0...v1.9.0) (2025-07-15)
+
+
+### Features
+
+* **blocks:** add new team ACF block ([d5f2e4f](https://github.com/FERRALI-Mario/basic_theme/commit/d5f2e4fa5f072df4be64d1969e271e32d4e70d47))
+
 ## [1.8.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.7.0...v1.8.0) (2025-07-15)
 
 
