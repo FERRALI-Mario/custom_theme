@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.11.0...v1.12.0) (2025-07-15)
+
+
+### Features
+
+* **blocks:** add new contact-infos ACF block ([b716fc3](https://github.com/FERRALI-Mario/basic_theme/commit/b716fc33fbf5265ae59c334122a86cc79b3aad30))
+
 ## [1.11.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.10.0...v1.11.0) (2025-07-15)
 
 
