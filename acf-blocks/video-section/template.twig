@@ -1,0 +1,47 @@
+<section class="video-section py-12">
+    <div class="container mx-auto text-center">
+        {# Affichage du titre #}
+        {% if fields.video_section_title %}
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">{{ fields.video_section_title }}</h2>
+        {% endif %}
+
+        {# Affichage de la description #}
+        {% if fields.video_section_description %}
+            <p class="text-lg text-gray-700 mb-6">{{ fields.video_section_description }}</p>
+        {% endif %}
+
+        {# Affichage de la vidéo intégrée avec iframe responsive #}
+        {% if fields.video_video_url %}
+
+            {% set embed_url = '' %}
+            {% set url = fields.video_video_url %}
+
+            {% if 'vimeo.com' in url %}
+                {% set video_id = url | split('/') | last %}
+                {% set embed_url = 'https://player.vimeo.com/video/' ~ video_id %}
+            {% elseif 'youtube.com/watch?v=' in url %}
+                {% set video_id = url | split('v=') | last %}
+                {% set embed_url = 'https://www.youtube.com/embed/' ~ video_id %}
+            {% elseif 'youtu.be' in url %}
+                {% set video_id = url | split('/') | last %}
+                {% set embed_url = 'https://www.youtube.com/embed/' ~ video_id %}
+            {% endif %}
+
+
+            {% if embed_url %}
+                <div class="relative w-full max-w-4xl mx-auto mb-8" style="aspect-ratio: 16/9; max-width: 500px;">
+                    <iframe
+                        class="absolute top-0 left-0 w-full h-full"
+                        src="{{ embed_url }}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+</section>
