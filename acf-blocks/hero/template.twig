@@ -12,10 +12,10 @@
     <!-- Contenu à gauche (titre, sous-titre, CTA) -->
     <div class="w-full md:w-1/2 text-left mb-6 md:mb-0">
       {% if fields.hero_title %}
-        <h1 class="text-3xl lg:text-4xl xl:text-5xl font-extrabold mb-4">{{ fields.hero_title }}</h1>
+        <h1 class="text-3xl font-bold mb-4">{{ fields.hero_title }}</h1>
       {% endif %}
       {% if fields.hero_subtitle %}
-        <p class="text-lg lg:text-xl text-gray-100 mb-6">{{ fields.hero_subtitle }}</p>
+        <p class="text-gray-100 mb-10">{{ fields.hero_subtitle }}</p>
       {% endif %}
       
       {% if fields.hero_cta_text and fields.hero_cta_url %}

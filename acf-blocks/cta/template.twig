@@ -6,10 +6,10 @@
 
   <div class="container mx-auto px-6 relative z-10">
     {% if fields.cta_title %}
-      <h2 id="cta-title" class="text-3xl lg:text-4xl font-bold mb-4">{{ fields.cta_title }}</h2>
+      <h2 id="cta-title" class="text-3xl font-bold mb-4">{{ fields.cta_title }}</h2>
     {% endif %}
     {% if fields.cta_text %}
-      <p class="text-lg mb-6">{{ fields.cta_text }}</p>
+      <p class="max-w-xl mx-auto mb-10">{{ fields.cta_text }}</p>
     {% endif %}
     {% if fields.cta_button_text and fields.cta_button_url %}
       {% include 'components/button.twig' with {

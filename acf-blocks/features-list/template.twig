@@ -7,8 +7,8 @@
                     {% if feature.feature_icon %}
                         <img src="{{ feature.feature_icon }}" alt="{{ feature.feature_title }}" class="mx-auto mb-4">
                     {% endif %}
-                    <h3 class="text-xl font-semibold mb-2">{{ feature.feature_title }}</h3>
-                    <p class="text-gray-600">{{ feature.feature_description }}</p>
+                    <h3 class="text-xl font-bold mb-4">{{ feature.feature_title }}</h3>
+                    <p class="text-gray-700">{{ feature.feature_description }}</p>
                 </div>
             {% endfor %}
         </div>
