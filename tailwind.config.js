@@ -53,6 +53,8 @@ module.exports = {
     'min-h-screen',
     'flex',
     'flex-wrap',
+    'flex-col',
+    'flex-row',
     'items-center',
     'justify-center',
     'italic',
