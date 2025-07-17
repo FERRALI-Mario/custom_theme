@@ -40,6 +40,9 @@ class Theme
 
         wp_enqueue_script('theme-js', $js, [], filemtime(get_template_directory() . '/assets/js/main.js'), true);
         wp_enqueue_style('theme-css', $css, [], filemtime(get_template_directory() . '/assets/css/tailwind.css'));
+
+        wp_enqueue_style('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
+        wp_enqueue_script('leaflet-js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
     }
 
     public static function bootTimber(): void
