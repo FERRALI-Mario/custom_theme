@@ -1,0 +1,17 @@
+<section class="map-block py-8 px-4 bg-gray-100">
+  <div class="container mx-auto">
+    {% set lat = fields.map_latitude|default(0) %}
+    {% set lng = fields.map_longitude|default(0) %}
+    {% set zoom = fields.map_zoom|default(14) %}
+
+    <div
+      id="map"
+      class="w-full rounded shadow"
+      style="height: 400px;"
+      data-lat="{{ fields.map_latitude }}"
+      data-lng="{{ fields.map_longitude }}"
+      data-zoom="{{ fields.map_zoom|default(14) }}"
+      data-label="{{ fields.map_label|default('Localisation') }}"
+    ></div>
+  </div>
+</section>
