@@ -1,0 +1,30 @@
+<section class="py-4 px-4">
+    <div class="container mx-auto text-center">
+        {% if fields.social_links %}
+        <div class="flex justify-center gap-4">
+            {% for link in fields.social_links %}
+                <a href="{{ link.social_url }}" target="_blank" aria-label="Visit {{ link.social_url }}" class="text-gray-600 hover:text-gray-900">
+                    {# Choisir l'icône en fonction du choix de l'utilisateur #}
+                    {% if link.social_icon == 'facebook' %}
+                        <i class="fab fa-facebook text-2xl"></i>
+                    {% elseif link.social_icon == 'instagram' %}
+                        <i class="fab fa-instagram text-2xl"></i>
+                    {% elseif link.social_icon == 'snapchat' %}
+                        <i class="fab fa-snapchat-ghost text-2xl"></i>
+                    {% elseif link.social_icon == 'tiktok' %}
+                        <i class="fab fa-tiktok text-2xl"></i>
+                    {% elseif link.social_icon == 'pinterest' %}
+                        <i class="fab fa-pinterest text-2xl"></i>
+                    {% elseif link.social_icon == 'github' %}
+                        <i class="fab fa-github text-2xl"></i>
+                    {% elseif link.social_icon == 'linkedin' %}
+                      <i class="fab fa-linkedin text-2xl"></i>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>Aucun lien social disponible.</p>
+        {% endif %}
+    </div>
+</section>
