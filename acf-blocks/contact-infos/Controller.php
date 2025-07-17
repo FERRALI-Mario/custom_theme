@@ -18,7 +18,7 @@ class Controller extends BlockFactory
 
     public function getDescription(): string
     {
-        return 'Affiche les informations de contact (adresse, téléphone, email, etc.)';
+        return 'Affiche les informations de contact (adresse, email, téléphone, horaire)';
     }
 
     public function getKeywords(): array
@@ -28,6 +28,6 @@ class Controller extends BlockFactory
 
     public function getIcon(): string
     {
-        return 'phone';
+        return 'email';
     }
 }

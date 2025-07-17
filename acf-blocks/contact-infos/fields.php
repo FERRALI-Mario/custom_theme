@@ -7,71 +7,60 @@ acf_add_local_field_group([
     'title' => 'Contact Infos Block',
     'fields' => [
         [
-            'key' => 'field_contact_form_title',
+            'key'   => 'field_contact_form_title',
             'label' => 'Titre du bloc',
-            'name' => 'contact_form_title',
-            'type' => 'text',
-            'required' => 0,
-            'wrapper' => [
-                'width' => '100',
-            ],
+            'name'  => 'contact_form_title',
+            'type'  => 'text',
         ],
         [
-            'key' => 'field_contact_form_text',
+            'key'   => 'field_contact_form_text',
             'label' => 'Texte introductif',
-            'name' => 'contact_form_text',
-            'type' => 'textarea',
-            'required' => 0,
-            'rows' => 3,
-            'wrapper' => [
-                'width' => '100',
-            ],
+            'name'  => 'contact_form_text',
+            'type'  => 'textarea',
+            'rows'  => 3,
         ],
         [
-            'key' => 'field_contact_address',
-            'label' => 'Adresse',
-            'name' => 'contact_address',
-            'type' => 'text',
-            'required' => 1,
-            'wrapper' => [
-                'width' => '100',
-            ],
-        ],
-        [
-            'key' => 'field_contact_phone',
-            'label' => 'Numéro de téléphone',
-            'name' => 'contact_phone',
-            'type' => 'text',
-            'required' => 0,
-            'wrapper' => [
-                'width' => '100',
-            ],
-        ],
-        [
-            'key' => 'field_contact_email',
-            'label' => 'Email',
-            'name' => 'contact_email',
-            'type' => 'email',
-            'required' => 0,
-            'wrapper' => [
-                'width' => '100',
+            'key'           => 'field_contact_items',
+            'label'         => 'Informations de contact',
+            'name'          => 'contact_items',
+            'type'          => 'repeater',
+            'button_label'  => 'Ajouter une info de contact',
+            'min'           => 1,
+            'max'           => 4,
+            'layout'        => 'table',
+            'sub_fields'    => [
+                [
+                    'key'     => 'field_contact_type',
+                    'label'   => 'Type',
+                    'name'    => 'type',
+                    'type'    => 'select',
+                    'choices' => [
+                        'adresse'  => 'Adresse',
+                        'telephone'=> 'Téléphone',
+                        'email'    => 'Email',
+                        'horaire'  => 'Horaire',
+                    ],
+                    'required' => 1,
+                ],
+                [
+                    'key'      => 'field_contact_value',
+                    'label'    => 'Valeur',
+                    'name'     => 'value',
+                    'type'     => 'text',
+                    'required' => 1,
+                ],
             ],
         ],
     ],
     'location' => [
         [
             [
-                'param' => 'block',
+                'param'    => 'block',
                 'operator' => '==',
-                'value' => 'acf/contact-infos',
-            ]
-        ]
+                'value'    => 'acf/contact-infos',
+            ],
+        ],
     ],
-    'style' => 'default',
-    'position' => 'acf_after_title',
-    'label_placement' => 'top',
-    'instruction_placement' => 'label',
-    'active' => true,
 ]);
 
 endif;
