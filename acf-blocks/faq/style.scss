@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .faq-toggle:checked ~ .faq-answer {
+    @apply max-h-96;
+  }
+
+  .faq-toggle:checked ~ .faq-question .faq-icon {
+    @apply rotate-180;
+  }
+  
+  .faq-question {
+    @apply transition-colors duration-200;
+  }
+}
