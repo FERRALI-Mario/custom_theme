@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.16.0...v1.17.0) (2025-07-18)
+
+
+### Features
+
+* **blocks:** add new number-counter ACF block ([530025e](https://github.com/FERRALI-Mario/basic_theme/commit/530025e21fbd9f9e8c85337ec867f268f4b542c0))
+
 ## [1.16.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.15.0...v1.16.0) (2025-07-18)
 
 
