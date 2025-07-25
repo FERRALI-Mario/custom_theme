@@ -1,0 +1,29 @@
+{% set image = fields.image %}
+{% set imagePosition = fields.image_position %}
+
+<section class="py-12 px-4">
+  <div class="container mx-auto max-w-5xl flex flex-col-reverse flex-row {{ imagePosition == 'right' ? 'md:flex-row-reverse' : 'md:flex-row' }} items-center gap-8">
+    
+    <div class="image flex justify-center max-w-96 md:w-1/2 lg:max-w-none">
+      {% if image %}
+        <img src="{{ image }}" alt="Image" class="max-w-full h-auto">
+      {% endif %}
+    </div>
+
+    <div class="text-center md:text-left max-w-xl md:w-1/2">
+      {% if fields.title %}
+        <h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
+      {% endif %}
+      {% if fields.text %}
+        <p class="max-w-xl mb-6 text-gray-800">{{ fields.text }}</p>
+      {% endif %}
+      {% if fields.button_text %}
+        {% include 'components/button.twig' with {
+          button_text: fields.button_text,
+          button_url: fields.button_url
+        } %}
+      {% endif %}
+    </div>
+
+  </div>
+</section>
