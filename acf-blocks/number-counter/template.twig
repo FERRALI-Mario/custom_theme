@@ -1,12 +1,12 @@
-{% set items = fields.counter|slice(0, 4) %}
+{% set items = fields.counters|slice(0, 4) %}
 {% set count = items|length %}
 
-<section class="py-16 px-4 bg-gray-50 number-counter-block">
+<section class="py-16 px-4 number-counter-block">
   <div class="container mx-auto">
-     <div class="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto bg-white shadow-md rounded-lg
+     <div class="flex flex-wrap justify-center justify-items-center gap-6 max-w-5xl mx-auto
                 {% if count == 3 %} md:flex-nowrap {% elseif count == 4 %} md:grid md:grid-cols-2 lg:flex {% endif %}">
       {% for counter in fields.counters %}
-        <div class="counter-item relative group p-6 flex flex-col items-center text-center sm:w-5/12 md:w-[220px] bg-white rounded-lg transition-all duration-300 transform cursor-default hover:scale-105 hover:shadow-xl hover:bg-gray-50 hover:cursor-pointer">
+        <div class="counter-item relative group p-6 flex flex-col items-center text-center sm:w-5/12 md:w-[220px] bg-gray-50 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:bg-gray-50">
           <div class="number text-primary text-4xl font-bold mb-2 z-10 relative" data-count="{{ counter.number }}">
             0
           </div>
