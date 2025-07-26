@@ -1,4 +1,4 @@
-<section class="timeline-block py-20">
+<section class="py-8 px-4 timeline-block">
   <div class="container mx-auto">
     
     <div class="text-center mb-10">
@@ -27,7 +27,7 @@
             <div class="hidden md:block absolute top-1/2 h-[2px] w-12 bg-gray-300 z-0 {{ loop.index is odd ? 'right-1/2 -mr-14' : 'left-1/2 -ml-14' }}"></div>
 
             <!-- Card -->
-            <div class="timeline-card w-full md:w-[42%] px-6 py-4 bg-gradient-to-br from-white via-gray-100 to-gray-200 shadow-md rounded-md opacity-0 translate-y-4 transition-all duration-700">
+            <div class="timeline-card mx-5 md:mx-0 md:w-[42%] px-6 py-4 bg-gradient-to-br from-white via-gray-100 to-gray-200 shadow-md rounded-md opacity-0 translate-y-4 transition-all duration-700">
               <span class="text-gray-500 font-bold text-xl mb-1">{{ event.year }}</span>
               <h3 class="text-xl font-semibold mb-2">{{ event.event_title }}</h3>
               {% if event.event_description %}
