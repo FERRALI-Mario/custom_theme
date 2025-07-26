@@ -24,7 +24,7 @@ class Controller extends BlockFactory
         $context['fields'] = $fields;
         $context['block'] = $block;
 
-        Timber::render('acf-blocks/contact-form/template.twig', $context);
+        Timber::render($this->getTemplatePath(), $context);
     }
 
 
