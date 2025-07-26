@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.19.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.18.0...v1.19.0) (2025-07-26)
+
+
+### Features
+
+* **assets:** version project assets ([078d77f](https://github.com/FERRALI-Mario/basic_theme/commit/078d77feb2c8c47145a911ac5af813377043e82e))
+* **blocks:** add new timeline ACF block ([da52d92](https://github.com/FERRALI-Mario/basic_theme/commit/da52d926b309e803118bffd891c4782654978d66))
+
+
+### Bug Fixes
+
+* **blocks:** improve templates and controllers for contact-form, contact-infos and faq ([53c9a7f](https://github.com/FERRALI-Mario/basic_theme/commit/53c9a7fea7e9122888eed2d3436118c48206bc73))
+
 ## [1.18.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.17.1...v1.18.0) (2025-07-25)
 
 
