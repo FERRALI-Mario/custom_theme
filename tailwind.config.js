@@ -86,6 +86,7 @@ module.exports = {
     'shadow',
     'rounded',
     'border',
+    'opacity-100',
   ],
   plugins: [],
 }
