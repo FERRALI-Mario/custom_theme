@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.20.0...v1.21.0) (2025-07-27)
+
+
+### Features
+
+* **blocks:** add preview thumbnails for all blocks to improve UX in editor ([e095332](https://github.com/FERRALI-Mario/basic_theme/commit/e095332bf9c96f3b962b8b04e5e4420029921935))
+
 ## [1.20.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.19.0...v1.20.0) (2025-07-26)
 
 
