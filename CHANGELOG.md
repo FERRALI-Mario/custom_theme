@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.22.0 (2025-07-27)
+
+
+### Features
+
+* **assets:** version project assets ([e2dbaac](https://github.com/FERRALI-Mario/custom_theme/commit/e2dbaac38b36650f609e34662fe9426283048860))
+* **blocks:** add base ACF blocks (contact-form, cta, faq, logos-carousel, etc.) ([26683df](https://github.com/FERRALI-Mario/custom_theme/commit/26683dfce84bec2db7985db3307998a259cdae97))
+* **blocks:** add features-list ACF block ([b89954e](https://github.com/FERRALI-Mario/custom_theme/commit/b89954ec1b06714d13766bdd1d5d7545bec7c2e5))
+* **blocks:** add hero and product-card blocks (Controller, styles, template) ([e9f4102](https://github.com/FERRALI-Mario/custom_theme/commit/e9f41022cfc04fef1bca682853e5afc9dbe5c934))
+* **blocks:** add new contact-form ACF block ([097b322](https://github.com/FERRALI-Mario/custom_theme/commit/097b3229052df65d6452b3c47a41100c2b92afb8))
+* **blocks:** add new contact-infos ACF block ([4214fbe](https://github.com/FERRALI-Mario/custom_theme/commit/4214fbe99d51800df328663fb5ef3796045924d2))
+* **blocks:** add new faq ACF block ([e6d5019](https://github.com/FERRALI-Mario/custom_theme/commit/e6d5019d49f2829643276c81813d83b417c416ed))
+* **blocks:** add new guarantee ACF block ([b5c36e5](https://github.com/FERRALI-Mario/custom_theme/commit/b5c36e5ba939b897a66c4db9c48f89b3df10bcea))
+* **blocks:** add new image-gallery ACF block ([dcd3889](https://github.com/FERRALI-Mario/custom_theme/commit/dcd388926d4fc2ba1be555c307da2d6debc60c80))
+* **blocks:** add new image-text ACF block ([0eb813f](https://github.com/FERRALI-Mario/custom_theme/commit/0eb813fe77bd0ad8d603fe2246979ebcf9d895a0))
+* **blocks:** add new intro-text ACF block ([9068f55](https://github.com/FERRALI-Mario/custom_theme/commit/9068f5542225614a2aef02d8afbce1aac4119015))
+* **blocks:** add new logos-carousel ACF block ([8538ec3](https://github.com/FERRALI-Mario/custom_theme/commit/8538ec3daa0518cbc5cba31aeecd9aeb604cdf69))
+* **blocks:** add new map ACF block ([df5b29b](https://github.com/FERRALI-Mario/custom_theme/commit/df5b29be14f8be247063df64a6bed100ed325fca))
+* **blocks:** add new number-counter ACF block ([528adf7](https://github.com/FERRALI-Mario/custom_theme/commit/528adf7a37ae35d94e8a341eb9174f87806efce8))
+* **blocks:** add new quote ACF block ([2847b4f](https://github.com/FERRALI-Mario/custom_theme/commit/2847b4f7309aaf1a8f1aec58af40b5214afe72c0))
+* **blocks:** add new social-links ACF block ([06fb952](https://github.com/FERRALI-Mario/custom_theme/commit/06fb95249c0e07d6f349547d86d740e4fce8dcd9))
+* **blocks:** add new team ACF block ([4ff12ec](https://github.com/FERRALI-Mario/custom_theme/commit/4ff12ec9d8673117dde0d38f05f43f79e7c6b37b))
+* **blocks:** add new testimonials ACF block ([f562eeb](https://github.com/FERRALI-Mario/custom_theme/commit/f562eeb2aa25eec7cac9d9c807b42f3bc1eab478))
+* **blocks:** add new timeline ACF block ([7766023](https://github.com/FERRALI-Mario/custom_theme/commit/77660235747240fc2a91458079731bdd2c6ad40d))
+* **blocks:** add new video-section ACF block ([021ed17](https://github.com/FERRALI-Mario/custom_theme/commit/021ed17b3514ecf778e7490ade11791e73e4d126))
+* **blocks:** add preview thumbnails for all blocks to improve UX in editor ([8c6b2cc](https://github.com/FERRALI-Mario/custom_theme/commit/8c6b2ccfd467639e1c45360cfefc1476cc2a7085))
+* **blocks:** create hero block with default styling and structure ([062f86d](https://github.com/FERRALI-Mario/custom_theme/commit/062f86db2fdaf635cdcb0bbf3a26a3f8f5ff78fa))
+* **blocks:** reintroduce CTA block with updated structure ([90068b9](https://github.com/FERRALI-Mario/custom_theme/commit/90068b96ba342637c18e01923b5cc78767104311))
+* **blocks:** update ACF blocks and add section-header component for improved structure ([4d352b5](https://github.com/FERRALI-Mario/custom_theme/commit/4d352b5a65c987665bcdd4f474d75a6de9e5bb22))
+* **core:** add Editor provider to manage editor settings ([fd1558c](https://github.com/FERRALI-Mario/custom_theme/commit/fd1558cf53395737d4097ccb235ed0346e57b492))
+* **templates:** add base pages templates (404, index, page) ([ebc6df1](https://github.com/FERRALI-Mario/custom_theme/commit/ebc6df1062f1c1f07b15ea0fb468e2aee4200a20))
+* **theme:** add new basic-theme ([3fd5771](https://github.com/FERRALI-Mario/custom_theme/commit/3fd5771eea4f1132616f00372bede35572299817))
+* **theme:** initialize basic-theme core structure ([e12dbe6](https://github.com/FERRALI-Mario/custom_theme/commit/e12dbe679927ce2f51615c95d93713398639bd96))
+
+
+### Bug Fixes
+
+* **blocks:** correct slug from 'wp-boiler' to 'acf' in ACF block configs and script ([5ea887d](https://github.com/FERRALI-Mario/custom_theme/commit/5ea887dd825ad41ab424472ea1cd64fce317fbf1))
+* **blocks:** improve templates and controllers for contact-form, contact-infos and faq ([991526b](https://github.com/FERRALI-Mario/custom_theme/commit/991526be5fc55cb14881e4fbf7050a25340ad8e7))
+
 ## [1.21.0](https://github.com/FERRALI-Mario/basic_theme/compare/v1.20.0...v1.21.0) (2025-07-27)
 
 
