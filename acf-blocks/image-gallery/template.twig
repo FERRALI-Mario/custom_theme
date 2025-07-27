@@ -1,36 +1,35 @@
 <section class="py-8 px-4">
-	<div class="container mx-auto max-w-4xl">
-		{% if fields.title or fields.paragraph %}
-			{% include 'components/section-header.twig' with {
-				title: fields.title,
-				text: fields.paragraph
-			} %}
-		{% endif %}
+    <div class="container mx-auto max-w-4xl">
+        {% if fields.title or fields.subtitle %}
+            {% include 'components/section-header.twig' with {
+                title: fields.title,
+                text: fields.subtitle
+            } %}
+        {% endif %}
 
-		{% if fields.gallery_images %}
-			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[2px]">
-				{% for item in fields.gallery_images %}
-					{% set image = item.image %}
-					{% set link = item.link %}
-					{% if image %}
-						<div class="relative group overflow-hidden">
-							{% if link %}
-								<a href="{{ link }}" target="_blank" rel="noopener" class="block relative">
-									<img src="{{ image.url }}" alt="{{ image.alt }}" class="w-full h-auto object-cover"/>
-									<div class="absolute inset-0 bg-transparent group-hover:bg-black/50 transition duration-300"></div>
-								</a>
-							{% else %}
-								<div class="relative">
-									<img src="{{ image.url }}" alt="{{ image.alt }}" class="w-full h-auto object-cover"/>
-								</div>
-							{% endif %}
-						</div>
-					{% endif %}
-				{% endfor %}
-			</div>
-		{% else %}
-			<p class="text-center text-gray-400">Aucune image disponible.</p>
-		{% endif %}
-
-	</div>
+        {% if fields.gallery_images %}
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[2px]">
+                {% for item in fields.gallery_images %}
+                    {% set image = item.image %}
+                    {% set link = item.link %}
+                    {% if image %}
+                        <div class="relative group overflow-hidden">
+                            {% if link %}
+                                <a href="{{ link }}" target="_blank" rel="noopener" class="block relative">
+                                    <img src="{{ image.url }}" alt="{{ image.alt }}" class="w-full h-auto object-cover"/>
+                                    <div class="absolute inset-0 bg-transparent group-hover:bg-black/50 transition duration-300"></div>
+                                </a>
+                            {% else %}
+                                <div class="relative">
+                                    <img src="{{ image.url }}" alt="{{ image.alt }}" class="w-full h-auto object-cover"/>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center text-gray-400">Aucune image disponible.</p>
+        {% endif %}
+    </div>
 </section>

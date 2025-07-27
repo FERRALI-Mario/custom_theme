@@ -3,8 +3,8 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_map',
-        'title' => 'Map Block',
+        'key' => 'map',
+        'title' => 'Bloc carte',
         'fields' => [
             [
                 'key' => 'field_map_label',

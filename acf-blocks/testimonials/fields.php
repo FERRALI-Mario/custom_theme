@@ -3,8 +3,8 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_testimonials',
-        'title' => 'Testimonials Block',
+        'key' => 'testimonials',
+        'title' => 'Bloc témoignages',
         'fields' => [
             [
                 'key' => 'field_testimonials_title',
@@ -14,9 +14,9 @@ if (function_exists('acf_add_local_field_group')) :
                 'required' => 0,
             ],
             [
-                'key' => 'field_testimonials_intro',
-                'label' => 'Texte d’introduction',
-                'name' => 'paragraph',
+                'key' => 'field_testimonials_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
                 'type' => 'textarea',
                 'rows' => 3,
                 'required' => 0,

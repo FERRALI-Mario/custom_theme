@@ -1,20 +1,20 @@
-<section class="cta-block relative py-16 items-center justify-center text-white text-center bg-fixed bg-cover bg-center" style="background-image: url('{{ fields.cta_background }}');" role="region" aria-labelledby="cta-title">
+<section class="cta-block relative py-16 items-center justify-center text-white text-center bg-fixed bg-cover bg-center" style="background-image: url('{{ fields.background }}');" role="region" aria-labelledby="cta-title">
 
 	<div class="absolute inset-0 bg-black/50 z-0"></div>
 
 	<div class="container mx-auto px-6 relative z-10">
-		{% if fields.cta_title %}
-			<h2 id="cta-title" class="text-3xl font-bold mb-4">{{ fields.cta_title }}</h2>
+		{% if fields.title %}
+			<h2 id="cta-title" class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
 		{% endif %}
-		{% if fields.cta_text %}
-			<p class="max-w-xl mx-auto mb-10">{{ fields.cta_text }}</p>
+		{% if fields.subtitle %}
+			<p class="max-w-xl mx-auto mb-10">{{ fields.subtitle }}</p>
 		{% endif %}
-		{% if fields.cta_button_text and fields.cta_button_url %}
+		{% if fields.button_text and fields.button_url %}
 			{% include 'components/button.twig' with {
-        button_text: fields.cta_button_text,
-        button_url: fields.cta_button_url,
-        open_in_new_tab: fields.cta_open_in_new_tab
-      } %}
+				button_text: fields.button_text,
+				button_url: fields.button_url,
+				open_in_new_tab: fields.open_in_new_tab
+			} %}
 		{% endif %}
 	</div>
 </section>

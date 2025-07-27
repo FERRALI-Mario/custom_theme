@@ -3,25 +3,25 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_image_text',
-        'title' => 'Image and Text Block',
+        'key' => 'image_text',
+        'title' => 'Block image et texte',
         'fields' => [
             [
-                'key' => 'field_title',
-                'label' => 'Title',
+                'key' => 'field_image_text_title',
+                'label' => 'Titre',
                 'name' => 'title',
                 'type' => 'text',
                 'required' => 1,
             ],
             [
-                'key' => 'field_text',
-                'label' => 'Text',
+                'key' => 'field_image_text_paragraph',
+                'label' => 'Paragraphe',
                 'name' => 'paragraph',
                 'type' => 'textarea',
                 'required' => 1,
             ],
             [
-                'key' => 'field_image',
+                'key' => 'field_image_text_image',
                 'label' => 'Image',
                 'name' => 'image',
                 'type' => 'image',
@@ -29,27 +29,27 @@ if (function_exists('acf_add_local_field_group')) :
                 'required' => 1,
             ],
             [
-                'key' => 'field_button_text',
-                'label' => 'Button Text',
+                'key' => 'field_image_text_button_text',
+                'label' => 'Texte du bouton',
                 'name' => 'button_text',
                 'type' => 'text',
                 'required' => 0,
             ],
             [
-                'key' => 'field_button_url',
-                'label' => 'Button URL',
+                'key' => 'field_image_text_button_url',
+                'label' => 'URL du bouton',
                 'name' => 'button_url',
                 'type' => 'url',
                 'required' => 0,
             ],
             [
-                'key' => 'field_image_position',
-                'label' => 'Image Position',
+                'key' => 'field_image_text_image_position',
+                'label' => 'Position de l\image',
                 'name' => 'image_position',
                 'type' => 'select',
                 'choices' => [
-                    'left' => 'Left',
-                    'right' => 'Right',
+                    'left' => 'Gauche',
+                    'right' => 'Droite',
                 ],
                 'default_value' => 'left',
             ],

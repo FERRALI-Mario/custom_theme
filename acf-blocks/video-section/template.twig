@@ -1,17 +1,16 @@
 <section class="py-8 px-4">
 	<div class="container mx-auto text-center">
-		{% if fields.title or fields.paragraph %}
+		{% if fields.title or fields.subtitle %}
 			{% include 'components/section-header.twig' with {
 				title: fields.title,
-				text: fields.paragraph
+				text: fields.subtitle
 			} %}
 		{% endif %}
 
-		{# Affichage de la vidéo intégrée avec iframe responsive #}
-		{% if fields.video_video_url %}
+		{% if fields.video_url %}
 
 			{% set embed_url = '' %}
-			{% set url = fields.video_video_url %}
+			{% set url = fields.video_url %}
 
 			{% if 'vimeo.com' in url %}
 				{% set video_id = url | split('/') | last %}
@@ -24,12 +23,10 @@
 				{% set embed_url = 'https://www.youtube.com/embed/' ~ video_id %}
 			{% endif %}
 
-
 			{% if embed_url %}
-				<div class="relative w-full max-w-4xl mx-auto mb-8" style="aspect-ratio: 16/9; max-width: 500px;">
+				<div class="relative w-full max-w-4xl mx-auto mb-8" style="aspect-ratio: 16/9;">
 					<iframe class="absolute top-0 left-0 w-full h-full" src="{{ embed_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 				</div>
-
 			{% endif %}
 
 		{% endif %}

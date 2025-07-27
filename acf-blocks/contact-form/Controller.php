@@ -17,8 +17,8 @@ class Controller extends BlockFactory
         $context = Timber::context();
         $fields = get_fields();
 
-        $fields['contact_form_rendered'] = !empty($fields['contact_form_shortcode'])
-            ? do_shortcode($fields['contact_form_shortcode'])
+        $fields['rendered'] = !empty($fields['shortcode'])
+            ? do_shortcode($fields['shortcode'])
             : '';
 
         $context['fields'] = $fields;

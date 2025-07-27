@@ -3,13 +3,13 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_contact_form',
-        'title' => 'Contact Form Block',
+        'key' => 'contact_form',
+        'title' => 'Block formulaire de contact',
         'fields' => [
             [
                 'key' => 'field_contact_form_shortcode',
-                'label' => 'Formulaire de contact (Shortcode)',
-                'name' => 'contact_form_shortcode',
+                'label' => 'Shortcode',
+                'name' => 'shortcode',
                 'type' => 'text',
                 'instructions' => 'Entrez le shortcode du formulaire de contact (par exemple [contact-form-7 id="123" title="Contact form 1"])',
                 'required' => 0,
@@ -22,9 +22,9 @@ if (function_exists('acf_add_local_field_group')) :
                 'required' => 0,
             ],
             [
-                'key' => 'field_contact_form_text',
-                'label' => 'Texte introductif',
-                'name' => 'paragraph',
+                'key' => 'field_contact_form_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
                 'type' => 'textarea',
                 'rows' => 3,
                 'required' => 0,

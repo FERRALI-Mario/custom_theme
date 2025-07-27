@@ -3,27 +3,27 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_image_gallery',
-        'title' => 'Image Gallery Block',
+        'key' => 'image_gallery',
+        'title' => 'Block galerie d\'images',
         'fields' => [
             [
-                'key' => 'field_gallery_title',
+                'key' => 'field_image_gallery_title',
                 'label' => 'Titre',
                 'name' => 'title',
                 'type' => 'text',
                 'required' => 0,
             ],
             [
-                'key' => 'field_gallery_description',
-                'label' => 'Description',
-                'name' => 'paragraph',
+                'key' => 'field_image_gallery_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
                 'type' => 'textarea',
                 'rows' => 2,
                 'required' => 0,
             ],
             [
-                'key' => 'field_gallery_images',
-                'label' => 'Gallery Images',
+                'key' => 'field_image_gallery_images',
+                'label' => 'Images de la galerie',
                 'name' => 'gallery_images',
                 'type' => 'repeater',
                 'instructions' => 'Ajoutez les images avec un lien optionnel.',
@@ -31,7 +31,7 @@ if (function_exists('acf_add_local_field_group')) :
                 'layout' => 'block',
                 'sub_fields' => [
                     [
-                        'key' => 'field_gallery_image',
+                        'key' => 'field_image_gallery_image',
                         'label' => 'Image',
                         'name' => 'image',
                         'type' => 'image',
@@ -40,8 +40,8 @@ if (function_exists('acf_add_local_field_group')) :
                         'required' => 1,
                     ],
                     [
-                        'key' => 'field_gallery_link',
-                        'label' => 'Lien (optionnel)',
+                        'key' => 'field_image_gallery_link',
+                        'label' => 'Lien',
                         'name' => 'link',
                         'type' => 'url',
                         'required' => 0,
@@ -55,8 +55,8 @@ if (function_exists('acf_add_local_field_group')) :
                     'param' => 'block',
                     'operator' => '==',
                     'value' => 'acf/image-gallery',
-                ]
-            ]
+                ],
+            ],
         ],
         'style' => 'default',
         'position' => 'acf_after_title',

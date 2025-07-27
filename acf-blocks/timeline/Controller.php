@@ -29,7 +29,7 @@ class Controller extends BlockFactory
         $context['fields'] = [
             'events' => $events,
             'title' => get_field('title'),
-            'paragraph' => get_field('paragraph'),
+            'subtitle' => get_field('subtitle'),
         ];
 
         $previewPath = $this->getPreviewPath();

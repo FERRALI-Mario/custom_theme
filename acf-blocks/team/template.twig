@@ -1,9 +1,9 @@
 <section class="py-8 px-4">
 	<div class="container mx-auto text-center">
-		{% if fields.title or fields.paragraph %}
+		{% if fields.title or fields.subtitle %}
 			{% include 'components/section-header.twig' with {
 				title: fields.title,
-				text: fields.paragraph
+				text: fields.subtitle
 			} %}
 		{% endif %}
 

@@ -3,8 +3,8 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_logos_carousel',
-        'title' => 'Logos Carousel Block',
+        'key' => 'logos_carousel',
+        'title' => 'Bloc carousel de Logos',
         'fields' => [
             [
                 'key' => 'field_title',
@@ -14,9 +14,9 @@ if (function_exists('acf_add_local_field_group')) :
                 'required' => 1,
             ],
             [
-                'key' => 'field_text',
-                'label' => 'Texte',
-                'name' => 'paragraph',
+                'key' => 'field_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
                 'type' => 'textarea',
                 'rows' => 4,
                 'required' => 0,
@@ -39,14 +39,14 @@ if (function_exists('acf_add_local_field_group')) :
                     ],
                     [
                         'key' => 'field_logo_url',
-                        'label' => 'URL du logo (optionnel)',
+                        'label' => 'URL du logo',
                         'name' => 'logo_url',
                         'type' => 'url',
                         'required' => 0,
                     ],
                 ],
-                'min' => 1, // Au moins un logo
-                'max' => 10, // Maximum 10 logos
+                'min' => 1,
+                'max' => 10,
             ],
         ],
         'location' => [

@@ -1,9 +1,9 @@
 <section class="py-12 px-4">
 	<div class="container mx-auto max-w-3xl">
-		{% if fields.contact_form_title or fields.contact_form_text %}
+		{% if fields.title or fields.subtitle %}
 			{% include 'components/section-header.twig' with {
-				title: fields.contact_form_title,
-				text: fields.contact_form_text
+				title: fields.title,
+				text: fields.subtitle
 			} %}
 		{% endif %}
 
@@ -11,11 +11,11 @@
 			<div class="grid gap-8 text-center grid-cols-[repeat(auto-fit,minmax(160px,1fr))]">
 				{% for item in fields.contact_items %}
 					{% set icon_class = {
-            'adresse': 'fa-map-marker-alt',
-            'telephone': 'fa-phone',
-            'email': 'fa-envelope',
-            'horaire': 'fa-clock'
-          }[item.type] %}
+						'adresse': 'fa-map-marker-alt',
+						'telephone': 'fa-phone',
+						'email': 'fa-envelope',
+						'horaire': 'fa-clock'
+					}[item.type] %}
 
 					{% set label = item.type|capitalize %}
 					{% set value = item.value %}

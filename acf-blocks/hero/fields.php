@@ -3,27 +3,27 @@
 if (!function_exists('acf_add_local_field_group')) return;
 
 acf_add_local_field_group([
-    'key' => 'group_hero_fields',
-    'title' => 'Bloc Hero',
+    'key' => 'hero',
+    'title' => 'Block Hero',
     'fields' => [
         [
             'key' => 'field_hero_title',
             'label' => 'Titre',
-            'name' => 'hero_title',
+            'name' => 'title',
             'type' => 'text',
             'required' => 1,
         ],
         [
             'key' => 'field_hero_subtitle',
             'label' => 'Sous-titre',
-            'name' => 'hero_subtitle',
+            'name' => 'subtitle',
             'type' => 'textarea',
             'rows' => 3,
         ],
         [
             'key' => 'field_hero_background',
             'label' => 'Image de fond',
-            'name' => 'hero_background',
+            'name' => 'background',
             'type' => 'image',
             'return_format' => 'array',
             'preview_size' => 'medium',
@@ -31,21 +31,21 @@ acf_add_local_field_group([
         [
             'key' => 'field_hero_cta_text',
             'label' => 'Texte du bouton',
-            'name' => 'hero_cta_text',
+            'name' => 'cta_text',
             'type' => 'text',
             'required' => 1,
         ],
         [
             'key' => 'field_hero_cta_url',
             'label' => 'URL du bouton',
-            'name' => 'hero_cta_url',
+            'name' => 'cta_url',
             'type' => 'url',
             'required' => 1,
         ],
         [
-            'key' => 'field_hero_second_image',
-            'label' => 'Seconde image',
-            'name' => 'hero_second_image',
+            'key' => 'field_hero_image',
+            'label' => 'Image',
+            'name' => 'image',
             'type' => 'image',
             'return_format' => 'array',
             'preview_size' => 'medium',

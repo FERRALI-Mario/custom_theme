@@ -3,8 +3,8 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_video_section',
-        'title' => 'Video Section Block',
+        'key' => 'video_section',
+        'title' => 'Bloc section vidéo',
         'fields' => [
             [
                 'key' => 'field_video_section_title',
@@ -14,17 +14,17 @@ if (function_exists('acf_add_local_field_group')) :
                 'required' => 1,
             ],
             [
-                'key' => 'field_video_section_description',
-                'label' => 'Description',
-                'name' => 'paragraph',
+                'key' => 'field_video_section_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
                 'type' => 'textarea',
                 'required' => 0,
                 'rows' => 4,
             ],
             [
-                'key' => 'field_video_video_url',
+                'key' => 'field_video_url',
                 'label' => 'URL de la vidéo',
-                'name' => 'video_video_url',
+                'name' => 'video_url',
                 'type' => 'url',
                 'required' => 1,
             ],

@@ -1,16 +1,16 @@
 <section class="intro-text-block max-w-3xl mx-auto py-8 px-4">
-	<div class="text-{{ fields.alignment }}">
+    <div class="text-{{ fields.alignment }}">
 
-		{% if fields.title %}
-			<h2 class="text-3xl font-bold mb-4">
-				{{ fields.title }}
-			</h2>
-		{% endif %}
+        {% if fields.title %}
+            <h2 class="text-3xl font-bold mb-4">
+                {{ fields.title }}
+            </h2>
+        {% endif %}
 
-		{% if fields.paragraph %}
-			<p class="text-gray-800 mb-10">
-				{{ fields.paragraph }}
-			</p>
-		{% endif %}
-	</div>
+        {% if fields.paragraph %}
+            <p class="text-gray-800">
+                {{ fields.paragraph }}
+            </p>
+        {% endif %}
+    </div>
 </section>

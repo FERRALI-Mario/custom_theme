@@ -3,22 +3,22 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_timeline',
-        'title' => 'Timeline',
+        'key' => 'timeline',
+        'title' => 'Frise chronologique',
         'fields' => [
             [
                 'key' => 'field_title',
-                'label' => 'Titre principal',
+                'label' => 'Titre',
                 'name' => 'title',
                 'type' => 'text',
-                'instructions' => 'Titre affiché au-dessus de la roadmap',
+                'instructions' => 'Titre affiché au-dessus de la frise chronologique',
                 'required' => 0,
                 'wrapper' => ['width' => '100'],
             ],
             [
-                'key' => 'field_description',
-                'label' => 'Description',
-                'name' => 'paragraph',
+                'key' => 'field_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
                 'type' => 'textarea',
                 'instructions' => 'Description optionnelle affichée sous le titre',
                 'rows' => 2,
@@ -26,30 +26,30 @@ if (function_exists('acf_add_local_field_group')) :
             ],
             [
                 'key' => 'field_events',
-                'label' => 'Events',
+                'label' => 'Événements',
                 'name' => 'events',
                 'type' => 'repeater',
-                'button_label' => 'Add Event',
+                'button_label' => 'Ajouter un événement',
                 'min' => 1,
                 'max' => 10,
                 'sub_fields' => [
                     [
                         'key' => 'field_year',
-                        'label' => 'Year',
+                        'label' => 'Année',
                         'name' => 'year',
                         'type' => 'number',
                         'required' => 1,
                     ],
                     [
                         'key' => 'field_event_title',
-                        'label' => 'Title',
+                        'label' => 'Titre de l\'événement',
                         'name' => 'event_title',
                         'type' => 'text',
                         'required' => 1,
                     ],
                     [
                         'key' => 'field_event_description',
-                        'label' => 'Description',
+                        'label' => 'Description de l\'événement',
                         'name' => 'event_description',
                         'type' => 'textarea',
                         'required' => 0,

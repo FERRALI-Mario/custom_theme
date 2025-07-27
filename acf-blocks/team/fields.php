@@ -3,8 +3,8 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_team',
-        'title' => 'Team Block',
+        'key' => 'team',
+        'title' => 'Bloc équipe',
         'fields' => [
             [
                 'key' => 'field_team_title',
@@ -16,7 +16,7 @@ if (function_exists('acf_add_local_field_group')) :
             [
                 'key' => 'field_team_subtitle',
                 'label' => 'Sous-titre',
-                'name' => 'paragraph',
+                'name' => 'subtitle',
                 'type' => 'textarea',
                 'rows' => 3,
                 'required' => 0,
@@ -59,7 +59,7 @@ if (function_exists('acf_add_local_field_group')) :
                     ],
                 ],
                 'min' => 1,
-                'max' => 6, // Limiter à 6 membres
+                'max' => 6,
             ],
         ],
         'location' => [

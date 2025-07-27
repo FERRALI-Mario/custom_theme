@@ -3,8 +3,8 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_intro_text',
-        'title' => 'Intro Text Block',
+        'key' => 'intro_text',
+        'title' => 'Block Texte d\introduction',
         'fields' => [
             [
                 'key' => 'field_intro_text_title',
@@ -15,7 +15,7 @@ if (function_exists('acf_add_local_field_group')) :
             ],
             [
                 'key' => 'field_intro_text_paragraph',
-                'label' => 'Paragraphe',
+                'label' => 'paragraph',
                 'name' => 'paragraph',
                 'type' => 'textarea',
                 'rows' => 4,
@@ -28,7 +28,7 @@ if (function_exists('acf_add_local_field_group')) :
                 'type' => 'select',
                 'choices' => [
                     'left' => 'Gauche',
-                    'center' => 'Centre',
+                    'center' => 'Milieu',
                     'right' => 'Droite',
                 ],
                 'default_value' => 'left',

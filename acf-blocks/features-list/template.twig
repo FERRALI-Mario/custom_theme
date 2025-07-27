@@ -2,14 +2,13 @@
 	<div class="container mx-auto text-center">
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 			{% for feature in fields.features_list %}
-				<div
-					class="feature-item text-center">
+				<div class="feature-item text-center">
 					{# Affichage de l'icône, avec une taille plus grande #}
-					{% if feature.feature_icon %}
-						<img src="{{ feature.feature_icon }}" alt="{{ feature.feature_title }}" class="max-w-96 sm:max-w-full mx-auto mb-4">
+					{% if feature.icon %}
+						<img src="{{ feature.icon }}" alt="{{ feature.title }}" class="max-w-96 sm:max-w-full mx-auto mb-4">
 					{% endif %}
-					<h3 class="text-xl font-bold mb-4">{{ feature.feature_title }}</h3>
-					<p class="text-gray-800">{{ feature.feature_description }}</p>
+					<h3 class="text-xl font-bold mb-4">{{ feature.title }}</h3>
+					<p class="text-gray-800">{{ feature.description }}</p>
 				</div>
 			{% endfor %}
 		</div>

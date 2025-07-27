@@ -3,12 +3,12 @@
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group([
-        'key' => 'group_faq',
-        'title' => 'Bloc FAQ',
+        'key' => 'faq',
+        'title' => 'Block FAQ',
         'fields' => [
             [
                 'key' => 'field_faq_title',
-                'label' => 'Titre principal',
+                'label' => 'Titre',
                 'name' => 'title',
                 'type' => 'text',
                 'instructions' => 'Titre affiché au-dessus de la FAQ',
@@ -16,18 +16,18 @@ if (function_exists('acf_add_local_field_group')) :
                 'wrapper' => ['width' => '100'],
             ],
             [
-                'key' => 'field_faq_description',
-                'label' => 'Description',
-                'name' => 'paragraph',
+                'key' => 'field_faq_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
                 'type' => 'textarea',
-                'instructions' => 'Description optionnelle affichée sous le titre',
+                'instructions' => 'Sous-titre optionnel affiché sous le titre',
                 'rows' => 2,
                 'wrapper' => ['width' => '100'],
             ],
             [
                 'key' => 'field_faq_entries',
-                'label' => 'Questions et Réponses',
-                'name' => 'faq_entries',
+                'label' => 'Questions et réponses',
+                'name' => 'entries',
                 'type' => 'repeater',
                 'button_label' => 'Ajouter une question',
                 'min' => 1,
