@@ -13,12 +13,17 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Contact Infos';
+        return 'Informations de contact';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche les informations de contact (adresse, email, téléphone, horaire)';
+        return 'Affiche les coordonnées de l’entreprise : adresse, téléphone, email, horaires, etc.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'contact';
     }
 
     public function getKeywords(): array
@@ -28,6 +33,6 @@ class Controller extends BlockFactory
 
     public function getIcon(): string
     {
-        return 'email';
+        return 'id';
     }
 }

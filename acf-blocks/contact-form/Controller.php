@@ -24,18 +24,29 @@ class Controller extends BlockFactory
         $context['fields'] = $fields;
         $context['block'] = $block;
 
+        if ($this->isPreview($block) && $previewPath) :
+            $previewUrl = get_template_directory_uri() . '/' . $previewPath;
+            echo '<img src="' . esc_url($previewUrl) . '" style="width:100%;height:auto;" alt="Aperçu du bloc" />';
+            return;
+        endif;
+
         Timber::render($this->getTemplatePath(), $context);
     }
 
 
     public function getTitle(): string
     {
-        return 'Contact Form';
+        return 'Formulaire de contact';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche un formulaire de contact intégré via un shortcode.';
+        return 'Permet d’ajouter un formulaire personnalisable pour que les visiteurs puissent te contacter facilement.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'contact';
     }
 
     public function getKeywords(): array

@@ -8,38 +8,31 @@ class Controller extends BlockFactory
 {
     public function __construct()
     {
-        parent::__construct('features-list'); // Enregistrement du bloc 'features-list'
+        parent::__construct('features-list');
     }
 
-    /**
-     * Récupère le titre du bloc
-     */
     public function getTitle(): string
     {
-        return 'Liste de Fonctionnalités'; // Nom du bloc
+        return 'Liste de fonctionnalités';
     }
 
-    /**
-     * Récupère la description du bloc
-     */
     public function getDescription(): string
     {
-        return 'Bloc pour afficher une liste de fonctionnalités ou d\'avantages';
+        return 'Présente une liste de points forts, services ou caractéristiques de manière visuelle et structurée.';
     }
 
-    /**
-     * Récupère les mots-clés du bloc
-     */
+    public function getCategory(): string
+    {
+        return 'mise-en-avant';
+    }
+
     public function getKeywords(): array
     {
         return ['fonctionnalités', 'avantages', 'liste'];
     }
 
-    /**
-     * Récupère l'icône du bloc
-     */
     public function getIcon(): string
     {
-        return 'list-alt'; // Icône de liste
+        return 'media-document';
     }
 }

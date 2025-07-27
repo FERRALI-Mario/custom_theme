@@ -26,17 +26,30 @@ class Controller extends BlockFactory
         $duration = max(8, ceil(($count / 5) * 13)); // min 8s pour éviter que ça freeze
         $context['marquee_duration'] = $duration;
 
+        $previewPath = $this->getPreviewPath();
+
+        if ($this->isPreview($block) && $previewPath) :
+            $previewUrl = get_template_directory_uri() . '/' . $previewPath;
+            echo '<img src="' . esc_url($previewUrl) . '" style="width:100%;height:auto;" alt="Aperçu du bloc" />';
+            return;
+        endif;
+
         Timber::render($this->getTemplatePath(), $context);
     }
 
     public function getTitle(): string
     {
-        return 'Testimonials';
+        return 'Témoignages clients';
     }
 
     public function getDescription(): string
     {
-        return 'Carrousel horizontal de témoignages clients.';
+        return 'Montre les retours ou avis de clients pour renforcer la confiance.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'relations';
     }
 
     public function getKeywords(): array

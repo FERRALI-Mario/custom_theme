@@ -13,16 +13,26 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Map';
+        return 'Carte interactive';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche une carte interactive avec un marqueur basé sur une latitude et une longitude';
+        return 'Intègre une carte Google Maps pour indiquer ton emplacement ou plusieurs points géographiques.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'contact';
     }
 
     public function getKeywords(): array
     {
         return ['map', 'carte', 'localisation'];
+    }
+
+    public function getIcon(): string
+    {
+        return 'location-alt';
     }
 }

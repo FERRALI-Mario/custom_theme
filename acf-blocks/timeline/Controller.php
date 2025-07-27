@@ -32,22 +32,40 @@ class Controller extends BlockFactory
             'description' => get_field('description'),
         ];
 
+        $previewPath = $this->getPreviewPath();
+
+        if ($this->isPreview($block) && $previewPath) :
+            $previewUrl = get_template_directory_uri() . '/' . $previewPath;
+            echo '<img src="' . esc_url($previewUrl) . '" style="width:100%;height:auto;" alt="Aperçu du bloc" />';
+            return;
+        endif;
+
         Timber::render($this->getTemplatePath(), $context);
     }
 
 
     public function getTitle(): string
     {
-        return 'Timeline';
+        return 'Frise chronologique';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche une chronologie avec des événements et des descriptions.';
+        return 'Affiche une chronologie d\’événements, d\'étapes d\’un projet ou de l\’histoire de l\’entreprise.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'mise-en-avant';
     }
 
     public function getKeywords(): array
     {
         return ['timeline', 'events', 'chronology'];
+    }
+
+    public function getIcon(): string
+    {
+        return 'schedule';
     }
 }

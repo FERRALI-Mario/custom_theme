@@ -12,9 +12,6 @@ class Controller extends BlockFactory
         parent::__construct('logos-carousel');
     }
 
-    /**
-     * Injection de la durée du carousel en fonction du nombre de logos
-     */
     public function render(array $block): void
     {
         $context = Timber::context();
@@ -25,39 +22,39 @@ class Controller extends BlockFactory
         $count = count($logos);
         $context['marquee_duration'] = $duration = max(8, ceil(($count / 5) * 13));
 
+        $previewPath = $this->getPreviewPath();
+
+        if ($this->isPreview($block) && $previewPath) :
+            $previewUrl = get_template_directory_uri() . '/' . $previewPath;
+            echo '<img src="' . esc_url($previewUrl) . '" style="width:100%;height:auto;" alt="Aperçu du bloc" />';
+            return;
+        endif;
+
         Timber::render($this->getTemplatePath(), $context);
     }
 
-
-    /**
-     * Récupère le titre du bloc
-     */
     public function getTitle(): string
     {
-        return 'Logos Carousel'; // Titre du bloc
+        return 'Carrousel de logos';
     }
 
-    /**
-     * Récupère la description du bloc
-     */
     public function getDescription(): string
     {
-        return 'Un carrousel horizontal des logos partenaires/clients.';
+        return 'Affiche les logos de partenaires, clients ou certifications sous forme de slider.';
     }
 
-    /**
-     * Récupère les mots-clés du bloc
-     */
+    public function getCategory(): string
+    {
+        return 'relations';
+    }
+
     public function getKeywords(): array
     {
         return ['logos', 'carrousel', 'clients', 'partenaires'];
     }
 
-    /**
-     * Récupère l'icône du bloc
-     */
     public function getIcon(): string
     {
-        return 'images-alt2'; // Icône pour le bloc
+        return 'slides'; 
     }
 }

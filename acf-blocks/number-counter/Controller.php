@@ -13,21 +13,26 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Number Counter';
+        return 'Compteur de chiffres';
     }
 
     public function getDescription(): string
     {
-        return 'Un bloc avec des compteurs animés.';
+        return 'Affiche des statistiques dynamiques comme le nombre de clients, projets ou années d’expérience.';
     }
 
     public function getCategory(): string
     {
-        return 'widgets';
+        return 'mise-en-avant';
     }
 
     public function getKeywords(): array
     {
         return ['counter', 'number', 'statistic', 'animated'];
+    }
+
+    public function getIcon(): string
+    {
+        return 'chart-bar';
     }
 }

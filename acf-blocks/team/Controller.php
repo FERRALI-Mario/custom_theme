@@ -11,23 +11,19 @@ class Controller extends BlockFactory
         parent::__construct('team');
     }
 
-    /**
-     * Retourne les champs ACF.
-     */
-    public function getFields(): array
-    {
-        return function_exists('get_fields') ? get_fields() ?: [] : [];
-    }
-
-    // Méthodes de base pour le bloc
     public function getTitle(): string
     {
-        return 'Team';
+        return 'Équipe';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche une grille des membres de l\'équipe.';
+        return 'Présente les membres de ton équipe avec photo, nom, poste et description.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'relations';
     }
 
     public function getKeywords(): array

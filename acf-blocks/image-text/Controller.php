@@ -13,16 +13,26 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Image and Text';
+        return 'Image et texte';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche une image et du texte avec une disposition personnalisée.';
+        return 'Bloc combiné pour afficher une image avec du texte associé, parfait pour raconter une histoire ou présenter un service.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'contenu';
     }
 
     public function getKeywords(): array
     {
         return ['image', 'text', 'layout'];
+    }
+
+    public function getIcon(): string
+    {
+        return 'format-image';
     }
 }

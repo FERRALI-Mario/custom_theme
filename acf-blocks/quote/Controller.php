@@ -13,12 +13,17 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Quote';
+        return 'Citation';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche une citation avec l\'auteur.';
+        return 'Met en avant une citation, un avis client ou une phrase inspirante.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'mise-en-avant';
     }
 
     public function getKeywords(): array

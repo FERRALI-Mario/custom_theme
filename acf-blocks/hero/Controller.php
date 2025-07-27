@@ -13,12 +13,17 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Hero';
+        return 'Bannière d\'accueil (Hero)';
     }
 
     public function getDescription(): string
     {
-        return 'Bloc Hero avec image de fond, titre et sous-titre';
+        return 'Un grand visuel accrocheur avec titre et sous-titre pour accueillir les visiteurs sur une page.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'contenu';
     }
 
     public function getKeywords(): array

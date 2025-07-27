@@ -13,16 +13,26 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'FAQ';
+        return 'FAQ (Foire aux questions)';
     }
 
     public function getDescription(): string
     {
-        return 'Bloc FAQ avec accordéon pour afficher des questions et réponses';
+        return 'Liste de questions/réponses fréquentes pour rassurer ou informer tes visiteurs.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'contact';
     }
 
     public function getKeywords(): array
     {
         return ['faq', 'accordéon', 'questions'];
+    }
+
+    public function getIcon(): string
+    {
+        return 'editor-help';
     }
 }

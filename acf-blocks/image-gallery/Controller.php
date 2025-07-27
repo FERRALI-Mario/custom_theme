@@ -13,17 +13,22 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Image Gallery';
+        return 'Galerie \'images';
     }
 
     public function getDescription(): string
     {
-        return 'Affiche une galerie d’images responsive.';
+        return 'Affiche une grille ou un carrousel d\’images pour mettre en valeur des photos de produits, de projets ou d\'événements.';
     }
 
     public function getKeywords(): array
     {
         return ['gallery', 'images', 'photos'];
+    }
+    
+    public function getCategory(): string
+    {
+        return 'contenu';
     }
 
     public function getIcon(): string

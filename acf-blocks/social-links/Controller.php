@@ -13,16 +13,26 @@ class Controller extends BlockFactory
 
     public function getTitle(): string
     {
-        return 'Social Links';
+        return 'Liens sociaux';
     }
     
     public function getDescription(): string
     {
-        return 'Un bloc affichant des liens vers les réseaux sociaux avec des icônes';
+        return 'Affiche les icônes/liens vers tes réseaux sociaux.';
+    }
+
+    public function getCategory(): string
+    {
+        return 'contact';
     }
 
     public function getKeywords(): array
     {
         return ['social', 'links', 'social-media'];
+    }
+
+    public function getIcon(): string
+    {
+        return 'share';
     }
 }

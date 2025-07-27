@@ -11,35 +11,28 @@ class Controller extends BlockFactory
         parent::__construct('video-section');
     }
 
-    /**
-     * Récupère le titre du bloc
-     */
     public function getTitle(): string
     {
-        return 'Video Section';
+        return 'Section vidéo';
     }
 
-    /**
-     * Récupère la description du bloc
-     */
     public function getDescription(): string
     {
-        return 'Bloc vidéo avec titre, description et vidéo intégrée.';
+        return 'Intègre une vidéo YouTube, Vimeo ou un fichier local avec titre et description.';
     }
 
-    /**
-     * Récupère les mots-clés du bloc
-     */
+    public function getCategory(): string
+    {
+        return 'contenu';
+    }
+
     public function getKeywords(): array
     {
         return ['video', 'section', 'embed'];
     }
 
-    /**
-     * Récupère l'icône du bloc
-     */
     public function getIcon(): string
     {
-        return 'video';  // Icône liée à la vidéo
+        return 'format-video';
     }
 }
