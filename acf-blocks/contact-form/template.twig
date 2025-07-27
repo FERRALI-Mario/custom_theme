@@ -1,16 +1,16 @@
 <section class="py-8 px-4">
-    <div class="container mx-auto text-center">
-        {% if fields.contact_form_title %}
-            <h2 class="text-3xl font-bold mb-4">{{ fields.contact_form_title }}</h2>
-        {% endif %}
-        {% if fields.contact_form_text %}
-            <p class="max-w-xl mx-auto text-gray-800 mb-10">{{ fields.contact_form_text }}</p>
-        {% endif %}
+	<div class="container mx-auto text-center">
+		{% if fields.title or fields.paragraph %}
+			{% include 'components/section-header.twig' with {
+				title: fields.title,
+				text: fields.paragraph
+			} %}
+		{% endif %}
 
-        {% if fields.contact_form_shortcode %}
-            <div class="contact-form-shortcode">
-                {{ fields.contact_form_rendered|raw }}
-            </div>
-        {% endif %}
-    </div>
+		{% if fields.contact_form_shortcode %}
+			<div class="contact-form-shortcode">
+				{{ fields.contact_form_rendered|raw }}
+			</div>
+		{% endif %}
+	</div>
 </section>

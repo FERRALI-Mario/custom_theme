@@ -1,43 +1,29 @@
 <section class="py-8 px-4">
-  <div class="container mx-auto max-w-4xl">
-    <div class="text-center mb-10">
-      {% if fields.faq_title %}
-        <h2 class="text-3xl font-bold mb-4">{{ fields.faq_title }}</h2>
-      {% endif %}
-      {% if fields.faq_description %}
-        <p class="max-w-xl mx-auto text-gray-800">{{ fields.faq_description }}</p>
-      {% endif %}
-    </div>
+	<div class="container mx-auto max-w-4xl">
+		{% if fields.title or fields.paragraph %}
+			{% include 'components/section-header.twig' with {
+				title: fields.title,
+				text: fields.paragraph
+			} %}
+		{% endif %}
 
-    <div class="space-y-4" data-faq>
-      {% for faq in fields.faq_entries %}
-        <div class="faq-item bg-gray-50 border border-white/10 text-black rounded-xl px-4 transition-all duration-200 shadow hover:bg-gray-100" data-faq-item>
-          <button
-            type="button"
-            class="faq-toggle flex w-full items-center justify-between py-4 font-medium transition"
-            aria-expanded="false"
-            aria-controls="faq-answer-{{ loop.index }}"
-            data-faq-trigger
-          >
-            <span>{{ faq.question }}</span>
-            <svg class="h-5 w-5 text-black transition-transform duration-300 rotate-0" fill="none" stroke="currentColor" stroke-width="2"
-              viewBox="0 0 24 24">
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </button>
+		<div class="space-y-4" data-faq>
+			{% for faq in fields.faq_entries %}
+				<div class="faq-item bg-gray-50 border border-white/10 text-black rounded-xl px-4 transition-all duration-200 shadow hover:bg-gray-100" data-faq-item>
+					<button type="button" class="faq-toggle flex w-full items-center justify-between py-4 font-medium transition" aria-expanded="false" aria-controls="faq-answer-{{ loop.index }}" data-faq-trigger>
+						<span>{{ faq.question }}</span>
+						<svg class="h-5 w-5 text-black transition-transform duration-300 rotate-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+							<path d="M6 9l6 6 6-6"/>
+						</svg>
+					</button>
 
-          <div
-            id="faq-answer-{{ loop.index }}"
-            class="faq-answer max-h-0 overflow-hidden transition-all duration-300 text-sm text-black"
-            aria-hidden="true"
-            data-faq-content
-          >
-            <div class="pb-4 pt-0">
-              {{ faq.answer }}
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
+					<div id="faq-answer-{{ loop.index }}" class="faq-answer max-h-0 overflow-hidden transition-all duration-300 text-sm text-black" aria-hidden="true" data-faq-content>
+						<div class="pb-4 pt-0">
+							{{ faq.answer }}
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
 </section>

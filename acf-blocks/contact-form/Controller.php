@@ -24,6 +24,8 @@ class Controller extends BlockFactory
         $context['fields'] = $fields;
         $context['block'] = $block;
 
+        $previewPath = $this->getPreviewPath();
+
         if ($this->isPreview($block) && $previewPath) :
             $previewUrl = get_template_directory_uri() . '/' . $previewPath;
             echo '<img src="' . esc_url($previewUrl) . '" style="width:100%;height:auto;" alt="Aperçu du bloc" />';

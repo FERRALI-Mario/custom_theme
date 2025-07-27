@@ -1,32 +1,29 @@
 <section class="py-8 px-4">
-    <div class="container mx-auto text-center">
-        {% if fields.team_title %}
-            <h2 class="text-3xl font-bold mb-4">{{ fields.team_title }}</h2>
-        {% endif %}
+	<div class="container mx-auto text-center">
+		{% if fields.title or fields.paragraph %}
+			{% include 'components/section-header.twig' with {
+				title: fields.title,
+				text: fields.paragraph
+			} %}
+		{% endif %}
 
-        {% if fields.team_subtitle %}
-            <p class="max-w-xl mx-auto text-gray-800 mb-10">{{ fields.team_subtitle }}</p>
-        {% endif %}
+		<div class="flex flex-wrap justify-center gap-6">
+			{% for member in fields.team_members %}
+				<div class="bg-white shadow-lg rounded-lg p-6 text-center">
+					{% if member.member_photo %}
+						{% if member.member_linkedin %}
+							<a href="{{ member.member_linkedin }}" target="_blank" rel="noopener noreferrer" class="inline-block">
+								<img src="{{ member.member_photo.url }}" alt="{{ member.member_name }}" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover transition-transform hover:scale-105">
+							</a>
+						{% else %}
+							<img src="{{ member.member_photo.url }}" alt="{{ member.member_name }}" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+						{% endif %}
+					{% endif %}
 
-        <div class="flex flex-wrap justify-center gap-6">
-        {% for member in fields.team_members %}
-            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
-                {% if member.member_photo %}
-                    {% if member.member_linkedin %}
-                        <a href="{{ member.member_linkedin }}" target="_blank" rel="noopener noreferrer" class="inline-block">
-                            <img src="{{ member.member_photo.url }}" alt="{{ member.member_name }}"
-                                class="w-24 h-24 rounded-full mx-auto mb-4 object-cover transition-transform hover:scale-105">
-                        </a>
-                    {% else %}
-                        <img src="{{ member.member_photo.url }}" alt="{{ member.member_name }}"
-                            class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    {% endif %}
-                {% endif %}
-
-                <h3 class="text-xl font-semibold mb-1">{{ member.member_name }}</h3>
-                <p class="text-sm text-gray-500">{{ member.member_role }}</p>
-            </div>
-          {% endfor %}
-        </div>
-    </div>
+					<h3 class="text-xl font-semibold mb-1">{{ member.member_name }}</h3>
+					<p class="text-sm text-gray-500">{{ member.member_role }}</p>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
 </section>

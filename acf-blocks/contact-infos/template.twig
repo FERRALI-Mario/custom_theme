@@ -1,48 +1,45 @@
 <section class="py-12 px-4">
-  <div class="container mx-auto max-w-3xl">
-    <div class="mx-auto max-w-xl text-center">
-      {% if fields.contact_form_title %}
-        <h2 class="text-3xl font-bold mb-4">{{ fields.contact_form_title }}</h2>
-      {% endif %}
+	<div class="container mx-auto max-w-3xl">
+		{% if fields.contact_form_title or fields.contact_form_text %}
+			{% include 'components/section-header.twig' with {
+				title: fields.contact_form_title,
+				text: fields.contact_form_text
+			} %}
+		{% endif %}
 
-      {% if fields.contact_form_text %}
-        <p class="text-gray-800 mb-10">{{ fields.contact_form_text }}</p>
-      {% endif %}
-    </div>
-
-    {% if fields.contact_items %}
-      <div class="grid gap-8 text-center grid-cols-[repeat(auto-fit,minmax(160px,1fr))]">
-        {% for item in fields.contact_items %}
-          {% set icon_class = {
+		{% if fields.contact_items %}
+			<div class="grid gap-8 text-center grid-cols-[repeat(auto-fit,minmax(160px,1fr))]">
+				{% for item in fields.contact_items %}
+					{% set icon_class = {
             'adresse': 'fa-map-marker-alt',
             'telephone': 'fa-phone',
             'email': 'fa-envelope',
             'horaire': 'fa-clock'
           }[item.type] %}
 
-          {% set label = item.type|capitalize %}
-          {% set value = item.value %}
-          {% set link = '' %}
+					{% set label = item.type|capitalize %}
+					{% set value = item.value %}
+					{% set link = '' %}
 
-          {% if item.type == 'telephone' %}
-            {% set link = 'tel:' ~ value %}
-          {% elseif item.type == 'email' %}
-            {% set link = 'mailto:' ~ value %}
-          {% elseif item.type == 'adresse' %}
-            {% set link = 'https://maps.google.com/?q=' ~ value|url_encode %}
-          {% endif %}
+					{% if item.type == 'telephone' %}
+						{% set link = 'tel:' ~ value %}
+					{% elseif item.type == 'email' %}
+						{% set link = 'mailto:' ~ value %}
+					{% elseif item.type == 'adresse' %}
+						{% set link = 'https://maps.google.com/?q=' ~ value|url_encode %}
+					{% endif %}
 
-          <div class="flex flex-col items-center">
-            <i class="fas {{ icon_class }} text-primary text-2xl mb-2"></i>
-            <h5 class="text-gray-500 text-sm mb-1">{{ label }}</h5>
-            {% if link %}
-              <a href="{{ link }}" class="text-base font-medium hover:underline" target="_blank" rel="noopener">{{ value }}</a>
-            {% else %}
-              <p class="text-base font-medium">{{ value }}</p>
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  </div>
+					<div class="flex flex-col items-center">
+						<i class="fas {{ icon_class }} text-primary text-2xl mb-2"></i>
+						<h5 class="text-gray-500 text-sm mb-1">{{ label }}</h5>
+						{% if link %}
+							<a href="{{ link }}" class="text-base font-medium hover:underline" target="_blank" rel="noopener">{{ value }}</a>
+						{% else %}
+							<p class="text-base font-medium">{{ value }}</p>
+						{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
 </section>

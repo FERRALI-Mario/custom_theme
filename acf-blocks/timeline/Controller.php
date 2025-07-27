@@ -19,7 +19,7 @@ class Controller extends BlockFactory
         $events = get_field('events');
 
         if (is_array($events)) :
-            usort($events, fn ($a, $b) => $a['year'] <=> $b['year']);
+            usort($events, fn($a, $b) => $a['year'] <=> $b['year']);
         else :
             $events = [];
         endif;
@@ -29,7 +29,7 @@ class Controller extends BlockFactory
         $context['fields'] = [
             'events' => $events,
             'title' => get_field('title'),
-            'description' => get_field('description'),
+            'paragraph' => get_field('paragraph'),
         ];
 
         $previewPath = $this->getPreviewPath();
