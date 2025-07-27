@@ -45,6 +45,14 @@ abstract class BlockFactory
             'align'           => 'full',
             'supports'        => $this->getSupports(),
             'render_callback' => [$this, 'render'],
+            'example'         => [
+                'attributes' => [
+                    'mode' => 'preview',
+                    'data' => [
+                        'is_example' => true,
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -56,6 +64,14 @@ abstract class BlockFactory
         $context = Timber::context();
         $context['block'] = $block;
         $context['fields'] = $this->getFields();
+
+        $previewPath = $this->getPreviewPath();
+
+        if ($this->isPreview($block) && $previewPath) :
+            $previewUrl = get_template_directory_uri() . '/' . $previewPath;
+            echo '<img src="' . esc_url($previewUrl) . '" style="width:100%;height:auto;" alt="Aperçu du bloc" />';
+            return;
+        endif;
 
         Timber::render($this->getTemplatePath(), $context);
     }
@@ -84,6 +100,26 @@ abstract class BlockFactory
     {
         return "acf-blocks/{$this->slug}/template.twig";
     }
+
+    /**
+     * Permet de savoir s'il y a bien une preview du bloc.
+     */
+    protected function isPreview(array $block): bool
+    {
+        return isset($block['data']['is_example']) && $block['data']['is_example'];
+    }
+
+    /**
+     * Permet d'afficher un aperçu pour chaque bloc.
+     */
+    protected function getPreviewPath(): ?string
+    {
+        $relative = "acf-blocks/{$this->slug}/preview.png";
+        $absolute = get_template_directory() . '/' . $relative;
+
+        return file_exists($absolute) ? $relative : null;
+    }
+
 
     public function getTitle(): string
     {

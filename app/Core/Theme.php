@@ -15,6 +15,7 @@ class Theme
         add_filter('timber/context', [Context::class, 'extend']);
 
         self::bootTimber();
+        self::registerBlockCategories();
         Blocks::register();
         Editor::register();
     }
@@ -27,7 +28,7 @@ class Theme
         add_theme_support('align-wide');
 
         register_nav_menus([
-            'main'   => 'Menu principal',
+            'primary'   => 'Menu principal',
             'footer' => 'Menu pied de page',
         ]);
     }
@@ -65,5 +66,17 @@ class Theme
             'views/layouts',
         ];
         Timber::$autoescape = false;
+    }
+
+    public static function registerBlockCategories(): void
+    {
+        add_filter('block_categories_all', function (array $categories, $editor_context) {
+            return array_merge($categories, [
+                ['slug' => 'contenu', 'title' => '🎨 Contenu'],
+                ['slug' => 'mise-en-avant', 'title' => '🧩 Mise en avant'],
+                ['slug' => 'contact', 'title' => '📇 Contact'],
+                ['slug' => 'relations', 'title' => '👥 Équipe & Témoignages'],
+            ]);
+        }, 10, 2);
     }
 }
