@@ -1,14 +1,20 @@
-<footer class="site-footer bg-gray-100 border-t mt-12">
-  <div class="container mx-auto py-8 px-6 text-center">
-    <p class="text-sm text-gray-600">&copy; {{ "now"|date("Y") }} {{ site.name }}. Tous droits réservés.</p>
-    <nav class="mt-4">
-      <ul class="flex justify-center space-x-4">
-        {% for item in footer_menu.items %}
-          <li>
-            <a href="{{ item.link }}" class="text-gray-600 hover:underline">{{ item.title }}</a>
-          </li>
-        {% endfor %}
-      </ul>
+<footer class="bg-gray-900 text-white py-8">
+  <div class="container mx-auto px-4">
+
+    {# Menu du footer #}
+    <nav class="mb-4">
+      {{ function('wp_nav_menu', {
+        theme_location: 'footer',
+        menu_class: 'flex flex-wrap gap-4 text-sm',
+        container: false,
+        echo: false
+      }) | raw }}
     </nav>
+
+    {# Texte personnalisé depuis ACF #}
+    {% if footer.text %}
+      <p class="text-xs text-gray-400">{{ footer.text }}</p>
+    {% endif %}
+
   </div>
 </footer>
