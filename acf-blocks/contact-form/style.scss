@@ -1,0 +1,48 @@
+@layer components {
+  .wpforms-form,
+  .wpforms-field-container {
+    @apply space-y-4;
+  }
+
+  .wpforms-submit-container {
+    @apply flex flex-col items-center space-y-2;
+  }
+
+  .wpforms-hidden,
+  .wpforms-submit-container img {
+    display: none !important;
+  }
+
+  em.wpforms-error {
+    @apply text-sm text-red-500;
+  }
+
+  em.wpforms-success {
+    @apply text-sm text-green-500;
+  }
+
+  .wpforms-confirmation-container {
+    @apply text-center text-gray-800;
+  }
+
+  .form-container {
+    @apply space-y-2;
+  }
+
+  .form-container label {
+    @apply text-sm font-medium block;
+  }
+
+  .form-container label span {
+    @apply text-red-500;
+  }
+
+  .form-container input,
+  .form-container textarea {
+    @apply flex w-full rounded-lg border bg-white/5 border-black/30 px-4 py-3 text-sm;
+  }
+
+  .form-container input {
+    @apply h-12;
+  }
+}
