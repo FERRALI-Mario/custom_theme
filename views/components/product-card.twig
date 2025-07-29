@@ -1,0 +1,48 @@
+<div class="relative product-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
+
+	{% if not product.in_stock %}
+		<div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">
+			Rupture de stock
+		</div>
+	{% endif %}
+
+	<a href="{{ product.link }}" class="relative block">
+		<img
+		src="{{ product.thumbnail.src }}" alt="{{ product.title }}" class="w-full h-48 object-cover {% if not product.in_stock %}brightness-50{% endif %}">
+
+	{# Alternative plus intense :
+			{% if not product.in_stock %}
+				<div class="absolute inset-0 bg-black/50"></div>
+			{% endif %}
+			#}
+	</a>
+
+	<div class="p-4">
+		<h3 class="text-lg font-semibold">{{ product.title }}</h3>
+
+		{% if product.is_on_sale and product.sale_price %}
+			<p>
+				{% if product.regular_price %}
+					<span class="line-through text-gray-400">
+						{{ product.regular_price }}
+						€
+					</span>
+				{% endif %}
+				<span class="text-red-500 font-bold ml-2">
+					{{ product.sale_price }}
+					€
+				</span>
+			</p>
+		{% elseif product.price_html %}
+			<p class="text-gray-800 font-bold">
+				{{ product.price_html | raw }}
+			</p>
+		{% else %}
+			<p class="text-gray-500 italic">Prix non disponible</p>
+		{% endif %}
+
+		<a href="{{ product.link }}" class="inline-block mt-4 bg-black text-white py-2 px-4 rounded-lg hover:bg-opacity-80 text-center">
+			Voir le produit
+		</a>
+	</div>
+</div>
