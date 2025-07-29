@@ -1,0 +1,25 @@
+<section class="py-8 px-4">
+	<div class="container mx-auto">
+		<div class="mx-auto text-center">
+			{% if fields.title %}
+				<h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
+			{% endif %}
+			{% if fields.description %}
+				<h2 class="text-lg mb-10 text-center">{{ fields.description }}</h2>
+			{% endif %}
+		</div>
+
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+			{% for product in products %}
+				{% include "components/product-card.twig" with { product: product } %}
+			{% endfor %}
+		</div>
+
+
+		{% if pagination %}
+			<div class="mt-10 text-center">
+				{{ pagination | raw }}
+			</div>
+		{% endif %}
+	</div>
+</section>
