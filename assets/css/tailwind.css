@@ -1,3 +1,6 @@
+@import "./../../acf-blocks/contact-form/style.scss";
+@import "./../../acf-blocks/product-grid/style.scss";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
