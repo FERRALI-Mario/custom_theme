@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.23.0](https://github.com/FERRALI-Mario/custom_theme/compare/v1.22.1...v1.23.0) (2025-07-29)
+
+
+### Features
+
+* ajout de l'aperçu contact-form et composant product-card ([58aad8a](https://github.com/FERRALI-Mario/custom_theme/commit/58aad8a69025571821c687c1b2752c382cc41359))
+
+
+### Bug Fixes
+
+* mise à jour des templates contact-form et logos-carousel ([57aef6d](https://github.com/FERRALI-Mario/custom_theme/commit/57aef6d3f88c0d974716a4f9aa4f1cf9b307bf81))
+
 ### [1.22.1](https://github.com/FERRALI-Mario/custom_theme/compare/v1.22.0...v1.22.1) (2025-07-27)
 
 ## 1.22.0 (2025-07-27)
