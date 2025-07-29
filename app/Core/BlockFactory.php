@@ -81,7 +81,7 @@ abstract class BlockFactory
      */
     protected function getFields(): array
     {
-        return function_exists('get_fields') ? get_fields() ?: [] : [];
+        return function_exists('get_fields') ? (get_fields() ?: []) : [];
     }
 
     /**

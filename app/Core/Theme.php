@@ -65,18 +65,20 @@ class Theme
             'views/partials',
             'views/layouts',
         ];
-        Timber::$autoescape = false;
     }
 
     public static function registerBlockCategories(): void
     {
         add_filter('block_categories_all', function (array $categories, $editor_context) {
-            return array_merge($categories, [
+            $new_categories = [
                 ['slug' => 'contenu', 'title' => '🎨 Contenu'],
+                ['slug' => 'woocommerce', 'title' => '🛒 WooCommerce'],
                 ['slug' => 'mise-en-avant', 'title' => '🧩 Mise en avant'],
                 ['slug' => 'contact', 'title' => '📇 Contact'],
                 ['slug' => 'relations', 'title' => '👥 Équipe & Témoignages'],
-            ]);
+            ];
+
+            return array_merge($new_categories, $categories);
         }, 10, 2);
     }
 }
