@@ -1,0 +1,7 @@
+{% if fields.enabled and breadcrumb is not empty %}
+	<section class="p-4">
+		<div class="container mx-auto">
+			{% include 'components/breadcrumb.twig' with {breadcrumb: breadcrumb,} %}
+		</div>
+	</section>
+{% endif %}

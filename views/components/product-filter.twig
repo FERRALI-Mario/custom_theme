@@ -1,0 +1,89 @@
+{% if filter_component %}
+	<div id="pg-filters-overlay" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+		<div class="absolute inset-0 bg-black/40"></div>
+
+		<div class="relative h-full w-full flex items-start justify-center p-4">
+			<div class="mt-10 w-full max-w-sm rounded-2xl bg-white shadow-xl">
+				<div class="flex items-center justify-between px-6 py-4 border-b">
+					<h3 class="text-lg font-semibold">Filtres</h3>
+					<button type="button" id="pg-close-filters" class="p-2 rounded hover:bg-gray-100" aria-label="Fermer">
+						<i class="fa-solid fa-xmark"></i>
+					</button>
+				</div>
+
+				<div class="max-h-[70vh] overflow-y-auto px-6 py-6">
+					<form method="get" action="" id="pg-filters-form" class="space-y-8">
+						<div>
+							<h4 class="text-sm font-medium mb-3">Catégories</h4>
+							{% set first = product_categories|slice(0,6) %}
+							{% set rest  = product_categories|slice(6) %}
+
+							<div id="pg-cats" class="flex flex-col gap-1">
+								{% for cat in first %}
+									<label class="inline-flex items-center gap-2 text-sm">
+										<input type="checkbox" name="product_category[]" value="{{ cat.id }}" class="pg-cat h-4 w-4 rounded border-gray-300" {% if cat.id in selected.categories %} checked {% endif %}>
+										<span>{{ cat.name }}</span>
+									</label>
+								{% endfor %}
+							</div>
+
+							{% if rest|length %}
+								<div id="pg-cats-more" class="mt-2 hidden">
+									<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+										{% for cat in rest %}
+											<label class="inline-flex items-center gap-2 text-sm">
+												<input type="checkbox" name="product_category[]" value="{{ cat.id }}" class="pg-cat h-4 w-4 rounded border-gray-300" {% if cat.id in selected.categories %} checked {% endif %}>
+												<span>{{ cat.name }}</span>
+											</label>
+										{% endfor %}
+									</div>
+								</div>
+								<button type="button" id="pg-toggle-cats" class="mt-2 text-sm text-gray-700 underline">Voir plus</button>
+							{% endif %}
+						</div>
+
+						{# Prix (min réel / max réel) #}
+						<div>
+							<h4 class="text-sm font-medium mb-5">Prix</h4>
+							<div class="relative">
+								<div class="absolute -top-5 left-0 text-xs font-medium" id="pg-label-min">{{ selected.price_min|default(price_bounds.min) }}</div>
+								<div class="absolute -top-5 right-0 text-xs font-medium" id="pg-label-max">{{ selected.price_max|default(price_bounds.max) }}</div>
+
+								<div class="relative h-2 rounded bg-gray-200">
+									<div id="pg-track-fill" class="absolute h-2 bg-black rounded" style="left:0;right:0;"></div>
+
+									<input id="pg-range-min" type="range" min="{{ price_bounds.min }}" max="{{ price_bounds.max }}" step="1" value="{{ selected.price_min|default(price_bounds.min) }}" class="absolute inset-0 w-full h-2 opacity-0 cursor-pointer">
+									<input id="pg-range-max" type="range" min="{{ price_bounds.min }}" max="{{ price_bounds.max }}" step="1" value="{{ selected.price_max|default(price_bounds.max) }}" class="absolute inset-0 w-full h-2 opacity-0 cursor-pointer">
+								</div>
+							</div>
+							<input type="hidden" name="price_min" id="pg-hidden-min" value="{{ selected.price_min|default(price_bounds.min) }}">
+							<input type="hidden" name="price_max" id="pg-hidden-max" value="{{ selected.price_max|default(price_bounds.max) }}">
+							<p class="text-xs text-gray-500 mt-2">Faites glisser les poignées aux extrémités de la barre.</p>
+						</div>
+
+						{# Avis : 5 étoiles cliquables #}
+						<div>
+							<h4 class="text-sm font-medium mb-3">Avis des clients</h4>
+							<div id="pg-stars" class="flex gap-1 text-2xl leading-none select-none" data-current="{{ selected.rating_min|default('') }}">
+								{% set r = selected.rating_min|default(0) %}
+								{% for i in 1..5 %}
+									<button type="button" class="pg-star" data-val="{{ i }}" aria-label="{{ i }} étoiles">
+										{% if i <= r %}★{% else %}☆
+										{% endif %}
+									</button>
+								{% endfor %}
+							</div>
+							<input type="hidden" name="rating_min" id="pg-stars-input" value="{{ selected.rating_min|default('') }}">
+							<button type="button" id="pg-stars-clear" class="mt-2 text-xs underline text-gray-600">Effacer</button>
+						</div>
+
+						<div class="pt-2 flex justify-end gap-3">
+							<button type="button" id="pg-reset" data-shop-url="{{ shop_url }}" class="px-4 py-2 text-sm rounded border hover:bg-gray-50">Réinitialiser</button>
+							<button type="submit" class="px-5 py-2 rounded-full bg-black text-white hover:bg-opacity-90">Appliquer</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}

@@ -1,11 +1,29 @@
 <section class="py-8 px-4">
 	<div class="container mx-auto">
-		<div class="mx-auto text-center">
-			{% if fields.title %}
-				<h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
-			{% endif %}
-			{% if fields.description %}
-				<h2 class="text-lg mb-10 text-center">{{ fields.description }}</h2>
+		{% if breadcrumb is defined and breadcrumb is not empty %}
+			{% include "components/breadcrumb.twig" with { breadcrumb: breadcrumb } %}
+		{% endif %}
+
+		<div class="relative mb-6">
+			<button type="button" id="pg-open-filters" class="absolute right-0 top-0 z-10 items-baseline gap-2 bg-black text-white px-4 py-2 rounded-full text-lg hover:bg-opacity-80 transition duration-300">
+				<i class="fa-solid fa-filter"></i>
+				Filtrer
+			</button>
+
+			<div class="text-left">
+				{% if fields.title %}
+					<h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
+				{% endif %}
+				{% if fields.description %}
+					<p class="text-lg mb-10">{{ fields.description }}</p>
+				{% endif %}
+			</div>
+		</div>
+
+
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+			{% if filter_component %}
+				{% include "components/product-filter.twig" with { custom_filters: custom_filters } %}
 			{% endif %}
 		</div>
 
@@ -14,7 +32,6 @@
 				{% include "components/product-card.twig" with { product: product } %}
 			{% endfor %}
 		</div>
-
 
 		{% if pagination %}
 			<div class="mt-10 text-center">
