@@ -7,14 +7,7 @@
 	{% endif %}
 
 	<a href="{{ product.link }}" class="relative block">
-		<img
-		src="{{ product.thumbnail.src }}" alt="{{ product.title }}" class="w-full h-48 object-cover {% if not product.in_stock %}brightness-50{% endif %}">
-
-	{# Alternative plus intense :
-			{% if not product.in_stock %}
-				<div class="absolute inset-0 bg-black/50"></div>
-			{% endif %}
-			#}
+		<img src="{{ product.thumbnail.src }}" alt="{{ product.title }}" class="w-full h-48 object-cover {% if product.in_stock %}hover:brightness-75{% endif %} transition duration-300 {% if not product.in_stock %}brightness-50{% endif %}">
 	</a>
 
 	<div class="p-4">

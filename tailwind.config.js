@@ -112,7 +112,6 @@ module.exports = {
     "ml-4",
     "mr-4",
     "mx-2",
-
     "page-numbers",
     "form-container",
     "wpforms-form",
