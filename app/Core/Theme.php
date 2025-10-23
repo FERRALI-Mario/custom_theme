@@ -18,6 +18,12 @@ class Theme
         self::registerBlockCategories();
         Blocks::register();
         Editor::register();
+
+        add_action('after_setup_theme', static function () {
+            if (\defined('WP_CLI') && \class_exists('\\WP_CLI') && \class_exists(\App\Console\InitCommand::class)) {
+                \App\Console\InitCommand::register();
+            }
+        }, 5);
     }
 
     public static function setup(): void

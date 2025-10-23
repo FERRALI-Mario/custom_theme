@@ -9,9 +9,15 @@
     "timber/timber": "^2.3",
     "vlucas/phpdotenv": "^5.5"
   },
+  "suggest": {
+    "woocommerce/woocommerce": "Requis pour le pack e-commerce"
+  },
   "autoload": {
     "psr-4": {
-      "App\\": "app/"
+      "App\\": "app/",
+      "Packs\\Ecommerce\\": "packs/ecommerce/",
+      "Packs\\Blog\\": "packs/blog/",
+      "Packs\\Vitrine\\": "packs/vitrine/"
     }
   },
   "scripts": {
