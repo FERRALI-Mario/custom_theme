@@ -2,14 +2,16 @@
 	<div class="container mx-auto text-center px-4">
 		{% if fields.title or fields.subtitle %}
 			{% include 'components/section-header.twig' with {
-				title: fields.title,
-				text: fields.subtitle
-			} %}
+        title: fields.title,
+        text:  fields.subtitle
+      } %}
 		{% endif %}
 
 		{% if testimonials is not empty %}
 			<div class="relative w-full overflow-hidden group">
-				<div class="flex animate-marquee w-fit gap-4 group-hover:[animation-play-state:paused]" style="animation-duration: {{ marquee_duration }}s;">
+				<div
+					class="flex animate-marquee w-fit gap-4 group-hover:[animation-play-state:paused]" style="animation-duration: {{ marquee_duration }}s;">
+					{# Deux copies consécutives de la même piste étendue #}
 					{% for i in 1..2 %}
 						{% for testimonial in testimonials %}
 							<figure class="w-64 shrink-0 inline-block rounded-xl border p-4 bg-gray-50 hover:bg-gray-100 transition-all text-left">
@@ -24,7 +26,7 @@
 										{% endif %}
 									</div>
 								</div>
-								{# Note avec étoiles #}
+
 								{% if testimonial.rating %}
 									<div class="flex gap-1 mb-2 text-yellow-500">
 										{% for i in 1..5 %}
@@ -36,6 +38,7 @@
 										{% endfor %}
 									</div>
 								{% endif %}
+
 								<blockquote class="text-sm text-gray-800 whitespace-normal">
 									{{ testimonial.testimonial_text }}
 								</blockquote>
