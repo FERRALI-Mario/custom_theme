@@ -1,29 +1,68 @@
-{% set image = fields.image %}
-{% set imagePosition = fields.image_position %}
+{# components/image-text.twig #}
+{% set image           = fields.image %}
+{% set imagePosition   = fields.image_position ?? 'right' %}
+{# 'left' | 'right' #}
+{% set title           = fields.title %}
+{% set paragraph       = fields.paragraph %}
+{% set button_text     = fields.button_text %}
+{% set button_url      = fields.button_url %}
+{% set open_in_new_tab = fields.open_in_new_tab %}
 
-<section class="py-8 px-4">
-    <div class="container mx-auto max-w-5xl flex flex-col-reverse flex-row {{ imagePosition == 'right' ? 'md:flex-row-reverse' : 'md:flex-row' }} items-center gap-8">
-        
-        <div class="image flex justify-center max-w-96 md:w-1/2 lg:max-w-none">
-            {% if image %}
-                <img src="{{ image }}" alt="Image" class="max-w-full h-auto">
-            {% endif %}
-        </div>
-        
-        <div class="text-center md:text-left max-w-xl md:w-1/2">
-            {% if fields.title %}
-                <h2 class="text-3xl font-bold mb-4">{{ fields.title }}</h2>
-            {% endif %}
-            {% if fields.paragraph %}
-                <p class="max-w-xl mb-6 text-gray-800">{{ fields.paragraph }}</p>
-            {% endif %}
-            {% if fields.button_text %}
-                {% include 'components/button.twig' with {
-                    button_text: fields.button_text,
-                    button_url: fields.button_url
-                } %}
-            {% endif %}
-        </div>
+{# ACF image: string (URL) ou array #}
+{% set imgUrl = image.url ?? image %}
+{% set imgAlt = (image.alt ?? title ?? '')|trim %}
+{% set imgId  = image.id ?? image.ID ?? null %}
+{% set imgSrcset = imgId ? function('wp_get_attachment_image_srcset', imgId, 'full') : null %}
+{# 50vw sur desktop (2 colonnes), 90vw sinon #}
+{% set imgSizes  = '(min-width: 1024px) 50vw, 90vw' %}
+{# Si la section est “au-dessus de la ligne de flottaison”, on peut forcer high. Par défaut: auto #}
+{% set fetchprio = fields.is_lcp ? 'high' : 'auto' %}
 
-    </div>
+<section class="py-12 lg:py-16">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div
+			class="grid items-center gap-10 lg:gap-16 md:grid-cols-12">
+
+			{# --- TEXTE --- #}
+			<div class="{{ imagePosition == 'right' ? 'md:col-span-6' : 'md:col-span-6 md:order-2' }}">
+				{% if title %}
+					{# Taille figée après ~md #}
+					<h2 class="text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-4xl font-bold tracking-tight text-gray-900 mb-4 sm:mb-5 lg:mb-6">
+						{{ title }}
+					</h2>
+				{% endif %}
+
+				{% if paragraph %}
+					<div class="max-w-2xl">
+						<p class="text-base sm:text-lg lg:text-xl leading-relaxed text-gray-800 mb-6 lg:mb-8">
+							{{ paragraph }}
+						</p>
+					</div>
+				{% endif %}
+
+				{% if button_text %}
+					<div class="flex justify-center md:justify-start">
+						{% include 'components/button.twig' with {
+              button_text: button_text,
+              button_url:  button_url,
+              open_in_new_tab: open_in_new_tab,
+              variant: 'outline'
+            } %}
+					</div>
+				{% endif %}
+			</div>
+
+			{# --- IMAGE --- #}
+			<div class="{{ imagePosition == 'right' ? 'md:col-span-6' : 'md:col-span-6 md:order-1' }}">
+				{% if imgUrl %}
+					<figure class="mx-auto w-full max-w-lg md:max-w-none lg:max-w-3xl">
+						<div class="relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[3/2] lg:aspect-[16/9] overflow-hidden rounded-2xl shadow-lg">
+							<img src="{{ imgUrl }}" {% if imgSrcset %} srcset="{{ imgSrcset }}" {% endif %} sizes="{{ imgSizes }}" alt="{{ imgAlt|e }}" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" fetchpriority="{{ fetchprio }}">
+						</div>
+					</figure>
+				{% endif %}
+			</div>
+
+		</div>
+	</div>
 </section>

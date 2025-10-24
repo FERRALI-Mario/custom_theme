@@ -1,3 +1,22 @@
-<a href="{{ button_url }}" class="bg-black text-white px-4 py-2 rounded-full font-bold text-lg hover:bg-opacity-80 transition duration-300" {% if open_in_new_tab %} target="_blank" {% endif %}>
-	{{ button_text }}
-</a>
+{# components/button.twig #}
+{% set href   = button_url ?? '#' %}
+{% set text   = button_text ?? 'En savoir plus' %}
+{% set newtab = open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '' %}
+{% set variant = variant ?? 'outline' %}
+
+{% if variant == 'outline' %}
+	<a href="{{ href }}" {{ newtab|raw }} class="inline-flex items-center gap-2 rounded-full border border-gray-900 px-5 py-3
+			            text-base font-semibold text-gray-900
+			            hover:bg-gray-900 hover:text-white
+			            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2
+			            transition-colors duration-200 shadow-sm">
+		{{ text }}
+	</a>
+{% else %}
+	<a href="{{ href }}" {{ newtab|raw }} class="inline-flex items-center rounded-full bg-black text-white px-5 py-3
+			            font-semibold text-base hover:bg-opacity-85
+			            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2
+			            transition-colors duration-200">
+		{{ text }}
+	</a>
+{% endif %}
