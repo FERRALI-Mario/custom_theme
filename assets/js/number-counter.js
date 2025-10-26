@@ -1,36 +1,43 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const counters = document.querySelectorAll('.number-counter-block [data-count]');
-  const speed = 100; // Plus bas = plus rapide
+(function () {
+  const prefersReduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const format = (n) => new Intl.NumberFormat().format(n);
 
-  counters.forEach(counter => {
-    const updateCount = () => {
-      const target = +counter.getAttribute('data-count');
-      const suffix = counter.textContent.replace(/[0-9]/g, '');
-      const count = +counter.innerText.replace(/\D/g, '');
+  const els = document.querySelectorAll(".number-counter-block [data-count]");
+  if (!els.length) return;
 
-      const increment = Math.ceil(target / speed);
+  const animate = (el) => {
+    const target = parseFloat(el.getAttribute("data-count")) || 0;
+    const duration = parseInt(el.getAttribute("data-duration") || 1200, 10);
 
-      if (count < target) {
-        counter.innerText = count + increment + suffix;
-        setTimeout(updateCount, 10);
-      } else {
-        counter.innerText = target + suffix;
-      }
+    if (prefersReduced) {
+      el.textContent = format(target);
+      return;
+    }
+
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / duration);
+      const val = Math.round(easeOutCubic(p) * target);
+      el.textContent = format(val);
+      if (p < 1) requestAnimationFrame(step);
     };
+    requestAnimationFrame(step);
+  };
 
-    // Optionnel : déclenche au scroll
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            updateCount();
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 1.0 }
-    );
+  const io = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animate(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
 
-    observer.observe(counter);
-  });
-});
+  els.forEach((el) => io.observe(el));
+})();

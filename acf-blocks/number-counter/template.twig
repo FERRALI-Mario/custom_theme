@@ -1,19 +1,28 @@
 {% set items = fields.counters|slice(0, 4) %}
 {% set count = items|length %}
 
-<section class="py-16 px-4 my-8 number-counter-block">
-	<div class="container mx-auto">
-		<div class="flex flex-wrap justify-center justify-items-center gap-6 max-w-5xl mx-auto {% if count == 3 %} md:flex-nowrap {% elseif count == 4 %} md:grid md:grid-cols-2 lg:flex {% endif %}">
-			{% for counter in fields.counters %}
-				<div class="counter-item relative group p-6 flex flex-col items-center text-center sm:w-5/12 md:w-[220px] bg-gray-50 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:bg-gray-50">
-					<div class="number text-primary text-4xl font-bold mb-2 z-10 relative" data-count="{{ counter.number }}">
-						0
-					</div>
-					<p class="font-semibold text-lg mb-2 z-10 relative">{{ counter.title }}</p>
+<section class="number-counter-block py-12 lg:py-16">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div class="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 {{ count == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4' }} place-items-center">
+			{% for counter in items %}
+				<figure
+					class="w-full max-w-[260px] rounded-xl bg-gray-50 ring-1 ring-black/5 px-6 py-6 text-center shadow-sm transition-shadow duration-200 hover:shadow-md">
+					{# Nombre — plus petit en md/lg que sur sm #}
+					<div class="number text-gray-900 font-extrabold tracking-tight
+												                   text-4xl sm:text-5xl md:text-4xl lg:text-4xl mb-1" data-count="{{ counter.number }}" data-duration="{{ counter.duration ?? 1200 }}">0</div>
+
+					{# Titre — compact en md/lg #}
+					<figcaption class="font-semibold text-base sm:text-lg md:text-[1.0625rem] text-gray-900">
+						{{ counter.title }}
+					</figcaption>
+
 					{% if counter.description %}
-						<p class="text-gray-600 text-sm z-10 relative">{{ counter.description }}</p>
+						{# Description — sobre, lisible #}
+						<p class="mt-2 text-gray-600 text-sm md:text-[0.9375rem] leading-6">
+							{{ counter.description }}
+						</p>
 					{% endif %}
-				</div>
+				</figure>
 			{% endfor %}
 		</div>
 	</div>
