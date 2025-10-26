@@ -1,29 +1,46 @@
-<section class="py-4 px-4">
-    <div class="container mx-auto text-center">
-        {% if fields.social_links %}
-        <div class="flex justify-center gap-4">
-            {% for link in fields.social_links %}
-                <a href="{{ link.url }}" target="_blank" aria-label="Visit {{ link.url }}" class="text-gray-600 hover:text-gray-900">
-                    {% if link.icon == 'facebook' %}
-                        <i class="fab fa-facebook text-2xl"></i>
-                    {% elseif link.icon == 'instagram' %}
-                        <i class="fab fa-instagram text-2xl"></i>
-                    {% elseif link.icon == 'snapchat' %}
-                        <i class="fab fa-snapchat-ghost text-2xl"></i>
-                    {% elseif link.icon == 'tiktok' %}
-                        <i class="fab fa-tiktok text-2xl"></i>
-                    {% elseif link.icon == 'pinterest' %}
-                        <i class="fab fa-pinterest text-2xl"></i>
-                    {% elseif link.icon == 'github' %}
-                        <i class="fab fa-github text-2xl"></i>
-                    {% elseif link.icon == 'linkedin' %}
-                        <i class="fab fa-linkedin text-2xl"></i>
-                    {% endif %}
-                </a>
-            {% endfor %}
-        </div>
-        {% else %}
-            <p>Aucun lien social disponible.</p>
-        {% endif %}
-    </div>
-</section>
+{% set links   = fields.social_links|default([]) %}
+{% set on_dark = fields.on_dark|default(false) %}
+
+{% if links|length %}
+	{% set icon_map = {
+    'facebook':  'fa-brands fa-facebook-f',
+    'instagram': 'fa-brands fa-instagram',
+    'snapchat':  'fa-brands fa-snapchat-ghost',
+    'tiktok':    'fa-brands fa-tiktok',
+    'pinterest': 'fa-brands fa-pinterest-p',
+    'github':    'fa-brands fa-github',
+    'linkedin':  'fa-brands fa-linkedin-in'
+  } %}
+
+	<section class="py-6">
+		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+			<nav class="text-center" aria-label="Réseaux sociaux">
+				<ul class="inline-flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+					{% for item in links %}
+						{% if item.url %}
+							{% set platform = (item.icon|default('link'))|lower %}
+							{% set label    = item.label|default(platform|capitalize) %}
+
+							<li>
+								<a href="{{ item.url }}" {% if item.new_tab %} target="_blank" rel="noopener noreferrer me" {% else %} rel="me" {% endif %} aria-label="{{ label }}" class="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition
+																														                         focus-visible:outline-none focus-visible:ring-2
+																														                         {% if on_dark %}
+																														                           text-white/80 hover:text-white hover:bg-white/10 focus-visible:ring-white
+																														                         {% else %}
+																														                           text-gray-600 hover:text-gray-900 hover:bg-black/5 focus-visible:ring-gray-900
+																														                         {% endif %}">
+									{% if icon_map[platform] is defined %}
+										<i class="{{ icon_map[platform] }} text-lg sm:text-xl" aria-hidden="true"></i>
+									{% else %}
+										<i class="fa-solid fa-link text-lg sm:text-xl" aria-hidden="true"></i>
+										<span class="sr-only">{{ label }}</span>
+									{% endif %}
+								</a>
+							</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</nav>
+		</div>
+	</section>
+{% endif %}
