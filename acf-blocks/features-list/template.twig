@@ -1,15 +1,37 @@
-<section class="features-list-block py-8 px-4">
-	<div class="container mx-auto text-center">
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-			{% for feature in fields.features_list %}
-				<div class="feature-item text-center">
-					{# Affichage de l'icône, avec une taille plus grande #}
+<section class="features-list-block py-12 lg:py-16">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+		{% set items = fields.features_list ?? [] %}
+		{% set count = items|length %}
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 justify-items-center md:justify-items-stretch items-stretch">
+			{% for feature in items %}
+				{% set isLastSingleMd  = (count % 2 == 1) and loop.last %}
+				{% set isLastSingleLg  = (count % 3 == 1) and loop.last %}
+				{% set isLastRowPairLg = (count % 3 == 2) and (loop.index == count - 1) %}
+
+				<article class="w-full min-w-0 h-full flex flex-col max-w-md md:max-w-md lg:max-w-none mx-auto md:mx-0 {{ isLastSingleMd ? 'md:col-span-2 md:max-w-xl md:mx-auto lg:col-span-1 lg:mx-0' : '' }} {{ isLastSingleLg ? 'lg:col-span-3 lg:max-w-3xl lg:mx-auto' : '' }} {{ isLastRowPairLg ? 'lg:col-start-2' : '' }}">
 					{% if feature.icon %}
-						<img src="{{ feature.icon }}" alt="{{ feature.title }}" class="max-w-96 sm:max-w-full mx-auto mb-4">
+						<figure class="w-full">
+							<div class="relative aspect-[16/9] overflow-hidden rounded-2xl shadow-lg">
+								<img src="{{ feature.icon }}" alt="{{ feature.title|default('')|e }}" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async">
+							</div>
+						</figure>
 					{% endif %}
-					<h3 class="text-xl font-bold mb-4">{{ feature.title }}</h3>
-					<p class="text-gray-800">{{ feature.description }}</p>
-				</div>
+
+					<div class="flex-1 flex flex-col">
+						{% if feature.title %}
+							<h3 class="mt-5 text-2xl sm:text-3xl md:text-3xl lg:text-3xl font-bold tracking-tight text-gray-900">
+								{{ feature.title }}
+							</h3>
+						{% endif %}
+
+						{% if feature.description %}
+							<p class="mt-4 text-base sm:text-lg lg:text-xl leading-relaxed text-gray-800">
+								{{ feature.description }}
+							</p>
+						{% endif %}
+					</div>
+				</article>
 			{% endfor %}
 		</div>
 	</div>
