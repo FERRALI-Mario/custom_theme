@@ -5,21 +5,20 @@
 
 	<div class="relative z-10 mx-auto max-w-7xl px-6">
 		{% if fields.title %}
-			{# Titre : même échelle que les autres blocks, figée après md #}
-			<h2 id="cta-title" class="text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-4xl font-bold tracking-tight mb-4 sm:mb-5 lg:mb-6">
+			{# Titre : plus petit en md/lg et figé après md #}
+			<h2 id="cta-title" class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight mb-4 sm:mb-5 lg:mb-6">
 				{{ fields.title }}
 			</h2>
 		{% endif %}
 
 		{% if fields.subtitle %}
-			{# Paragraphe : même logique, largeur contenue pour la lisibilité #}
-			<p class="mx-auto max-w-3xl text-base sm:text-lg lg:text-xl leading-relaxed text-gray-100/95 mb-8 lg:mb-10">
+			{# Paragraphe : plus petit en lg, interlignage ajusté #}
+			<p class="mx-auto max-w-3xl text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-100/95 mb-8 lg:mb-10">
 				{{ fields.subtitle }}
 			</p>
 		{% endif %}
 
 		{% if fields.button_text and fields.button_url %}
-			{# Bouton plein clair (pas outline) pour fond sombre #}
 			{% include 'components/button.twig' with {
         button_text: fields.button_text,
         button_url:  fields.button_url,
