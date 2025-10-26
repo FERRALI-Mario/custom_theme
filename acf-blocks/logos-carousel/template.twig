@@ -1,29 +1,51 @@
-<section class="logos-carousel py-20 px-4 bg-white overflow-hidden">
-	<div class="container mx-auto text-center">
+{# acf-blocks/logos-carousel/template.twig #}
+<section class="logos-carousel py-16 lg:py-20 px-4 bg-white overflow-hidden">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+
 		{% if fields.title or fields.subtitle %}
-			{% include 'components/section-header.twig' with {
-                title: fields.title,
-                text: fields.subtitle
-            } %}
+			<div class="mx-auto max-w-3xl mb-8 sm:mb-10 lg:mb-12">
+				{% if fields.title %}
+					<h2 class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight text-gray-900">
+						{{ fields.title }}
+					</h2>
+				{% endif %}
+				{% if fields.subtitle %}
+					<p class="mt-3 sm:mt-4 text-base sm:text-lg lg:text-[1.125rem] leading-relaxed text-gray-700">
+						{{ fields.subtitle }}
+					</p>
+				{% endif %}
+			</div>
 		{% endif %}
 
 		{% if fields.logos is not empty %}
-			<div class="relative w-full overflow-hidden mx-auto max-w-5xl">
-				<div class="flex animate-marquee w-fit gap-10 hover:[animation-play-state:paused]" style="animation-duration: {{ marquee_duration }}s;">
-					{% for i in 1..2 %}
+			{% set speed = marquee_duration ?? 30 %}
+
+			<div class="relative w-full overflow-hidden mx-auto max-w-6xl">
+				<div class="flex w-fit gap-10 animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none" style="animation-duration: {{ speed }}s;">
+					{% for _ in 1..2 %}
 						{% for logo in fields.logos %}
-							<div class="relative shrink-0 w-40 h-24 flex items-center justify-center group">
-								<a href="{{ logo.logo_url ?: '#' }}" target="_blank" class="block relative w-full h-full">
-									<img src="{{ logo.logo_image.url }}" alt="{{ logo.logo_image.alt }}" class="max-h-20 w-auto mx-auto object-contain brightness-75 group-hover:brightness-100 transition duration-300"/>
-									<div class="absolute inset-0 bg-white opacity-40 group-hover:opacity-0 transition duration-300"></div>
-								</a>
+							{% set url = logo.logo_url ?? '' %}
+							{% set img = logo.logo_image ?? null %}
+							{% set alt = (img.alt ?? 'Logo')|trim %}
+							{% set label = (logo.logo_name ?? alt)|trim %}
+
+							<div class="relative shrink-0 w-28 h-16 sm:w-32 sm:h-18 md:w-40 md:h-24 lg:w-44 lg:h-24 flex items-center justify-center group">
+								{% if url %}
+									<a href="{{ url }}" target="_blank" rel="noopener" aria-label="Aller vers {{ label }}" class="block relative w-full h-full">
+										<img src="{{ img.url }}" alt="{{ alt }}" loading="lazy" decoding="async" class="mx-auto h-full w-full max-h-12 sm:max-h-14 md:max-h-16 object-contain opacity-80 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0"/>
+									</a>
+								{% else %}
+									<span class="block relative w-full h-full">
+										<img src="{{ img.url }}" alt="{{ alt }}" loading="lazy" decoding="async" class="mx-auto h-full w-full max-h-12 sm:max-h-14 md:max-h-16 object-contain opacity-80 grayscale"/>
+									</span>
+								{% endif %}
 							</div>
 						{% endfor %}
 					{% endfor %}
 				</div>
 
-				<div class="pointer-events-none absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-white to-transparent z-10"></div>
-				<div class="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-white to-transparent z-10"></div>
+				<div class="pointer-events-none absolute left-0 top-0 h-full w-24 sm:w-28 md:w-32 bg-gradient-to-r from-white to-transparent"></div>
+				<div class="pointer-events-none absolute right-0 top-0 h-full w-24 sm:w-28 md:w-32 bg-gradient-to-l from-white to-transparent"></div>
 			</div>
 		{% endif %}
 	</div>
