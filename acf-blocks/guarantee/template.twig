@@ -1,11 +1,11 @@
 {% set icons = {
-  'secure-payment': "<i class='fa-solid fa-xl fa-lock'></i>",
-  'fast-delivery': "<i class='fa-solid fa-xl fa-truck-fast'></i>",
-  'contact': "<i class='fa-solid fa-xl fa-phone'></i>",
-  'click-collect': "<i class='fa-solid fa-xl fa-shop'></i>",
-  'free-shipping': "<i class='fa-solid fa-xl fa-hand-holding-dollar'></i>",
-  'customer-support': "<i class='fa-solid fa-xl fa-headset'></i>",
-  'warranty': "<i class='fa-solid fa-xl fa-shield-halved'></i>"
+  'secure-payment': "<i class='fa-solid fa-lock'></i>",
+  'fast-delivery': "<i class='fa-solid fa-truck-fast'></i>",
+  'contact': "<i class='fa-solid fa-phone'></i>",
+  'click-collect': "<i class='fa-solid fa-shop'></i>",
+  'free-shipping': "<i class='fa-solid fa-hand-holding-dollar'></i>",
+  'customer-support': "<i class='fa-solid fa-headset'></i>",
+  'warranty': "<i class='fa-solid fa-shield-halved'></i>"
 } %}
 
 {% set items = (fields.guarantees ?? [])|slice(0, 4) %}
@@ -18,23 +18,25 @@
 			{% for item in items %}
 				<article
 					class="w-full max-w-[320px] rounded-xl bg-white ring-1 ring-black/5 shadow-sm px-6 py-7 text-center">
-					{# --- Icône : custom image OU Font Awesome --- #}
-					{% if item.icon_type == 'custom' and item.custom_icon %}
-						<img src="{{ item.custom_icon.url }}" alt="{{ (item.title ?? '')|e }}" class="mx-auto mb-4 h-10 w-10 sm:h-12 sm:w-12 object-contain" loading="lazy" decoding="async">
-					{% else %}
-						<div class="mx-auto mb-4 text-primary text-3xl sm:text-4xl leading-none">
-							{{ icons[item.icon_type]|default('')|raw }}
-						</div>
-					{% endif %}
 
-					{# --- Titre (compact en md/lg) --- #}
+					{# Boîte icône normalisée (mêmes dimensions pour FA et image) #}
+					<div class="mx-auto mb-4 h-[50px] w-[50px] flex items-center justify-center">
+						{% if item.icon_type == 'custom' and item.custom_icon %}
+							<img src="{{ item.custom_icon.url }}" alt="{{ (item.title ?? '')|e }}" class="h-full w-full object-contain" loading="lazy" decoding="async">
+						{% else %}
+							{# FA hérite de la taille via text-* (pas de fa-xl) #}
+							<span class="text-primary leading-none text-4xl sm:text-5xl">
+								{{ icons[item.icon_type]|default('')|raw }}
+							</span>
+						{% endif %}
+					</div>
+
 					{% if item.title %}
 						<h3 class="font-semibold text-base sm:text-lg md:text-[1.0625rem] text-gray-900">
 							{{ item.title }}
 						</h3>
 					{% endif %}
 
-					{# --- Description (sobre, lisible) --- #}
 					{% if item.description %}
 						<p class="mt-2 text-gray-600 text-sm md:text-[0.9375rem] leading-6">
 							{{ item.description }}
