@@ -1,43 +1,77 @@
-<section class="py-12 px-4">
-	<div class="container mx-auto max-w-3xl">
+<section class="py-12 lg:py-16">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
 		{% if fields.title or fields.subtitle %}
-			{% include 'components/section-header.twig' with {
-				title: fields.title,
-				text: fields.subtitle
-			} %}
+			<div class="mx-auto max-w-3xl text-center mb-8 sm:mb-10 lg:mb-12">
+				{% if fields.title %}
+					<h2 class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight text-gray-900">
+						{{ fields.title }}
+					</h2>
+				{% endif %}
+				{% if fields.subtitle %}
+					<p class="mt-3 sm:mt-4 text-base sm:text-lg lg:text-[1.125rem] leading-relaxed text-gray-700">
+						{{ fields.subtitle }}
+					</p>
+				{% endif %}
+			</div>
 		{% endif %}
 
 		{% if fields.contact_items %}
-			<div class="grid gap-8 text-center grid-cols-[repeat(auto-fit,minmax(160px,1fr))]">
-				{% for item in fields.contact_items %}
+			{% set items = fields.contact_items %}
+			{% set count = items|length %}
+
+			{% set colsSm = count == 1 ? 'sm:grid-cols-1' : 'sm:grid-cols-2' %}
+			{% set colsLg = count >= 4 ? 'lg:grid-cols-4' : (count == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2') %}
+
+			<div class="grid grid-cols-1 {{ colsSm }} {{ colsLg }} gap-8 md:gap-10 justify-items-center">
+
+				{% for item in items %}
 					{% set icon_class = {
-						'adresse': 'fa-map-marker-alt',
-						'telephone': 'fa-phone',
-						'email': 'fa-envelope',
-						'horaire': 'fa-clock'
-					}[item.type] %}
+            'adresse'  : 'fa-location-dot',
+            'telephone': 'fa-phone',
+            'email'    : 'fa-envelope',
+            'horaire'  : 'fa-clock'
+          }[item.type]|default('fa-circle-info') %}
 
-					{% set label = item.type|capitalize %}
-					{% set value = item.value %}
+					{% set label = (item.type|default('info'))|capitalize %}
+					{% set value = item.value|default('') %}
+
 					{% set link = '' %}
+					{% set target = '' %}
+					{% set rel = '' %}
 
-					{% if item.type == 'telephone' %}
-						{% set link = 'tel:' ~ value %}
-					{% elseif item.type == 'email' %}
-						{% set link = 'mailto:' ~ value %}
-					{% elseif item.type == 'adresse' %}
-						{% set link = 'https://maps.google.com/?q=' ~ value|url_encode %}
+					{% if item.type == 'telephone' and value %}
+						{% set link   = 'tel:' ~ value %}
+					{% elseif item.type == 'email' and value %}
+						{% set link   = 'mailto:' ~ value %}
+					{% elseif item.type == 'adresse' and value %}
+						{% set link   = 'https://maps.google.com/?q=' ~ value|url_encode %}
+						{% set target = ' target="_blank"' %}
+						{% set rel    = ' rel="noopener"' %}
 					{% endif %}
 
-					<div class="flex flex-col items-center">
-						<i class="fas {{ icon_class }} text-primary text-2xl mb-2"></i>
-						<h5 class="text-gray-500 text-sm mb-1">{{ label }}</h5>
-						{% if link %}
-							<a href="{{ link }}" class="text-base font-medium hover:underline" target="_blank" rel="noopener">{{ value }}</a>
-						{% else %}
-							<p class="text-base font-medium">{{ value }}</p>
+					<article class="w-full max-w-sm text-center">
+						<div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 shadow-sm">
+							<i class="fa-solid {{ icon_class }} text-2xl sm:text-3xl text-primary" aria-hidden="true"></i>
+						</div>
+
+						<h5 class="mt-3 text-xs sm:text-sm font-semibold tracking-wide text-gray-500">
+							{{ label }}
+						</h5>
+
+						{% if value %}
+							{% if link %}
+								<a href="{{ link }}" {{ target|raw }} {{ rel|raw }} class="mt-1 inline-block text-base sm:text-lg md:text-lg font-medium text-gray-900 hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+									{{ value }}
+								</a>
+							{% else %}
+								<p class="mt-1 text-base sm:text-lg md:text-lg font-medium text-gray-900">
+									{{ value }}
+								</p>
+							{% endif %}
 						{% endif %}
-					</div>
+					</article>
+
 				{% endfor %}
 			</div>
 		{% endif %}
