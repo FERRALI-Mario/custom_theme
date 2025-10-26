@@ -1,9 +1,12 @@
 <div class="mx-auto max-w-xl text-center">
 	{% if title %}
-		<h2 class="text-3xl font-bold mb-4">{{ title }}</h2>
+		<h2 class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl font-bold mb-4 sm:mb-5 lg:mb-6">
+			{{ title }}
+		</h2>
 	{% endif %}
-
 	{% if text %}
-		<p class="text-gray-800 mb-10">{{ text }}</p>
+		<p class="text-gray-800 text-base sm:text-lg lg:text-[1.125rem] leading-7 mb-10">
+			{{ text }}
+		</p>
 	{% endif %}
 </div>
