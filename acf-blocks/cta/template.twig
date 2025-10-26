@@ -1,18 +1,14 @@
-<section
-	class="cta-block relative py-16 md:py-20 lg:py-24 text-white text-center bg-fixed bg-cover bg-center" style="background-image: url('{{ fields.background }}');" role="region" aria-labelledby="cta-title">
-	{# Overlay plus lisible sur fond photo #}
+<section class="cta-block relative py-16 md:py-20 lg:py-24 text-white text-center bg-fixed bg-cover bg-center" style="background-image: url('{{ fields.background }}');" role="region" aria-labelledby="cta-title">
 	<div class="absolute inset-0 bg-black/55 md:bg-black/50 z-0"></div>
 
 	<div class="relative z-10 mx-auto max-w-7xl px-6">
 		{% if fields.title %}
-			{# Titre : plus petit en md/lg et figé après md #}
 			<h2 id="cta-title" class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight mb-4 sm:mb-5 lg:mb-6">
 				{{ fields.title }}
 			</h2>
 		{% endif %}
 
 		{% if fields.subtitle %}
-			{# Paragraphe : plus petit en lg, interlignage ajusté #}
 			<p class="mx-auto max-w-3xl text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-100/95 mb-8 lg:mb-10">
 				{{ fields.subtitle }}
 			</p>
