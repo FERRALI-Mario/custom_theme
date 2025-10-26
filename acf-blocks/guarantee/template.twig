@@ -8,30 +8,39 @@
   'warranty': "<i class='fa-solid fa-xl fa-shield-halved'></i>"
 } %}
 
-{% set items = fields.guarantees|slice(0, 4) %}
+{% set items = (fields.guarantees ?? [])|slice(0, 4) %}
 {% set count = items|length %}
+{% set colsLg = count == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4' %}
 
-<section class="py-16 px-4 my-8 bg-gray-50">
-	<div class="container mx-auto">
-		<div class="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto
-				                {% if count == 3 %} md:flex-nowrap {% elseif count == 4 %} md:grid md:grid-cols-2 lg:flex {% endif %}">
+<section class="py-12 lg:py-16 bg-gray-50">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div class="grid gap-6 sm:gap-7 grid-cols-1 sm:grid-cols-2 {{ colsLg }} place-items-center">
 			{% for item in items %}
-				<div class="relative group bg-white shadow-md rounded-lg p-6 flex flex-col items-center text-center w-full sm:w-5/12 md:w-auto transition-transform duration-300">
-
+				<article
+					class="w-full max-w-[320px] rounded-xl bg-white ring-1 ring-black/5 shadow-sm px-6 py-7 text-center">
+					{# --- Icône : custom image OU Font Awesome --- #}
 					{% if item.icon_type == 'custom' and item.custom_icon %}
-						<img src="{{ item.custom_icon.url }}" alt="{{ item.title|e }}" class="w-12 h-12 mb-2 z-10 relative object-contain"/>
+						<img src="{{ item.custom_icon.url }}" alt="{{ (item.title ?? '')|e }}" class="mx-auto mb-4 h-10 w-10 sm:h-12 sm:w-12 object-contain" loading="lazy" decoding="async">
 					{% else %}
-						<div class="mb-4 z-10 relative text-primary text-3xl h-10 flex items-center justify-center leading-none">
-							{{ icons[item.icon_type]|raw }}
+						<div class="mx-auto mb-4 text-primary text-3xl sm:text-4xl leading-none">
+							{{ icons[item.icon_type]|default('')|raw }}
 						</div>
 					{% endif %}
 
-					<p class="font-semibold text-lg mb-2 z-10 relative">{{ item.title }}</p>
-					<p class="text-gray-600 text-sm z-10 relative">{{ item.description }}</p>
+					{# --- Titre (compact en md/lg) --- #}
+					{% if item.title %}
+						<h3 class="font-semibold text-base sm:text-lg md:text-[1.0625rem] text-gray-900">
+							{{ item.title }}
+						</h3>
+					{% endif %}
 
-					<span class="bar bar-1"></span>
-					<span class="bar bar-2"></span>
-				</div>
+					{# --- Description (sobre, lisible) --- #}
+					{% if item.description %}
+						<p class="mt-2 text-gray-600 text-sm md:text-[0.9375rem] leading-6">
+							{{ item.description }}
+						</p>
+					{% endif %}
+				</article>
 			{% endfor %}
 		</div>
 	</div>
