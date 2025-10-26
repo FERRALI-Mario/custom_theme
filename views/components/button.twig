@@ -1,7 +1,8 @@
 {# components/button.twig #}
-{% set href   = button_url ?? '#' %}
-{% set text   = button_text ?? 'En savoir plus' %}
-{% set newtab = open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '' %}
+{% set href    = button_url ?? '#' %}
+{% set text    = button_text ?? 'En savoir plus' %}
+{% set newtab  = open_in_new_tab ? ' target="_blank" rel="noopener noreferrer"' : '' %}
+{# variants: outline | solid (noir) | solid-light (blanc, pour fond sombre/Hero) #}
 {% set variant = variant ?? 'outline' %}
 
 {% if variant == 'outline' %}
@@ -12,9 +13,32 @@
 			            transition-colors duration-200 shadow-sm">
 		{{ text }}
 	</a>
+
+{% elseif variant == 'solid-light' %}
+	{# Plein clair : idéal sur Hero sombre #}
+	<a href="{{ href }}" {{ newtab|raw }} class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3
+			            text-base font-semibold text-gray-900
+			            hover:bg-gray-100
+			            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/40
+			            transition-colors duration-200 shadow-sm">
+		{{ text }}
+	</a>
+
+{% elseif variant == 'solid' %}
+	{# Plein sombre (noir) #}
+	<a href="{{ href }}" {{ newtab|raw }} class="inline-flex items-center gap-2 rounded-full bg-black px-5 py-3
+			            text-base font-semibold text-white
+			            hover:bg-black/85
+			            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2
+			            transition-colors duration-200">
+		{{ text }}
+	</a>
+
 {% else %}
-	<a href="{{ href }}" {{ newtab|raw }} class="inline-flex items-center rounded-full bg-black text-white px-5 py-3
-			            font-semibold text-base hover:bg-opacity-85
+	{# Fallback = solid noir #}
+	<a href="{{ href }}" {{ newtab|raw }} class="inline-flex items-center gap-2 rounded-full bg-black px-5 py-3
+			            text-base font-semibold text-white
+			            hover:bg-black/85
 			            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2
 			            transition-colors duration-200">
 		{{ text }}

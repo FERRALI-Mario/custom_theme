@@ -1,32 +1,57 @@
-{% set bg = fields.background is iterable ? fields.background.url : '' %}
-{% set image = fields.image is iterable ? fields.image.url : '' %}
+{# components/hero.twig #}
+{% set bg      = fields.background %}
+{% set bgUrl   = bg.url ?? bg %}
+{% set image   = fields.image %}
+{% set imgUrl  = image.url ?? image %}
+{% set imgAlt  = (image.alt ?? fields.title ?? 'Hero image')|trim %}
+{% set imgId   = image.id ?? image.ID ?? null %}
+{% set srcset  = imgId ? function('wp_get_attachment_image_srcset', imgId, 'full') : null %}
+{% set sizes   = '(min-width: 1024px) 40vw, 0px' %}
+{# image cachée < md #}
+{% set fetchprio = fields.is_lcp ? 'high' : 'auto' %}
 
-<section class="hero-block relative min-h-screen flex items-center justify-between text-center text-white px-4 py-16"
-  {% if bg %} style="background-image: url('{{ bg }}'); background-size: cover; background-position: center center;" {% endif %}>
-  
-  <div class="absolute inset-0 bg-black/50"></div>
+<section class="relative min-h-screen text-white" {% if bgUrl %} style="background-image:url('{{ bgUrl }}'); background-size:cover; background-position:center;" {% endif %}>
+	<div class="absolute inset-0 bg-black/50 md:bg-gradient-to-r md:from-black/60 md:via-black/40 md:to-transparent"></div>
 
-  <div class="container mx-auto flex items-center justify-evenly lg:justify-between relative md:max-w-4xl xl:max-w-5xl">
-    
-    <div class="w-full sm:w-2/3 md:w-1/2 md:mr-2 lg:w-2/5 lg:mr-0 text-left mb-6 md:mb-0">
-      {% if fields.title %}
-        <h1 class="text-3xl font-bold mb-4">{{ fields.title }}</h1>
-      {% endif %}
-      {% if fields.subtitle %}
-        <p class="text-gray-100 mb-10">{{ fields.subtitle }}</p>
-      {% endif %}
-      
-      {% if fields.cta_text and fields.cta_url %}
-        <a href="{{ fields.cta_url }}" class="bg-black text-white px-4 py-2 rounded-full font-bold text-lg hover:bg-opacity-80 transition duration-300">
-          {{ fields.cta_text }}
-        </a>
-      {% endif %}
-    </div>
+	<div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
+		<div
+			class="grid w-full items-center gap-10 lg:gap-16 md:grid-cols-12">
 
-    <div class="image-wrapper w-full md:w-1/2 md:ml-2 lg:ml-0 lg:max-w-[425px] hidden md:block xl:ml-20xl xl:mr-20xl">
-      {% if image %}
-        <img src="{{ image }}" alt="Hero Image" class="w-full h-auto object-cover opacity-90">
-      {% endif %}
-    </div>
-  </div>
+			{# --- TEXTE --- #}
+			<div class="md:col-span-6">
+				{% if fields.title %}
+					<h1 class="text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-4xl font-bold tracking-tight mb-4 sm:mb-5 lg:mb-6">
+						{{ fields.title }}
+					</h1>
+				{% endif %}
+
+				{% if fields.subtitle %}
+					<p class="text-gray-100/95 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mb-6 lg:mb-8">
+						{{ fields.subtitle }}
+					</p>
+				{% endif %}
+
+				{% if fields.cta_text and fields.cta_url %}
+					{% include 'components/button.twig' with {
+            button_text: fields.cta_text,
+            button_url:  fields.cta_url,
+            open_in_new_tab: fields.open_in_new_tab,
+            variant: 'solid-light'  # plein clair (pas outline) pour fond sombre
+          } %}
+				{% endif %}
+			</div>
+
+			{# --- IMAGE (cachée en mobile) --- #}
+			<div class="md:col-span-6 hidden md:block">
+				{% if imgUrl %}
+					<figure class="md:ml-auto w-full max-w-lg lg:max-w-2xl xl:max-w-3xl">
+						<div class="relative aspect-[3/2] lg:aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/15">
+							<img src="{{ imgUrl }}" {% if srcset %} srcset="{{ srcset }}" {% endif %} sizes="{{ sizes }}" alt="{{ imgAlt|e }}" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" fetchpriority="{{ fetchprio }}">
+						</div>
+					</figure>
+				{% endif %}
+			</div>
+
+		</div>
+	</div>
 </section>
