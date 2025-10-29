@@ -1,18 +1,7 @@
 <section class="py-8 px-4">
 	<div class="container mx-auto max-w-4xl">
 		{% if fields.title or fields.subtitle %}
-			<div class="mx-auto max-w-xl text-center">
-				{% if fields.title %}
-					<h2 class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl font-bold mb-4 sm:mb-5 lg:mb-6">
-						{{ fields.title }}
-					</h2>
-				{% endif %}
-				{% if fields.subtitle %}
-					<p class="text-gray-800 text-base sm:text-lg lg:text-[1.125rem] leading-7 mb-10">
-						{{ fields.subtitle }}
-					</p>
-				{% endif %}
-			</div>
+			{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
 		{% endif %}
 
 		<div class="space-y-4" data-faq>

@@ -1,21 +1,8 @@
 <section class="relative overflow-hidden bg-white py-12 lg:py-20">
-	<div
-		class="container mx-auto text-center px-4">
+	<div class="container mx-auto text-center px-4">
 
-		{# Header avec tailles réduites en md/lg #}
 		{% if fields.title or fields.subtitle %}
-			<header class="mx-auto max-w-3xl mb-8 lg:mb-10">
-				{% if fields.title %}
-					<h2 class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight text-gray-900">
-						{{ fields.title }}
-					</h2>
-				{% endif %}
-				{% if fields.subtitle %}
-					<p class="mt-4 text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-700">
-						{{ fields.subtitle }}
-					</p>
-				{% endif %}
-			</header>
+			{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
 		{% endif %}
 
 		{% if testimonials is not empty %}
