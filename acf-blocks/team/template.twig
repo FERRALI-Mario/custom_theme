@@ -1,28 +1,45 @@
-<section class="py-8 px-4">
-	<div class="container mx-auto text-center">
+<section class="team-block py-12 lg:py-16">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+
 		{% if fields.title or fields.subtitle %}
 			{% include 'components/section-header.twig' with {
-				title: fields.title,
-				text: fields.subtitle
-			} %}
+        title: fields.title,
+        text:  fields.subtitle
+      } %}
 		{% endif %}
 
-		<div class="flex flex-wrap justify-center gap-6">
+		<div class="flex flex-wrap justify-center gap-6 md:gap-8">
 			{% for member in fields.team_members %}
-				<div class="bg-white shadow-lg rounded-lg p-6 text-center">
+				<article class="group flex-shrink-0 basis-full sm:basis-[calc(50%-theme(spacing.6))] md:basis-[calc(33.333%-theme(spacing.8))] lg:basis-[calc(25%-theme(spacing.8))] max-w-xs rounded-2xl bg-white shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-lg focus-within:shadow-lg">
+
 					{% if member.member_photo %}
-						{% if member.member_linkedin %}
-							<a href="{{ member.member_linkedin }}" target="_blank" rel="noopener noreferrer" class="inline-block">
-								<img src="{{ member.member_photo.url }}" alt="{{ member.member_name }}" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover transition-transform hover:scale-105">
-							</a>
-						{% else %}
-							<img src="{{ member.member_photo.url }}" alt="{{ member.member_name }}" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-						{% endif %}
+						<div class="relative inline-block">
+							{% if member.member_linkedin %}
+								<a href="{{ member.member_linkedin }}" target="_blank" rel="noopener" class="block h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden ring-2 ring-primary/30 transition group-hover:ring-primary/50">
+									<img src="{{ member.member_photo.url }}" alt="{{ member.member_name|e }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async">
+								</a>
+								<a href="{{ member.member_linkedin }}" target="_blank" rel="noopener" class="absolute -bottom-1 -right-1 inline-flex items-center justify-center h-6 w-6 rounded-full bg-[#0A66C2] text-white shadow ring-2 ring-white transition hover:scale-105" aria-label="LinkedIn">
+									<i class="fa-brands fa-linkedin-in text-[10px]" aria-hidden="true"></i>
+								</a>
+							{% else %}
+								<div class="h-24 w-24 sm:h-28 sm:w-28 rounded-full overflow-hidden ring-2 ring-primary/30 transition group-hover:ring-primary/50">
+									<img src="{{ member.member_photo.url }}" alt="{{ member.member_name|e }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async">
+								</div>
+							{% endif %}
+						</div>
 					{% endif %}
 
-					<h3 class="text-xl font-semibold mb-1">{{ member.member_name }}</h3>
-					<p class="text-sm text-gray-500">{{ member.member_role }}</p>
-				</div>
+					{% if member.member_name %}
+						<h3 class="mt-4 text-lg sm:text-xl md:text-xl lg:text-xl font-semibold tracking-tight text-gray-900">
+							{{ member.member_name }}
+						</h3>
+					{% endif %}
+					{% if member.member_role %}
+						<p class="mt-1 text-sm sm:text-base md:text-base text-gray-500">
+							{{ member.member_role }}
+						</p>
+					{% endif %}
+				</article>
 			{% endfor %}
 		</div>
 	</div>
