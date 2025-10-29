@@ -1,35 +1,62 @@
-<section class="py-8 px-4">
-	<div class="container mx-auto text-center">
+{% set raw_url = fields.video_url|default('')|trim %}
+{% set type    = '' %}
+{% set id      = '' %}
+
+{% if 'vimeo.com' in raw_url %}
+	{% set type = 'vimeo' %}
+	{% set id   = (raw_url|split('/')|last)|split('?')|first %}
+{% elseif 'youtu.be/' in raw_url %}
+	{% set type = 'youtube' %}
+	{% set id   = (raw_url|split('/')|last)|split('?')|first %}
+{% elseif 'youtube.com' in raw_url %}
+	{% set type = 'youtube' %}
+	{% if 'watch?v=' in raw_url %}
+		{% set id = (raw_url|split('v=')|last)|split('&')|first %}
+	{% elseif '/shorts/' in raw_url %}
+		{% set id = (raw_url|split('/shorts/')|last)|split('?')|first %}
+	{% endif %}
+{% endif %}
+
+{% set title = fields.title|default('Vidéo') %}
+
+<section class="py-12 lg:py-16">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+
 		{% if fields.title or fields.subtitle %}
-			{% include 'components/section-header.twig' with {
-				title: fields.title,
-				text: fields.subtitle
-			} %}
+			{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
 		{% endif %}
 
-		{% if fields.video_url %}
-
-			{% set embed_url = '' %}
-			{% set url = fields.video_url %}
-
-			{% if 'vimeo.com' in url %}
-				{% set video_id = url | split('/') | last %}
-				{% set embed_url = 'https://player.vimeo.com/video/' ~ video_id %}
-			{% elseif 'youtube.com/watch?v=' in url %}
-				{% set video_id = url | split('v=') | last %}
-				{% set embed_url = 'https://www.youtube.com/embed/' ~ video_id %}
-			{% elseif 'youtu.be' in url %}
-				{% set video_id = url | split('/') | last %}
-				{% set embed_url = 'https://www.youtube.com/embed/' ~ video_id %}
+		{% if type and id %}
+			{% if type == 'youtube' %}
+				{% set embed  = 'https://www.youtube-nocookie.com/embed/' ~ id ~ '?autoplay=1&muted=0&rel=0&modestbranding=1&playsinline=1' %}
+				{% set poster = 'https://i.ytimg.com/vi/' ~ id ~ '/hqdefault.jpg' %}
+			{% else %}
+				{% set embed  = 'https://player.vimeo.com/video/' ~ id ~ '?autoplay=1&title=0&byline=0&portrait=0' %}
+				{% set poster = fields.poster_image.url|default('') %}
 			{% endif %}
 
-			{% if embed_url %}
-				<div class="relative w-full max-w-4xl mx-auto mb-8" style="aspect-ratio: 16/9;">
-					<iframe class="absolute top-0 left-0 w-full h-full" src="{{ embed_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			<div class="mx-auto max-w-4xl">
+				<div class="video-lite group relative w-full overflow-hidden rounded-xl shadow-md" style="aspect-ratio:16/9" data-embed="{{ embed }}" aria-label="Lire la vidéo : {{ title }}">
+
+					{% if poster %}
+						<img src="{{ poster }}" alt="Aperçu vidéo" class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none">
+					{% else %}
+						<div class="absolute inset-0 bg-gray-200"></div>
+					{% endif %}
+
+					<button type="button" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-white/90 backdrop-blur px-6 py-6 shadow-lg transition group-hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black" aria-label="Lire la vidéo">
+						<span class="sr-only">Lire</span>
+						<svg viewbox="0 0 24 24" width="44" height="44" aria-hidden="true">
+							<circle cx="12" cy="12" r="11" fill="#ef4444"/>
+							<path d="M10 8l6 4-6 4z" fill="#fff"/>
+						</svg>
+					</button>
 				</div>
-			{% endif %}
 
+				<noscript>
+					<iframe src="{{ embed|replace({'?autoplay=1':'?autoplay=0'}) }}" title="{{ title }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-same-origin allow-scripts allow-popups allow-presentation" class="mt-4 h-[56.25vw] max-h-[540px] w-full rounded-xl border-0" style="aspect-ratio:16/9"></iframe>
+				</noscript>
+			</div>
 		{% endif %}
-
 	</div>
 </section>
