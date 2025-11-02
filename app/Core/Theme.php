@@ -78,6 +78,7 @@ class Theme
         add_filter('block_categories_all', function (array $categories, $editor_context) {
             $new_categories = [
                 ['slug' => 'contenu', 'title' => '🎨 Contenu'],
+                ['slug' => 'maison', 'title' => '🏡 Maison'],
                 ['slug' => 'woocommerce', 'title' => '🛒 WooCommerce'],
                 ['slug' => 'mise-en-avant', 'title' => '🧩 Mise en avant'],
                 ['slug' => 'contact', 'title' => '📇 Contact'],

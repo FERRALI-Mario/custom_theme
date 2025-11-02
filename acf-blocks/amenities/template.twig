@@ -1,0 +1,114 @@
+{# ====== AMENITIES / ÉQUIPEMENTS ====== #}
+
+{# Données #}
+{% set f = fields ?? {} %}
+{% set categories = f.categories ?? [] %}
+
+{# Métadonnées des catégories (libellé + icône Font Awesome 6 Free) #}
+{% set CAT_META = {
+  'ideal_stay':          {'label':'Idéal pour votre séjour','icon':'fa-person'},
+  'parking':             {'label':'Parking','icon':'fa-square-parking'},
+  'activities':          {'label':'Activités','icon':'fa-person-running'},
+  'salle_de_bains':      {'label':'Salle de bains','icon':'fa-bath'},
+  'chambre':             {'label':'Chambre','icon':'fa-bed'},
+  'vue':                 {'label':'Vue','icon':'fa-eye'},
+  'exterieur':           {'label':'En extérieur','icon':'fa-tree'},
+  'cuisine':             {'label':'Cuisine','icon':'fa-mug-saucer'},
+  'equipements_chambre': {'label':'Équipements en chambre','icon':'fa-plug'},
+  'coin_salon':          {'label':'Coin salon','icon':'fa-couch'},
+  'high_tech':           {'label':'High-tech','icon':'fa-microchip'},
+  'restauration':        {'label':'Restauration','icon':'fa-utensils'},
+  'internet':            {'label':'Internet','icon':'fa-wifi'},
+  'reception':           {'label':'Réception','icon':'fa-concierge-bell'},
+  'services_nettoyage':  {'label':'Services de nettoyage','icon':'fa-broom'},
+  'services_affaires':   {'label':'Services d’affaires','icon':'fa-briefcase'},
+  'securite':            {'label':'Sécurité','icon':'fa-shield-halved'},
+  'general':             {'label':'Général','icon':'fa-circle-info'},
+  'accessibilite':       {'label':'Accessibilité','icon':'fa-universal-access'},
+  'bien_etre':           {'label':'Bien-être','icon':'fa-spa'},
+  'langues_parlees':     {'label':'Langues parlées','icon':'fa-language'},
+} %}
+
+{# Dé-duplication côté rendu #}
+{% set seen = [] %}
+{% set normalized = [] %}
+	{% for cat in categories %}
+	{% set key = cat.category_key ?? null %}
+		{% if key and (key not in seen) %}
+		{% set seen = seen|merge([key]) %}
+	{% set normalized = normalized|merge([cat]) %}
+{% endif %}
+{% endfor %}
+
+	{% if normalized|length %}
+
+	{# Nombre de catégories #}
+	{% set count = normalized|length %}
+
+
+	{% set columnClasses = count == 1 ? 'columns-1' : (count == 2 ? 'columns-2' : 'columns-1 sm:columns-2 lg:columns-3')
+  %}
+
+	{# Largeur max du bloc de colonnes (centrage propre sur desktop) #}
+	{% set colsMax =
+    count >= 3 ? 'max-w-7xl'
+    : (count == 2 ? 'max-w-5xl' : 'max-w-3xl')
+  %}
+
+		<section class="amenities py-12 lg:py-16"> <div
+			class="mx-auto max-w-7xl px-6">
+
+			{# Titre / sous-titre #}
+			{% if fields.title or fields.subtitle %}
+				{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
+			{% endif %}
+
+			<div class="mx-auto {{ colsMax }} max-w-sm md:max-w-xl lg:max-w-5xl lg:ml-[150px]">
+				<div class="{{ columnClasses }} [column-gap:2rem] md:[column-gap:2.5rem]">
+
+					{% for cat in normalized %}
+						{% set key   = cat.category_key %}
+						{% set meta  = CAT_META[key] ?? null %}
+						{% set items = cat.items ?? [] %}
+
+						<div class="mb-8 break-inside-avoid [break-inside:avoid-column]">
+
+							<div class="flex items-center gap-2 mb-2">
+								{% if meta %}
+									<i class="fa-solid {{ meta.icon }} text-gray-700" aria-hidden="true"></i>
+									<h3 class="text-lg md:text-xl font-semibold m-0">{{ meta.label }}</h3>
+								{% else %}
+									<h3 class="text-lg md:text-xl font-semibold m-0">{{ key }}</h3>
+								{% endif %}
+							</div>
+
+							{% if cat.category_description %}
+								<p class="text-sm text-gray-600 leading-relaxed mb-2">
+									{{ cat.category_description }}
+								</p>
+							{% endif %}
+
+							{% if items|length %}
+								<ul class="space-y-2">
+									{% for it in items %}
+										{% set present = it.item_present ?? false %}
+										<li class="flex items-start gap-3 {{ not present ? 'opacity-60' }}">
+											<span class="shrink-0 leading-none text-gray-700" aria-hidden="true">
+												<span class="text-base md:text-lg">{{ present ? '✓' : '✗' }}</span>
+											</span>
+											<span class="text-sm md:text-base">{{ it.item_label }}</span>
+										</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+
+						</div>
+					{% endfor %}
+
+				</div>
+			</div>
+			{# /Wrapper centré #}
+
+		</div>
+	</section>
+{% endif %}
