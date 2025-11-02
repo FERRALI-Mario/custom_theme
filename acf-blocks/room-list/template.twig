@@ -1,0 +1,86 @@
+{% set f = fields ?? {} %}
+{% set items = f.rooms ?? [] %}
+
+<section class="room-list-block py-12 lg:py-16">
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+		{% if f.title or f.subtitle %}
+			{% include 'components/section-header.twig' with { title: f.title, text: f.subtitle } %}
+		{% endif %}
+
+		{# garde uniquement les rooms valides #}
+		{% set rooms = [] %}
+		{% for r in items %}
+			{% if (r.room_type ?? '') and (r.photos is iterable and r.photos|length) %}
+				{% set rooms = rooms|merge([r]) %}
+			{% endif %}
+		{% endfor %}
+
+		{% if rooms|length %}
+			{% set count = rooms|length %}
+			{% set CARD_W = 'max-w-[22rem]' %}
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-10 lg:gap-4 justify-items-center items-stretch mt-8">
+				{% for room in rooms %}
+					{% set isLastSingleMd  = (count % 2 == 1) and loop.last %}
+					{% set isLastSingleLg  = (count % 3 == 1) and loop.last %}
+					{% set isLastRowPairLg = (count % 3 == 2) and (loop.index == count - 1) %}
+
+					<article
+						class="w-full min-w-0 h-full flex flex-col max-w-[28rem] mx-auto md:mx-0 {{ isLastSingleMd  ? 'md:col-span-2 md:justify-self-center lg:col-span-1 lg:justify-self-auto' : '' }} {{ isLastSingleLg  ? 'lg:col-span-3 lg:justify-self-center' : '' }} {{ isLastRowPairLg ? 'lg:col-start-2' : '' }} rounded-2xl border border-gray-200 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 p-5">
+						{# --- Carrousel: fondu (opacity), pas de translateX --- #}
+						{% set slides = room.photos %}
+						{% set cid = 'carousel-' ~ loop.index %}
+						<div class="relative rounded-xl overflow-hidden aspect-[3/2] select-none" data-carousel="{{ cid }}" data-active="0">
+							{% for img in slides %}
+								{% set id  = img.id ?? img.ID ?? null %}
+								{% set src = img.url ?? (id ? function('wp_get_attachment_image_url', id, 'large') : null) %}
+								{% set alt = img.alt ?? (id ? function('get_post_meta', id, '_wp_attachment_image_alt', true) : null) %}
+								{% set alt = alt ?: ((room.room_type ?? 'Photo') ~ ' – ' ~ loop.index) %}
+								{% if src %}
+									<figure class="rl-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-300 ease-out">
+										<img src="{{ src }}" alt="{{ alt }}" loading="lazy" decoding="async" class="h-full w-full object-cover"/>
+									</figure>
+								{% endif %}
+							{% endfor %}
+							<div class="sr-only">Carrousel de photos de
+								{{ room.room_type }}</div>
+
+							{% if slides|length > 1 %}
+								<div class="pointer-events-none absolute inset-0 flex items-center justify-between px-2">
+									<button type="button" class="pointer-events-auto rl-prev inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-md ring-1 ring-black/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" aria-label="Précédent">
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+											<path d="M15 18l-6-6 6-6"/>
+										</svg>
+									</button>
+									<button type="button" class="pointer-events-auto rl-next inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-md ring-1 ring-black/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" aria-label="Suivant">
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
+											<path d="M9 18l6-6-6-6"/>
+										</svg>
+									</button>
+								</div>
+							{% endif %}
+						</div>
+
+						{# --- Badges + contenu --- #}
+						<div class="text-left">
+							<div class="mt-3 flex flex-wrap items-center gap-2">
+								{% if room.room_type %}
+									<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700">{{ room.room_type }}</span>
+								{% endif %}
+								{% if room.area_sqm|default(0) > 0 %}
+									<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700">{{ room.area_sqm|number_format(0, '.', '') }}m²</span>
+								{% endif %}
+							</div>
+
+							{% if room.description %}
+								<p class="mt-4 text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800">
+									{{ room.description }}
+								</p>
+							{% endif %}
+						</div>
+					</article>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+</section>
