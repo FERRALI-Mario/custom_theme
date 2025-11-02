@@ -21,6 +21,11 @@ class Controller extends BlockFactory
         return 'Équipements de la maison.';
     }
 
+    public function getCategory(): string
+    {
+        return 'maison';
+    }
+
     public function getKeywords(): array
     {
         return ['amenities', 'équipements', 'catégories', 'maison d’hôtes'];
