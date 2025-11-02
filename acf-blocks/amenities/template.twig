@@ -76,14 +76,14 @@
 							<div class="flex items-center gap-2 mb-2">
 								{% if meta %}
 									<i class="fa-solid {{ meta.icon }} text-gray-700" aria-hidden="true"></i>
-									<h3 class="text-lg md:text-xl font-semibold m-0">{{ meta.label }}</h3>
+									<h3 class="text-2xl font-bold tracking-tight text-gray-900">{{ meta.label }}</h3>
 								{% else %}
-									<h3 class="text-lg md:text-xl font-semibold m-0">{{ key }}</h3>
+									<h3 class="text-2xl font-bold tracking-tight text-gray-900">{{ key }}</h3>
 								{% endif %}
 							</div>
 
 							{% if cat.category_description %}
-								<p class="text-sm text-gray-600 leading-relaxed mb-2">
+								<p class="text-[15px] sm:text-base leading-relaxed text-gray-700 mb-2">
 									{{ cat.category_description }}
 								</p>
 							{% endif %}
@@ -94,9 +94,9 @@
 										{% set present = it.item_present ?? false %}
 										<li class="flex items-start gap-3 {{ not present ? 'opacity-60' }}">
 											<span class="shrink-0 leading-none text-gray-700" aria-hidden="true">
-												<span class="text-base md:text-lg">{{ present ? '✓' : '✗' }}</span>
+												<span class="text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800">{{ present ? '✓' : '✗' }}</span>
 											</span>
-											<span class="text-sm md:text-base">{{ it.item_label }}</span>
+											<span class="text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800">{{ it.item_label }}</span>
 										</li>
 									{% endfor %}
 								</ul>
