@@ -1,0 +1,119 @@
+{% set fields = fields ?? {} %}
+{% set months = months ?? [] %}
+{% set weekdays = weekdays ?? [] %}
+
+<section class="booking-request-calendar-block py-12 lg:py-16">
+	{% if fields.title or fields.subtitle %}
+		{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
+	{% endif %}
+
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8">
+		<div class="flex flex-col items-center gap-6 md:flex-row md:items-end md:justify-between">
+			<div class="flex items-center gap-2">
+				<button type="button" class="brc-prev inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition">
+					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-width="2"/></svg>
+				</button>
+				<div class="brc-current-month text-lg font-semibold text-gray-900 w-48 text-center select-none">
+					{{ months|first.label }}
+				</div>
+				<button type="button" class="brc-next inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition">
+					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke-width="2"/></svg>
+				</button>
+			</div>
+
+			<div class="grid grid-cols-2 gap-3 w-full md:w-auto">
+				<div>
+					<label class="block text-sm font-medium text-gray-700">Arrivée</label>
+					<input id="brc-checkin-input" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 bg-gray-50 cursor-pointer" type="text" placeholder="jj/mm/aaaa" readonly>
+				</div>
+				<div>
+					<label class="block text-sm font-medium text-gray-700">Départ</label>
+					<input id="brc-checkout-input" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 bg-gray-50 cursor-pointer" type="text" placeholder="jj/mm/aaaa" readonly>
+				</div>
+			</div>
+		</div>
+
+		<div class="grid gap-6 md:grid-cols-1 mt-6 select-none">
+			{% for m in months %}
+				<table class="w-full border-collapse rounded-lg overflow-hidden border border-gray-200">
+					<thead class="bg-gray-50">
+						<tr>
+							{% for w in weekdays %}
+								<th class="px-2 py-2 text-xs font-medium text-gray-600 uppercase text-center w-[14.28%]">{{ w }}</th>
+							{% endfor %}
+						</tr>
+					</thead>
+					<tbody
+						class="brc-body">
+						{# Rempli par JS #}
+						{% for row in 0..5 %}
+							<tr>
+								{% for col in 0..6 %}
+									<td class="px-1 py-1">
+										<div class="h-10 w-10 mx-auto"></div>
+									</td>
+								{% endfor %}
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endfor %}
+		</div>
+		<div id="brc-feedback" class="mt-6 text-center text-sm font-medium hidden"></div>
+
+		<div class="text-center mt-6">
+			<button type="button" id="brc-open-modal" class="hidden inline-flex items-center rounded-md px-4 py-2 font-medium text-white bg-gray-900 hover:bg-gray-800 transition">
+				{{ fields.button_label|default('Demander une réservation') }}
+			</button>
+		</div>
+
+		<div id="brc-modal" class="fixed inset-0 z-50 hidden">
+			<div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+			<div class="relative mx-auto mt-20 w-full max-w-lg rounded-lg bg-white p-6 shadow-xl transform transition-all">
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-lg font-bold text-gray-900">Finaliser la demande</h3>
+					<button type="button" class="brc-close text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+				</div>
+
+				<form id="brc-form" class="space-y-4" novalidate>
+					{{ function('wp_nonce_field','brc_request','_brc_nonce')|raw }}
+					<input type="hidden" name="action" value="booking_request_submit">
+					<input type="hidden" name="checkin" value="">
+					<input type="hidden" name="checkout" value="">
+					<input type="hidden" name="ical" value="{{ fields.ical_url }}">
+					<input type="hidden" name="cache" value="{{ fields.cache_minutes }}">
+					<input type="hidden" name="fallback_json" value="{{ (fields.fallback|default([]))|json_encode }}">
+
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Nom complet
+							<span class="text-red-500">*</span>
+						</label>
+						<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="text" name="name" required>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Téléphone
+							<span class="text-red-500">*</span>
+						</label>
+						<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="tel" name="phone" required>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">E-mail</label>
+						<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="email" name="email">
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Message</label>
+						<textarea class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" name="message" rows="3"></textarea>
+					</div>
+
+					<div id="brc-form-error" class="text-red-600 text-sm text-center hidden"></div>
+
+					<div class="pt-2">
+						<button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent bg-gray-900 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 sm:text-sm">
+							Envoyer la demande
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>

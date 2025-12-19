@@ -19,6 +19,13 @@ class Theme
         Blocks::register();
         Editor::register();
 
+        $ajax_handler_path = get_template_directory() . '/acf-blocks/booking-request-calendar/AjaxHandler.php';
+
+        if (file_exists($ajax_handler_path)) {
+            require_once $ajax_handler_path;
+            new \AcfBlocks\BookingRequestCalendar\AjaxHandler();
+        }
+
         add_action('after_setup_theme', static function () {
             if (\defined('WP_CLI') && \class_exists('\\WP_CLI') && \class_exists(\App\Console\InitCommand::class)) {
                 \App\Console\InitCommand::register();
