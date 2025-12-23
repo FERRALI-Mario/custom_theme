@@ -1,0 +1,141 @@
+<?php
+if (function_exists('acf_add_local_field_group')) :
+    acf_add_local_field_group([
+        'key' => 'group_booking_request_calendar_fields',
+        'title' => 'Demande de réservation',
+        'fields' => [
+            // --- ONGLET 1 : GÉNÉRAL ---
+            [
+                'key' => 'field_tab_general',
+                'label' => 'Général',
+                'type' => 'tab',
+                'placement' => 'top',
+                'endpoint' => 0,
+            ],
+            [
+                'key' => 'field_brc_title',
+                'label' => 'Titre',
+                'name' => 'title',
+                'type' => 'text',
+                'required' => 1,
+            ],
+            [
+                'key' => 'field_brc_subtitle',
+                'label' => 'Sous-titre',
+                'name' => 'subtitle',
+                'type' => 'textarea',
+                'rows' => 2,
+                'required' => 1,
+            ],
+            [
+                'key' => 'field_brc_min_stay',
+                'label' => 'Séjour minimum (nuits)',
+                'name' => 'min_stay',
+                'type' => 'number',
+                'default_value' => 7,
+                'min' => 1,
+            ],
+            [
+                'key' => 'field_brc_success_text',
+                'label' => 'Message de confirmation',
+                'name' => 'success_text',
+                'type' => 'text',
+                'default_value' => 'Demande envoyée !',
+            ],
+            [
+                'key' => 'field_brc_button_label',
+                'label' => 'Libellé du bouton',
+                'name' => 'button_label',
+                'type' => 'text',
+                'default_value' => 'Réserver',
+            ],
+
+            // --- ONGLET 2 : TARIFS ---
+            [
+                'key' => 'field_tab_pricing',
+                'label' => 'Tarifs',
+                'type' => 'tab',
+                'placement' => 'top',
+                'endpoint' => 0,
+            ],
+            [
+                'key' => 'field_brc_seasonal_prices',
+                'label' => 'Tarifs Saisonniers',
+                'name' => 'seasonal_prices',
+                'type' => 'repeater',
+                'instructions' => 'Définissez des prix spécifiques pour certaines périodes (ex: Juillet/Août). Si une date n\'est pas dans ces périodes, le prix par défaut sera utilisé.',
+                'layout' => 'block', // 'block' est souvent plus lisible que 'table' dans un onglet
+                'button_label' => 'Ajouter une période',
+                'sub_fields' => [
+                    [
+                        'key' => 'field_brc_season_start',
+                        'label' => 'Date de début',
+                        'name' => 'start_date',
+                        'type' => 'date_picker',
+                        'display_format' => 'd/m/Y',
+                        'return_format' => 'Y-m-d',
+                        'required' => 1,
+                        'wrapper' => ['width' => '33'], // Mise en page sur une ligne
+                    ],
+                    [
+                        'key' => 'field_brc_season_end',
+                        'label' => 'Date de fin',
+                        'name' => 'end_date',
+                        'type' => 'date_picker',
+                        'display_format' => 'd/m/Y',
+                        'return_format' => 'Y-m-d',
+                        'required' => 1,
+                        'wrapper' => ['width' => '33'],
+                    ],
+                    [
+                        'key' => 'field_brc_season_price',
+                        'label' => 'Prix nuit (€)',
+                        'name' => 'price',
+                        'type' => 'number',
+                        'required' => 1,
+                        'min' => 0,
+                        'append' => '€',
+                        'wrapper' => ['width' => '33'],
+                    ],
+                ],
+            ],
+
+            // --- ONGLET 3 : DISPONIBILITÉS (iCal) ---
+            [
+                'key' => 'field_tab_availability',
+                'label' => 'Synchro & Dispo',
+                'type' => 'tab',
+                'placement' => 'top',
+                'endpoint' => 0,
+            ],
+            [
+                'key' => 'field_brc_ical_url',
+                'label' => 'URL iCal (Airbnb/Booking)',
+                'name' => 'ical_url',
+                'type' => 'url',
+            ],
+            [
+                'key' => 'field_brc_cache_minutes',
+                'label' => 'Cache iCal (minutes)',
+                'name' => 'cache_minutes',
+                'type' => 'number',
+                'default_value' => 60,
+                'instructions' => 'Temps avant de re-télécharger le calendrier externe.',
+            ],
+            [
+                'key' => 'field_brc_fallback',
+                'label' => 'Bloquer des dates manuellement',
+                'name' => 'fallback',
+                'type' => 'repeater',
+                'layout' => 'table',
+                'button_label' => 'Bloquer une période',
+                'sub_fields' => [
+                    ['key' => 'field_brc_fb_start', 'label' => 'Début', 'name' => 'fb_start', 'type' => 'date_picker', 'return_format' => 'Y-m-d', 'required' => 1],
+                    ['key' => 'field_brc_fb_end', 'label' => 'Fin', 'name' => 'fb_end', 'type' => 'date_picker', 'return_format' => 'Y-m-d', 'required' => 1],
+                    ['key' => 'field_brc_fb_note', 'label' => 'Note (interne)', 'name' => 'fb_note', 'type' => 'text'],
+                ],
+            ],
+        ],
+        'location' => [[['param' => 'block', 'operator' => '==', 'value' => 'acf/calendar']]],
+    ]);
+endif;

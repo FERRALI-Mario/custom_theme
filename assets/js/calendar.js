@@ -39,15 +39,12 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     if (!window.BRC) return;
-    const root = document.querySelector(".booking-request-calendar-block");
+    const root = document.querySelector(".calendar-block");
     if (!root) return;
 
-    // Récupération des dates bloquées (PHP)
-    // On s'assure que c'est un tableau de Strings pour que .has() fonctionne
     const blockedRaw = BRC.blocked || [];
     const blockedSet = new Set(blockedRaw.map(String));
 
-    // Debug : Regardez la console (F12) pour voir si les dates s'affichent ici
     console.log("Dates indisponibles chargées :", blockedSet);
 
     const minStay = parseInt((BRC.rules && BRC.rules.min_stay) || 7, 10);
@@ -73,6 +70,10 @@
     const outDisplay = $("#brc-checkout-input", root);
     const inHidden = $('input[name="checkin"]', form);
     const outHidden = $('input[name="checkout"]', form);
+    const priceInput = $('input[name="price"]', form);
+    const pricePerNight = parseFloat(priceInput ? priceInput.value : 0);
+    const topSummary = $("#brc-top-summary", root);
+    const topPriceEl = $("#brc-top-price", root);
 
     function renderMonth() {
       const ml = monthsFr[current.month - 1];
@@ -80,7 +81,6 @@
         current.year
       }`;
 
-      // --- CALCUL DYNAMIQUE DE LA GRILLE ---
       const firstOfMonth = new Date(current.year, current.month - 1, 1);
       const daysInMonth = new Date(current.year, current.month, 0).getDate();
 
@@ -88,35 +88,32 @@
       const offset = (dow + 6) % 7; // Décalage pour commencer Lundi
       const startGrid = addDays(firstOfMonth, -offset);
 
-      // Calcul précis du nombre de cases nécessaires (multiple de 7)
-      // Cela évite d'avoir une ligne vide en bas
       const totalCells = Math.ceil((offset + daysInMonth) / 7) * 7;
 
       let html = "";
 
       for (let i = 0; i < totalCells; i++) {
-        // Début de ligne (Lundi)
         if (i % 7 === 0) html += "<tr>";
 
         const d = addDays(startGrid, i);
         const dateStr = fmt(d);
         const inMonth = d.getMonth() + 1 === current.month;
-        const isBlocked = blockedSet.has(dateStr);
 
-        // --- STYLES CSS (Flat Design) ---
-        // Base : rond, centré, pas d'ombre
+        const techBlocked = blockedSet.has(dateStr);
+        const priceBlocked = isPriceMissing(d);
+        const isBlocked = techBlocked || priceBlocked;
+
+        const dayPrice = getPrice(d);
+
         let classes =
-          "brc-day w-10 h-10 mx-auto inline-flex items-center justify-center rounded-full text-sm transition border border-transparent ";
+          "brc-day w-10 h-10 mx-auto flex flex-col items-center justify-center rounded-full text-sm transition border border-transparent leading-none ";
 
         if (isBlocked) {
-          // INDISPONIBLE : Gris foncé + Barré + Curseur interdit
           classes +=
-            "bg-gray-200 text-gray-400 line-through cursor-not-allowed decoration-gray-400";
+            "bg-gray-200 text-gray-400 cursor-not-allowed decoration-gray-400";
         } else if (inMonth) {
-          // MOIS COURANT : Blanc
           classes += "bg-white hover:bg-gray-100 text-gray-900 cursor-pointer";
         } else {
-          // HORS MOIS : Gris clair MAIS Sélectionnable (cursor-pointer)
           classes += "text-gray-400 hover:bg-gray-50 cursor-pointer";
         }
 
@@ -125,11 +122,19 @@
             class="${classes}"
             data-date="${dateStr}"
             data-blocked="${isBlocked ? 1 : 0}">
-            ${d.getDate()}
+            
+            <span class="text-sm font-semibold">
+                ${d.getDate()}
+            </span>
+
+            ${
+              !isBlocked
+                ? `<span class="text-[8px] text-gray-500 font-normal leading-none -mt-0.5">${dayPrice}€</span>`
+                : ""
+            }
           </button>
         </td>`;
 
-        // Fin de ligne (Dimanche)
         if ((i + 1) % 7 === 0) html += "</tr>";
       }
 
@@ -140,6 +145,72 @@
       );
       highlightSelection();
     }
+
+    const getMonthDay = (d) => {
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${m}-${day}`;
+    };
+
+    const getPrice = (dateObj) => {
+      const def = window.BRC_CONTEXT
+        ? parseFloat(window.BRC_CONTEXT.defaultPrice)
+        : 0;
+      const seasons =
+        window.BRC_CONTEXT && window.BRC_CONTEXT.seasonal
+          ? window.BRC_CONTEXT.seasonal
+          : [];
+
+      const currentMD = getMonthDay(dateObj); // Ex: "12-25"
+
+      for (let s of seasons) {
+        // On extrait juste MM-DD des champs ACF (format YYYY-MM-DD)
+        const startMD = s.start_date.substring(5); // "2025-07-01" -> "07-01"
+        const endMD = s.end_date.substring(5); // "2025-08-31" -> "08-31"
+
+        // Gestion du chevauchement d'année (ex: du 15 Déc au 15 Janv)
+        if (startMD > endMD) {
+          // Si la date est après le début OU avant la fin (Hiver)
+          if (currentMD >= startMD || currentMD <= endMD) {
+            return parseFloat(s.price);
+          }
+        } else {
+          // Cas standard (ex: Juin à Août)
+          if (currentMD >= startMD && currentMD <= endMD) {
+            return parseFloat(s.price);
+          }
+        }
+      }
+      return def;
+    };
+
+    const isPriceMissing = (dateObj) => {
+      const seasons =
+        window.BRC_CONTEXT && window.BRC_CONTEXT.seasonal
+          ? window.BRC_CONTEXT.seasonal
+          : [];
+
+      const currentMD = getMonthDay(dateObj);
+
+      for (let s of seasons) {
+        const startMD = s.start_date.substring(5);
+        const endMD = s.end_date.substring(5);
+
+        let inSeason = false;
+
+        if (startMD > endMD) {
+          if (currentMD >= startMD || currentMD <= endMD) inSeason = true;
+        } else {
+          if (currentMD >= startMD && currentMD <= endMD) inSeason = true;
+        }
+
+        if (inSeason) {
+          const price = parseFloat(s.price);
+          return !price || price <= 0;
+        }
+      }
+      return true;
+    };
 
     function highlightSelection() {
       $$(".brc-day", tbody).forEach((el) => {
@@ -223,6 +294,61 @@
       }
     }
 
+    function updateSummary() {
+      if (!start || !end) return;
+
+      const s = parse(start);
+      const e = parse(end);
+
+      let total = 0;
+      let iter = new Date(s);
+
+      // Objet pour compter : { "50": 2, "40": 1 } -> 2 nuits à 50€, 1 nuit à 40€
+      let breakdown = {};
+
+      while (iter < e) {
+        let p = getPrice(iter);
+        total += p;
+
+        // On compte les nuits par tarif
+        let pStr = p.toString();
+        breakdown[pStr] = (breakdown[pStr] || 0) + 1;
+
+        iter.setDate(iter.getDate() + 1);
+      }
+
+      const deposit = total * 0.4;
+
+      // Génération du HTML de la liste
+      const listEl = $("#brc-price-breakdown");
+      if (listEl) {
+        listEl.innerHTML = "";
+        for (const [price, nights] of Object.entries(breakdown)) {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${nights} nuit${
+            nights > 1 ? "s" : ""
+          }</strong> à ${price}€`;
+          listEl.appendChild(li);
+        }
+      }
+      if ($("#brc-total")) $("#brc-total").innerText = total;
+      if ($("#brc-deposit")) $("#brc-deposit").innerText = deposit.toFixed(2);
+      if ($("#brc-summary")) $("#brc-summary").classList.remove("hidden");
+
+      if (topSummary && topPriceEl) {
+        topPriceEl.innerText = total; // Affiche le prix
+        topSummary.classList.remove("hidden"); // Rend le bloc visible
+        topSummary.classList.add("flex"); // Force le flex
+      }
+    }
+
+    // Modifier l'écouteur du bouton d'ouverture
+    openBtn.addEventListener("click", () => {
+      updateSummary(); // <--- AJOUT ICI
+      formError.classList.add("hidden");
+      modal.classList.remove("hidden");
+    });
+
     // ... (Helpers UI identiques) ...
     function showFeedback(msg, type = "error") {
       feedback.classList.remove("hidden", "text-red-600", "text-green-600");
@@ -239,19 +365,22 @@
 
     function onDayClick(e) {
       const btn = e.currentTarget;
-      // Empêcher le clic sur une date bloquée
       if (btn.dataset.blocked === "1") return;
 
       const date = btn.dataset.date;
       hideFeedback();
 
       if (!start || (start && end)) {
+        // Reset sélection (1er clic ou nouveau clic après sélection complète)
         start = date;
         end = null;
         inDisplay.value = date.split("-").reverse().join("/");
         outDisplay.value = "";
+
         openBtn.classList.add("hidden");
+        if (topSummary) topSummary.classList.add("hidden"); // On cache le total
       } else {
+        // 2ème clic (Fin de séjour)
         let d = parse(date);
         let s = parse(start);
 
@@ -261,8 +390,9 @@
         } else if (d.getTime() === s.getTime()) {
           start = null;
           inDisplay.value = "";
+          if (topSummary) topSummary.classList.add("hidden");
         } else {
-          // Validation Disponibilité
+          // Vérif validité
           let isValid = true;
           let temp = new Date(s);
           while (temp <= d) {
@@ -279,27 +409,33 @@
               "error"
             );
             end = null;
+            if (topSummary) topSummary.classList.add("hidden");
           } else {
+            // Vérif durée min
             const diffTime = Math.abs(d - s);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
             if (diffDays < minStay) {
-              end = date; // On montre visuellement la sélection
+              end = date;
               outDisplay.value = date.split("-").reverse().join("/");
-              highlightSelection(); // On force le highlight pour le feedback visuel
+              highlightSelection();
               showFeedback(
                 `Le séjour doit être d'au moins ${minStay} nuits.`,
                 "error"
               );
               openBtn.classList.add("hidden");
+              if (topSummary) topSummary.classList.add("hidden"); // Cache si invalide
               return;
             }
 
+            // TOUT EST BON
             end = date;
             outDisplay.value = date.split("-").reverse().join("/");
             inHidden.value = start;
             outHidden.value = end;
+
             openBtn.classList.remove("hidden");
+            updateSummary(); // <--- C'est ici que la magie opère !
           }
         }
       }

@@ -6,6 +6,8 @@ use Timber\Timber;
 use Timber\Post;
 use Timber\PostQuery;
 
+use App\Paiement\PaymentController;
+
 class Router
 {
     public static function run(): void
@@ -17,6 +19,26 @@ class Router
             'post_status'    => 'publish',
             'posts_per_page' => 10,
         ]);
+
+        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+
+        if (strpos($uri, '/paiement') !== false || is_page('paiement')) {
+            if (class_exists(PaymentController::class)) {
+                PaymentController::viewPayment();
+                exit;
+            }
+        }
+
+        if (strpos($uri, '/success') !== false || is_page('success')) {
+            if (class_exists(PaymentController::class)) {
+                PaymentController::viewSuccess();
+                exit;
+            }
+        }
+
+        // 2. Contexte global Timber
+        $context = Timber::context();
+        $context['post']  = Timber::get_post();
 
         // Gestion minimale : front, page, 404, index
         if (is_front_page()) {

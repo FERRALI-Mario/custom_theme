@@ -4,7 +4,6 @@ import "./number-counter.js";
 import "./video-section.js";
 import "./product-filter.js";
 import "./room-list.js";
-import "./booking-request-calendar.js";
 import { initMapBlock } from "./map.js";
 
 document.addEventListener("DOMContentLoaded", initMapBlock);

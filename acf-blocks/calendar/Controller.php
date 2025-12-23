@@ -1,6 +1,6 @@
 <?php
 
-namespace AcfBlocks\BookingRequestCalendar;
+namespace AcfBlocks\Calendar;
 
 use App\Core\BlockFactory;
 use Timber\Timber;
@@ -9,7 +9,7 @@ class Controller extends BlockFactory
 {
     public function __construct()
     {
-        parent::__construct('booking-request-calendar');
+        parent::__construct('calendar');
     }
 
     public function getTitle(): string
@@ -31,11 +31,6 @@ class Controller extends BlockFactory
 
     public function render(array $block, string $content = '', bool $is_preview = false, int $post_id = 0): void
     {
-        if ($this->isPreview($block) && $this->getPreviewPath()) {
-            echo sprintf('<img src="%s" alt="Aperçu" style="width:100%%;height:auto;" />', esc_url(get_template_directory_uri() . '/' . $this->getPreviewPath()));
-            return;
-        }
-
         $context = Timber::context();
         $fields  = function_exists('get_fields') ? (get_fields() ?: []) : [];
 
@@ -44,6 +39,8 @@ class Controller extends BlockFactory
         $weekStart    = 1;
         $minStay      = (int)($fields['min_stay'] ?? 7);
         $cacheMin     = max(5, (int)($fields['cache_minutes'] ?? 60));
+
+        // Instantiation pour utiliser les méthodes helpers (getBlockedDates)
         $handler = new AjaxHandler();
 
         $blocked = $handler->getBlockedDates($fields['ical_url'] ?? '', $cacheMin);
@@ -55,22 +52,25 @@ class Controller extends BlockFactory
 
         $rules = ['min_stay' => $minStay];
 
-        // JS
-        $handle = 'booking-request-calendar';
-        $src    = get_template_directory_uri() . '/assets/js/booking-request-calendar.js';
-        wp_enqueue_script($handle, $src, [], filemtime(get_template_directory() . '/assets/js/booking-request-calendar.js'), true);
+        $handle = 'calendar-js';
+        $src    = get_template_directory_uri() . '/assets/js/calendar.js';
 
-        wp_localize_script($handle, 'BRC', [
-            'ajaxurl'    => admin_url('admin-ajax.php'),
-            'blocked'    => array_values($blocked),
-            'rules'      => $rules,
-            'weekStart'  => $weekStart,
-            'current'    => ['year' => (int)$today->format('Y'), 'month' => (int)$today->format('n')],
-            'i18n'       => [
-                'invalid'  => 'Dates invalides.',
-                'tooShort' => "Le séjour doit être d'au moins $minStay nuits.",
-            ]
-        ]);
+        if (file_exists(get_template_directory() . '/assets/js/calendar.js')) {
+            wp_enqueue_script($handle, $src, [], filemtime(get_template_directory() . '/assets/js/calendar.js'), true);
+
+            wp_localize_script($handle, 'BRC', [
+                'ajaxurl'   => admin_url('admin-ajax.php'),
+                'blocked'   => array_values($blocked),
+                'rules'     => $rules,
+                'weekStart' => $weekStart,
+                'current'   => ['year' => (int)$today->format('Y'), 'month' => (int)$today->format('n')],
+            ]);
+
+            wp_localize_script($handle, 'BRC_CONTEXT', [
+                'defaultPrice' => (float)($fields['price_per_night'] ?? 0),
+                'seasonal'     => $fields['seasonal_prices'] ?? [],
+            ]);
+        }
 
         $context['fields']   = $fields;
         $context['block']    = $block;
@@ -81,7 +81,6 @@ class Controller extends BlockFactory
         Timber::render($this->getTemplatePath(), $context);
     }
 
-    // Uniquement la méthode d'affichage du calendrier reste ici
     private function buildMonths(\DateTime $from, int $count, int $weekStart, array $blockedSet): array
     {
         $months = [];

@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Providers\Blocks;
 use App\Providers\Editor;
+use App\Providers\PostTypes;
 use Timber\Timber;
 
 class Theme
@@ -16,15 +17,27 @@ class Theme
 
         self::bootTimber();
         self::registerBlockCategories();
+        PostTypes::register();
         Blocks::register();
         Editor::register();
 
-        $ajax_handler_path = get_template_directory() . '/acf-blocks/booking-request-calendar/AjaxHandler.php';
+        add_action('template_redirect', [\App\Core\Router::class, 'run']);
 
-        if (file_exists($ajax_handler_path)) {
-            require_once $ajax_handler_path;
-            new \AcfBlocks\BookingRequestCalendar\AjaxHandler();
+        $calendarHandlerPath = get_template_directory() . '/acf-blocks/calendar/AjaxHandler.php';
+
+        if (file_exists($calendarHandlerPath)) {
+            require_once $calendarHandlerPath;
+            if (class_exists('AcfBlocks\Calendar\AjaxHandler')) {
+                \AcfBlocks\Calendar\AjaxHandler::register();
+            }
         }
+
+        $paymentPath = get_template_directory() . '/app/Paiement/PaymentController.php';
+        if (file_exists($paymentPath)) {
+            require_once $paymentPath;
+        }
+
+        add_action('acf/init', [self::class, 'registerGlobalConfig']);
 
         add_action('after_setup_theme', static function () {
             if (\defined('WP_CLI') && \class_exists('\\WP_CLI') && \class_exists(\App\Console\InitCommand::class)) {
@@ -94,5 +107,51 @@ class Theme
 
             return array_merge($new_categories, $categories);
         }, 10, 2);
+    }
+
+    public static function registerGlobalConfig(): void
+    {
+        if (function_exists('acf_add_options_sub_page')) {
+            acf_add_options_sub_page([
+                'page_title'  => 'Réglages Stripe',
+                'menu_title'  => 'Stripe',
+                'parent_slug' => 'options-general.php',
+                'menu_slug'   => 'acf-options-stripe',
+                'capability'  => 'manage_options',
+            ]);
+        }
+
+        if (function_exists('acf_add_local_field_group')) {
+            acf_add_local_field_group([
+                'key' => 'group_stripe_configuration',
+                'title' => 'Configuration Stripe',
+                'fields' => [
+                    [
+                        'key' => 'field_stripe_mode',
+                        'label' => 'Mode',
+                        'name' => 'stripe_mode',
+                        'type' => 'radio',
+                        'choices' => ['test' => 'Mode Test', 'live' => 'Mode Live'],
+                        'default_value' => 'test',
+                        'layout' => 'horizontal',
+                    ],
+                    [
+                        'key' => 'field_stripe_test_key',
+                        'label' => 'Clé Secrète (Test)',
+                        'name' => 'stripe_test_key',
+                        'type' => 'text',
+                        'conditional_logic' => [[['field' => 'field_stripe_mode', 'operator' => '==', 'value' => 'test']]],
+                    ],
+                    [
+                        'key' => 'field_stripe_live_key',
+                        'label' => 'Clé Secrète (Live)',
+                        'name' => 'stripe_live_key',
+                        'type' => 'text',
+                        'conditional_logic' => [[['field' => 'field_stripe_mode', 'operator' => '==', 'value' => 'live']]],
+                    ],
+                ],
+                'location' => [[['param' => 'options_page', 'operator' => '==', 'value' => 'acf-options-stripe']]],
+            ]);
+        }
     }
 }

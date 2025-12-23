@@ -2,7 +2,7 @@
 {% set months = months ?? [] %}
 {% set weekdays = weekdays ?? [] %}
 
-<section class="booking-request-calendar-block py-12 lg:py-16">
+<section class="calendar-block py-12 lg:py-16">
 	{% if fields.title or fields.subtitle %}
 		{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
 	{% endif %}
@@ -19,6 +19,19 @@
 				<button type="button" class="brc-next inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition">
 					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke-width="2"/></svg>
 				</button>
+			</div>
+
+			<div id="brc-top-summary" class="hidden md:absolute md:left-1/2 md:-translate-x-1/2 flex-col items-center justify-center transition-all duration-300">
+
+				<span class="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-0.5 font-sans">
+					Total Séjour
+				</span>
+
+				<div class="flex items-center">
+					<span id="brc-top-price" class="text-3xl font-bold text-gray-900 tracking-tight">0</span>
+					<span class="text-2xl font-light text-gray-400 ml-1">€</span>
+				</div>
+
 			</div>
 
 			<div class="grid grid-cols-2 gap-3 w-full md:w-auto">
@@ -75,6 +88,27 @@
 					<button type="button" class="brc-close text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
 				</div>
 
+				<div id="brc-summary" class="bg-gray-50 p-4 rounded-md mb-4 text-sm text-gray-700 hidden border border-gray-200">
+					<div class="mb-2 border-b border-gray-200 pb-2">
+						<strong>Détails du séjour :</strong>
+						<ul id="brc-price-breakdown" class="mt-1 space-y-1 text-gray-600 list-disc list-inside"></ul>
+					</div>
+
+					<div class="flex justify-between items-center mb-2 text-base">
+						<span>Prix total :</span>
+						<strong>
+							<span id="brc-total">0</span>
+							€</strong>
+					</div>
+
+					<div class="mt-2 text-xs text-gray-500">
+						<p>Un acompte de
+							<strong>40% (<span id="brc-deposit">0</span>
+								€)</strong>
+							vous sera demandé pour confirmer.</p>
+					</div>
+				</div>
+
 				<form id="brc-form" class="space-y-4" novalidate>
 					{{ function('wp_nonce_field','brc_request','_brc_nonce')|raw }}
 					<input type="hidden" name="action" value="booking_request_submit">
@@ -83,6 +117,9 @@
 					<input type="hidden" name="ical" value="{{ fields.ical_url }}">
 					<input type="hidden" name="cache" value="{{ fields.cache_minutes }}">
 					<input type="hidden" name="fallback_json" value="{{ (fields.fallback|default([]))|json_encode }}">
+					{% set rules = { 'default': fields.price_per_night|default(0), 'seasonal': fields.seasonal_prices|default([]) } %}
+					<input type="hidden" name="pricing_rules" value="{{ rules|json_encode|e('html_attr') }}">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
 
 					<div>
 						<label class="block text-sm font-medium text-gray-700">Nom complet
@@ -97,8 +134,10 @@
 						<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="tel" name="phone" required>
 					</div>
 					<div>
-						<label class="block text-sm font-medium text-gray-700">E-mail</label>
-						<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="email" name="email">
+						<label class="block text-sm font-medium text-gray-700">E-mail
+							<span class="text-red-500">*</span>
+						</label>
+						<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="email" name="email" required>
 					</div>
 					<div>
 						<label class="block text-sm font-medium text-gray-700">Message</label>

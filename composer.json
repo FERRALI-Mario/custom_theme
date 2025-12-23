@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": "^8.1",
+    "stripe/stripe-php": "^19.1",
     "symfony/var-dumper": "^6.0",
     "timber/timber": "^2.3",
     "vlucas/phpdotenv": "^5.5"
