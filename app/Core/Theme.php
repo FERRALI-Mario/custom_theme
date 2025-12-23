@@ -62,15 +62,9 @@ class Theme
     public static function enqueueAssets(): void
     {
         $dist = get_template_directory_uri() . '/assets';
-        $js   = $dist . '/js/main.js';
-        $css  = $dist . '/css/tailwind.css';
 
-        wp_enqueue_script('theme-js', $js, [], filemtime(get_template_directory() . '/assets/js/main.js'), true);
-        wp_enqueue_style('theme-css', $css, [], filemtime(get_template_directory() . '/assets/css/tailwind.css'));
-
-        /** MAPS */
-        wp_enqueue_style('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
-        wp_enqueue_script('leaflet-js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
+        wp_enqueue_script('theme-js', $dist . '/js/main.js', [], filemtime(get_template_directory() . '/assets/js/main.js'), true);
+        wp_enqueue_style('theme-css', $dist . '/css/tailwind.css', [], filemtime(get_template_directory() . '/assets/css/tailwind.css'));
 
         /** FONTAWESOME */
         wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css', [], null);

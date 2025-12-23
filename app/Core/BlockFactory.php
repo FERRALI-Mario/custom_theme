@@ -61,6 +61,8 @@ abstract class BlockFactory
      */
     public function render(array $block): void
     {
+        $this->enqueueAssets();
+
         $context = Timber::context();
         $context['block'] = $block;
         $context['fields'] = $this->getFields();
@@ -74,6 +76,26 @@ abstract class BlockFactory
         endif;
 
         Timber::render($this->getTemplatePath(), $context);
+    }
+
+    /**
+     * Charge automatiquement le JS du bloc s'il existe dans assets/js/{slug}.js
+     */
+    protected function enqueueAssets(): void
+    {
+        // Chemin vers votre dossier JS compilé/final
+        $js_path = "/assets/js/{$this->slug}.js";
+        $abs_path = get_template_directory() . $js_path;
+
+        if (file_exists($abs_path)) {
+            wp_enqueue_script(
+                "block-{$this->slug}", // Handle unique : block-timeline
+                get_template_directory_uri() . $js_path,
+                [], // Dépendances (ajouter ['jquery'] si besoin)
+                filemtime($abs_path), // Cache busting auto
+                true // Footer
+            );
+        }
     }
 
     /**

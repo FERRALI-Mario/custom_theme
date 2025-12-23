@@ -44,9 +44,6 @@
 
     const blockedRaw = BRC.blocked || [];
     const blockedSet = new Set(blockedRaw.map(String));
-
-    console.log("Dates indisponibles chargées :", blockedSet);
-
     const minStay = parseInt((BRC.rules && BRC.rules.min_stay) || 7, 10);
 
     let current = {

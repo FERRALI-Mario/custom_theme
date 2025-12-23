@@ -35,4 +35,21 @@ class Controller extends BlockFactory
     {
         return 'location-alt';
     }
+
+    protected function enqueueAssets(): void
+    {
+        wp_enqueue_style('leaflet-css', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4');
+        wp_enqueue_script('leaflet-js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true);
+
+        $js_path = "/assets/js/map.js";
+        if (file_exists(get_template_directory() . $js_path)) {
+            wp_enqueue_script(
+                'block-map',
+                get_template_directory_uri() . $js_path,
+                ['leaflet-js'],
+                null,
+                true
+            );
+        }
+    }
 }
