@@ -43,17 +43,17 @@ class Router
         // Gestion minimale : front, page, 404, index
         if (is_front_page()) {
             Timber::render('views/pages/front-page.twig', $context);
-            return;
+            exit;
         }
 
         if (is_page()) {
             Timber::render('views/pages/page.twig', $context);
-            return;
+            exit;
         }
 
         if (is_404()) {
             Timber::render('views/pages/404.twig', $context);
-            return;
+            exit;
         }
 
         // Fallback global
