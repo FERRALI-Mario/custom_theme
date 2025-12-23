@@ -14,6 +14,8 @@ class Controller extends BlockFactory
 
     public function render(array $block): void
     {
+        $this->enqueueAssets();
+
         $context = Timber::context();
 
         $events = get_field('events');
