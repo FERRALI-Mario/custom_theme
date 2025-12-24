@@ -1,6 +1,6 @@
 {
   "name": "wp-theme-boilerplate",
-  "version": "1.32.0",
+  "version": "1.33.0",
   "private": true,
   "scripts": {
     "dev": "vite",
