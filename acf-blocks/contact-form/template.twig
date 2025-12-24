@@ -9,10 +9,46 @@
 			{% endif %}
 		</div>
 
-		{% if fields.shortcode %}
-			<div class="contact-form-shortcode">
-				{{ fields.rendered|raw }}
-			</div>
-		{% endif %}
+		<form id="custom-contact-form" class="space-y-4" novalidate>
+			<input type="hidden" name="action" value="send_contact_form">
+			<input type="hidden" name="_wpnonce" value="{{ function('wp_create_nonce', 'wp_rest') }}">
+
+			{% if fields.form_fields %}
+				{% for field in fields.form_fields %}
+					<div class="space-y-2">
+
+						<label class="text-sm font-medium block text-gray-700">
+							{{ field.label }}
+							<span class="text-red-500">*</span>
+						</label>
+
+						{% set field_name = 'field_' ~ loop.index ~ '_' ~ function('sanitize_title', field.label) %}
+
+						{% if field.type == 'textarea' %}
+							<textarea name="{{ field_name }}" rows="4" class="flex w-full rounded-lg border bg-white/5 border-black/30 px-4 py-3 text-sm focus:border-black focus:outline-none transition-colors" required></textarea>
+						{% else %}
+							<input type="{{ field.type }}" name="{{ field_name }}" class="flex w-full rounded-lg border bg-white/5 border-black/30 px-4 py-2 text-sm focus:border-black focus:outline-none transition-colors" required>
+						{% endif %}
+					</div>
+				{% endfor %}
+
+				<div class="pt-2">
+					<button type="submit" class="w-full flex justify-center items-center h-12 rounded-lg bg-black text-white text-sm font-medium hover:bg-gray-800 transition-all shadow-sm disabled:opacity-50">
+						<span class="btn-text">{{ fields.submit_text|default('Envoyer') }}</span>
+						<span class="btn-loading hidden ml-2">
+							<i class="fas fa-circle-notch fa-spin"></i>
+						</span>
+					</button>
+				</div>
+
+			{% else %}
+				<div class="text-center text-sm text-gray-500 italic">
+					Aucun champ configuré.
+				</div>
+			{% endif %}
+
+			<div id="form-message" class="text-red-600 text-sm text-center hidden"></div>
+
+		</form>
 	</div>
 </section>

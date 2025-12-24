@@ -23,6 +23,15 @@ class Theme
 
         add_action('template_redirect', [\App\Core\Router::class, 'run']);
 
+        $contactHandlerPath = get_template_directory() . '/acf-blocks/contact-form/AjaxHandler.php';
+
+        if (file_exists($contactHandlerPath)) {
+            require_once $contactHandlerPath;
+            if (class_exists('AcfBlocks\ContactForm\AjaxHandler')) {
+                \AcfBlocks\ContactForm\AjaxHandler::register();
+            }
+        }
+
         $calendarHandlerPath = get_template_directory() . '/acf-blocks/calendar/AjaxHandler.php';
 
         if (file_exists($calendarHandlerPath)) {

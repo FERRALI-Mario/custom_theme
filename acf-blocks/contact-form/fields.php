@@ -7,19 +7,11 @@ if (function_exists('acf_add_local_field_group')) :
         'title' => 'Block formulaire de contact',
         'fields' => [
             [
-                'key' => 'field_contact_form_shortcode',
-                'label' => 'Shortcode',
-                'name' => 'shortcode',
-                'type' => 'text',
-                'instructions' => 'Entrez le shortcode du formulaire de contact (par exemple [contact-form-7 id="123" title="Contact form 1"])',
-                'required' => 0,
-            ],
-            [
                 'key' => 'field_contact_form_title',
                 'label' => 'Titre',
                 'name' => 'title',
                 'type' => 'text',
-                'required' => 0,
+                'required' => 1,
             ],
             [
                 'key' => 'field_contact_form_subtitle',
@@ -27,7 +19,45 @@ if (function_exists('acf_add_local_field_group')) :
                 'name' => 'subtitle',
                 'type' => 'textarea',
                 'rows' => 3,
-                'required' => 0,
+                'required' => 1,
+            ],
+            [
+                'key' => 'field_contact_fields',
+                'label' => 'Champs du formulaire',
+                'name' => 'form_fields',
+                'type' => 'repeater',
+                'button_label' => 'Ajouter un champ',
+                'layout' => 'block',
+                'sub_fields' => [
+                    [
+                        'key' => 'field_input_type',
+                        'label' => 'Type de champ',
+                        'name' => 'type',
+                        'type' => 'select',
+                        'choices' => [
+                            'text' => 'Texte simple (Nom, Prénom)',
+                            'email' => 'Email',
+                            'tel' => 'Téléphone',
+                            'textarea' => 'Message (Zone de texte)',
+                        ],
+                        'default_value' => 'text',
+                    ],
+                    [
+                        'key' => 'field_input_label',
+                        'label' => 'Libellé (Label)',
+                        'name' => 'label',
+                        'type' => 'text',
+                        'required' => 1,
+                        'placeholder' => 'Ex: Votre nom',
+                    ],
+                ],
+            ],
+            [
+                'key' => 'field_contact_btn_text',
+                'label' => 'Texte du bouton',
+                'name' => 'submit_text',
+                'type' => 'text',
+                'default_value' => 'Envoyer le message',
             ],
         ],
         'location' => [

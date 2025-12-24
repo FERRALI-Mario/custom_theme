@@ -12,30 +12,6 @@ class Controller extends BlockFactory
         parent::__construct('contact-form');
     }
 
-    public function render(array $block): void
-    {
-        $context = Timber::context();
-        $fields = get_fields();
-
-        $fields['rendered'] = !empty($fields['shortcode'])
-            ? do_shortcode($fields['shortcode'])
-            : '';
-
-        $context['fields'] = $fields;
-        $context['block'] = $block;
-
-        $previewPath = $this->getPreviewPath();
-
-        if ($this->isPreview($block) && $previewPath) :
-            $previewUrl = get_template_directory_uri() . '/' . $previewPath;
-            echo '<img src="' . esc_url($previewUrl) . '" style="width:100%;height:auto;" alt="Aperçu du bloc" />';
-            return;
-        endif;
-
-        Timber::render($this->getTemplatePath(), $context);
-    }
-
-
     public function getTitle(): string
     {
         return 'Formulaire de contact';
@@ -59,5 +35,20 @@ class Controller extends BlockFactory
     public function getIcon(): string
     {
         return 'email';
+    }
+
+    protected function enqueueAssets(): void
+    {
+        $handle = 'contact-form-js';
+        $src = get_template_directory_uri() . '/assets/js/contact.js';
+
+        if (file_exists(get_template_directory() . '/assets/js/contact.js')) {
+            wp_enqueue_script($handle, $src, [], filemtime(get_template_directory() . '/assets/js/contact.js'), true);
+
+            wp_localize_script($handle, 'CONTACT_FORM', [
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce'   => wp_create_nonce('contact_form_action') // Doit correspondre à AjaxHandler check
+            ]);
+        }
     }
 }
