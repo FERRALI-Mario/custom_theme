@@ -1,11 +1,32 @@
+const fs = require("fs");
+const path = require("path");
+
+const activeBlocksPath = path.resolve(__dirname, "active-blocks.json");
+let activeBlocks = [];
+
+try {
+  if (fs.existsSync(activeBlocksPath)) {
+    activeBlocks = JSON.parse(fs.readFileSync(activeBlocksPath, "utf8"));
+  } else {
+    console.warn(
+      "⚠️  active-blocks.json non trouvé. Tailwind va scanner tous les blocs."
+    );
+  }
+} catch (e) {
+  console.error("Erreur lecture active-blocks.json", e);
+}
+
+const blockPaths =
+  activeBlocks.length > 0
+    ? activeBlocks.map((slug) => `./acf-blocks/${slug}/**/*.twig`)
+    : ["./acf-blocks/**/*.twig"];
+
 module.exports = {
   content: [
     "./*.php",
-    "./functions.php",
-    "./app/**/*.php",
-    "./acf-blocks/**/*.php",
-    "./acf-blocks/**/*.twig",
     "./views/**/*.twig",
+    "./assets/js/**/*.js",
+    ...blockPaths,
   ],
   theme: {
     extend: {

@@ -120,7 +120,7 @@
             <span class="text-sm font-semibold">${d.getDate()}</span>
             ${
               !isBlocked
-                ? `<span class="text-[8px] text-gray-500 font-normal leading-none -mt-0.5">${dayPrice}€</span>`
+                ? `<span class="text-gray-500 font-normal leading-none -mt-0.5">${dayPrice}€</span>`
                 : ""
             }
           </button>
