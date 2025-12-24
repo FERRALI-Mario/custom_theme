@@ -17,6 +17,15 @@ if (function_exists('acf_add_local_field_group')) :
                 ]
             ],
             [
+                'key' => 'field_map_api_key',
+                'label' => 'Clé API Google Maps',
+                'name' => 'map_api_key',
+                'type' => 'text',
+                'instructions' => 'Copiez votre clé API Google Maps ici (commence par AIza...).',
+                'required' => 1,
+                'placeholder' => 'AIzaSy...',
+            ],
+            [
                 'key' => 'field_map_latitude',
                 'label' => 'Latitude',
                 'name' => 'map_latitude',
