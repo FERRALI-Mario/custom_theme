@@ -3,7 +3,6 @@
   const $ = (s, r = document) => r.querySelector(s);
 
   // 1. FORMATAGE DATE ROBUSTE
-  // Force le format YYYY-MM-DD local pour correspondre exactement à PHP
   const fmt = (d) => {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -68,7 +67,6 @@
     const inHidden = $('input[name="checkin"]', form);
     const outHidden = $('input[name="checkout"]', form);
     const priceInput = $('input[name="price"]', form);
-    const pricePerNight = parseFloat(priceInput ? priceInput.value : 0);
     const topSummary = $("#brc-top-summary", root);
     const topPriceEl = $("#brc-top-price", root);
 
@@ -81,8 +79,8 @@
       const firstOfMonth = new Date(current.year, current.month - 1, 1);
       const daysInMonth = new Date(current.year, current.month, 0).getDate();
 
-      const dow = firstOfMonth.getDay(); // 0 = Dimanche
-      const offset = (dow + 6) % 7; // Décalage pour commencer Lundi
+      const dow = firstOfMonth.getDay();
+      const offset = (dow + 6) % 7;
       const startGrid = addDays(firstOfMonth, -offset);
 
       const totalCells = Math.ceil((offset + daysInMonth) / 7) * 7;
@@ -119,11 +117,7 @@
             class="${classes}"
             data-date="${dateStr}"
             data-blocked="${isBlocked ? 1 : 0}">
-            
-            <span class="text-sm font-semibold">
-                ${d.getDate()}
-            </span>
-
+            <span class="text-sm font-semibold">${d.getDate()}</span>
             ${
               !isBlocked
                 ? `<span class="text-[8px] text-gray-500 font-normal leading-none -mt-0.5">${dayPrice}€</span>`
@@ -157,25 +151,17 @@
         window.BRC_CONTEXT && window.BRC_CONTEXT.seasonal
           ? window.BRC_CONTEXT.seasonal
           : [];
-
-      const currentMD = getMonthDay(dateObj); // Ex: "12-25"
+      const currentMD = getMonthDay(dateObj);
 
       for (let s of seasons) {
-        // On extrait juste MM-DD des champs ACF (format YYYY-MM-DD)
-        const startMD = s.start_date.substring(5); // "2025-07-01" -> "07-01"
-        const endMD = s.end_date.substring(5); // "2025-08-31" -> "08-31"
-
-        // Gestion du chevauchement d'année (ex: du 15 Déc au 15 Janv)
+        const startMD = s.start_date.substring(5);
+        const endMD = s.end_date.substring(5);
         if (startMD > endMD) {
-          // Si la date est après le début OU avant la fin (Hiver)
-          if (currentMD >= startMD || currentMD <= endMD) {
+          if (currentMD >= startMD || currentMD <= endMD)
             return parseFloat(s.price);
-          }
         } else {
-          // Cas standard (ex: Juin à Août)
-          if (currentMD >= startMD && currentMD <= endMD) {
+          if (currentMD >= startMD && currentMD <= endMD)
             return parseFloat(s.price);
-          }
         }
       }
       return def;
@@ -186,13 +172,11 @@
         window.BRC_CONTEXT && window.BRC_CONTEXT.seasonal
           ? window.BRC_CONTEXT.seasonal
           : [];
-
       const currentMD = getMonthDay(dateObj);
 
       for (let s of seasons) {
         const startMD = s.start_date.substring(5);
         const endMD = s.end_date.substring(5);
-
         let inSeason = false;
 
         if (startMD > endMD) {
@@ -211,10 +195,8 @@
 
     function highlightSelection() {
       $$(".brc-day", tbody).forEach((el) => {
-        // On ne touche pas au style des dates indisponibles
         if (el.dataset.blocked === "1") return;
 
-        // 1. RESET : On retire tous les styles d'état
         el.classList.remove(
           "bg-gray-900",
           "text-white",
@@ -223,24 +205,21 @@
           "scale-105"
         );
 
-        // 2. ÉTAT PAR DÉFAUT
         const d = parse(el.dataset.date);
         const inMonth = d.getMonth() + 1 === current.month;
 
         if (inMonth) {
           el.classList.add("bg-white", "text-gray-900", "hover:bg-gray-100");
-          el.classList.remove("text-gray-400"); // Sécurité
+          el.classList.remove("text-gray-400");
         } else {
-          el.classList.add("text-gray-400"); // Gris pour hors mois
+          el.classList.add("text-gray-400");
           el.classList.remove("bg-white", "text-gray-900");
         }
       });
 
-      // 3. APPLIQUER LA SÉLECTION (Prioritaire)
       if (start) {
         const sEl = $(`button[data-date="${start}"]`, tbody);
         if (sEl) {
-          // Style DÉBUT : Noir (supprime le gris ou le blanc)
           sEl.classList.remove(
             "bg-white",
             "text-gray-900",
@@ -259,7 +238,6 @@
       if (end) {
         const eEl = $(`button[data-date="${end}"]`, tbody);
         if (eEl) {
-          // Style FIN : Noir
           eEl.classList.remove(
             "bg-white",
             "text-gray-900",
@@ -274,16 +252,13 @@
           );
         }
 
-        // 4. INTERVALLE
         const sd = parse(start);
         const ed = parse(end);
 
         $$(".brc-day", tbody).forEach((el) => {
           if (el.dataset.blocked === "1") return;
-
           const d = parse(el.dataset.date);
           if (d > sd && d < ed) {
-            // Entre les deux : Gris clair
             el.classList.remove("bg-white", "text-gray-400", "text-gray-900");
             el.classList.add("bg-gray-100", "text-gray-900");
           }
@@ -293,30 +268,21 @@
 
     function updateSummary() {
       if (!start || !end) return;
-
       const s = parse(start);
       const e = parse(end);
-
       let total = 0;
       let iter = new Date(s);
-
-      // Objet pour compter : { "50": 2, "40": 1 } -> 2 nuits à 50€, 1 nuit à 40€
       let breakdown = {};
 
       while (iter < e) {
         let p = getPrice(iter);
         total += p;
-
-        // On compte les nuits par tarif
         let pStr = p.toString();
         breakdown[pStr] = (breakdown[pStr] || 0) + 1;
-
         iter.setDate(iter.getDate() + 1);
       }
 
       const deposit = total * 0.4;
-
-      // Génération du HTML de la liste
       const listEl = $("#brc-price-breakdown");
       if (listEl) {
         listEl.innerHTML = "";
@@ -333,20 +299,18 @@
       if ($("#brc-summary")) $("#brc-summary").classList.remove("hidden");
 
       if (topSummary && topPriceEl) {
-        topPriceEl.innerText = total; // Affiche le prix
-        topSummary.classList.remove("hidden"); // Rend le bloc visible
-        topSummary.classList.add("flex"); // Force le flex
+        topPriceEl.innerText = total;
+        topSummary.classList.remove("hidden");
+        topSummary.classList.add("flex");
       }
     }
 
-    // Modifier l'écouteur du bouton d'ouverture
     openBtn.addEventListener("click", () => {
-      updateSummary(); // <--- AJOUT ICI
+      updateSummary();
       formError.classList.add("hidden");
       modal.classList.remove("hidden");
     });
 
-    // ... (Helpers UI identiques) ...
     function showFeedback(msg, type = "error") {
       feedback.classList.remove("hidden", "text-red-600", "text-green-600");
       feedback.classList.add(
@@ -363,24 +327,19 @@
     function onDayClick(e) {
       const btn = e.currentTarget;
       if (btn.dataset.blocked === "1") return;
-
       const date = btn.dataset.date;
       hideFeedback();
 
       if (!start || (start && end)) {
-        // Reset sélection (1er clic ou nouveau clic après sélection complète)
         start = date;
         end = null;
         inDisplay.value = date.split("-").reverse().join("/");
         outDisplay.value = "";
-
         openBtn.classList.add("hidden");
-        if (topSummary) topSummary.classList.add("hidden"); // On cache le total
+        if (topSummary) topSummary.classList.add("hidden");
       } else {
-        // 2ème clic (Fin de séjour)
         let d = parse(date);
         let s = parse(start);
-
         if (d < s) {
           start = date;
           inDisplay.value = date.split("-").reverse().join("/");
@@ -389,7 +348,6 @@
           inDisplay.value = "";
           if (topSummary) topSummary.classList.add("hidden");
         } else {
-          // Vérif validité
           let isValid = true;
           let temp = new Date(s);
           while (temp <= d) {
@@ -408,10 +366,8 @@
             end = null;
             if (topSummary) topSummary.classList.add("hidden");
           } else {
-            // Vérif durée min
             const diffTime = Math.abs(d - s);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
             if (diffDays < minStay) {
               end = date;
               outDisplay.value = date.split("-").reverse().join("/");
@@ -421,25 +377,21 @@
                 "error"
               );
               openBtn.classList.add("hidden");
-              if (topSummary) topSummary.classList.add("hidden"); // Cache si invalide
+              if (topSummary) topSummary.classList.add("hidden");
               return;
             }
-
-            // TOUT EST BON
             end = date;
             outDisplay.value = date.split("-").reverse().join("/");
             inHidden.value = start;
             outHidden.value = end;
-
             openBtn.classList.remove("hidden");
-            updateSummary(); // <--- C'est ici que la magie opère !
+            updateSummary();
           }
         }
       }
       highlightSelection();
     }
 
-    // Navigation & Events (Identiques)
     $(".brc-prev", root).addEventListener("click", () => {
       current.month--;
       if (current.month < 1) {
@@ -456,25 +408,81 @@
       }
       renderMonth();
     });
-    openBtn.addEventListener("click", () => {
-      formError.classList.add("hidden");
-      modal.classList.remove("hidden");
-    });
+
     const closeModal = () => modal.classList.add("hidden");
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", (e) => {
       if (e.target === modal) closeModal();
     });
 
+    // --- SOUMISSION DU FORMULAIRE (LOGIQUE MODIFIÉE) ---
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // 1. Reset des erreurs
+      formError.classList.add("hidden");
+
+      // 2. VÉRIFICATION 1 : Champs vides (Priorité haute)
+      let hasEmpty = false;
+      // On sélectionne tous les champs requis
+      const requiredInputs = $$("input[required], textarea[required]", form);
+
+      requiredInputs.forEach((input) => {
+        // Nettoyage style
+        input.classList.remove("border-red-500", "bg-red-50");
+
+        if (!input.value.trim()) {
+          hasEmpty = true;
+          input.classList.add("border-red-500", "bg-red-50");
+
+          // Enlever le rouge quand on écrit
+          input.addEventListener(
+            "input",
+            () => {
+              input.classList.remove("border-red-500", "bg-red-50");
+            },
+            { once: true }
+          );
+        }
+      });
+
+      if (hasEmpty) {
+        formError.innerText = "Veuillez remplir tous les champs obligatoires.";
+        formError.classList.remove("hidden");
+        return; // STOP : On ne vérifie même pas l'email si des champs sont vides
+      }
+
+      // 3. VÉRIFICATION 2 : Format Email (Priorité secondaire)
+      const emailInput = $('input[name="email"]', form);
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+      if (emailInput) {
+        if (!emailRegex.test(emailInput.value.trim())) {
+          emailInput.classList.add("border-red-500", "bg-red-50");
+          formError.innerText = "L'adresse email n'est pas valide.";
+          formError.classList.remove("hidden");
+
+          emailInput.addEventListener(
+            "input",
+            () => {
+              emailInput.classList.remove("border-red-500", "bg-red-50");
+            },
+            { once: true }
+          );
+
+          return; // STOP
+        }
+      }
+
+      // 4. Suite du traitement (Envoi AJAX) si tout est OK
       const btn = form.querySelector('button[type="submit"]');
       const originalText = btn.innerText;
       btn.disabled = true;
       btn.innerText = "Envoi en cours...";
-      formError.classList.add("hidden");
+
       const formData = new FormData(form);
       formData.append("action", "booking_request_submit");
+
       fetch(BRC.ajaxurl, { method: "POST", body: formData })
         .then((r) => r.json())
         .then((res) => {
