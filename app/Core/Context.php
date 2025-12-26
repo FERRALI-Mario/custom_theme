@@ -2,32 +2,17 @@
 
 namespace App\Core;
 
-use Timber\Menu;
+use Timber\Timber;
 
 class Context
 {
     public static function extend(array $context): array
     {
-        // Infos globales du site
-        $context['site'] = [
-            'name'        => get_bloginfo('name'),
-            'description' => get_bloginfo('description'),
-            'url'         => get_bloginfo('url'),
-        ];
+        $context['site'] = new \Timber\Site();
 
-        $context['menus'] = [];
+        $context['menu'] = Timber::get_menu('primary');
 
-        $primaryMenu = wp_get_nav_menu_object('primary');
-        if ($primaryMenu) :
-            $context['menus']['primary'] = Menu::build($primaryMenu);
-        endif;
-
-        $footerMenu = wp_get_nav_menu_object('footer');
-        if ($footerMenu) :
-            $context['menus']['footer'] = Menu::build($footerMenu);
-        endif;
-
-        if (function_exists('get_fields')) :
+        if (function_exists('get_fields')) {
             $context['options'] = get_fields('option') ?: [];
 
             $context['header'] = [
@@ -35,9 +20,9 @@ class Context
             ];
 
             $context['footer'] = [
-                'logo' => get_field('footer_text', 'option'),
+                'logo' => get_field('footer_text', 'option'), // ou footer_logo
             ];
-        endif;
+        }
 
         return $context;
     }

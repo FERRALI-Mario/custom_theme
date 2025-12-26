@@ -1,62 +1,16 @@
-<header class="py-4 px-6 bg-white shadow-md">
-  <div class="container mx-auto flex justify-between items-center">
-    
-    <!-- Logo -->
-    {% if header.logo %}
-      <a href="{{ site.url }}" class="flex items-center">
-        <img src="{{ get_attachment(header.logo).src }}" alt="{{ site.name }}" class="h-10 w-auto" />
-      </a>
-    {% else %}
-      <span class="font-bold text-lg">{{ site.name }}</span>
-    {% endif %}
-    
-    <!-- Menu desktop -->
-    <nav class="hidden md:flex gap-6 items-center">
-      {{ function('wp_nav_menu', {
-        theme_location: 'primary',
-        menu_class: 'flex gap-6 text-gray-700 hover:text-blue-500 transition-all duration-300',
-        container: false,
-        echo: false
-      }) | raw }}
-    </nav>
+<header class="fixed w-full top-0 z-50 transition-all duration-300 bg-gray-900 text-white shadow-lg" x-data="{ mobileMenuOpen: false }">
+	<div class="container mx-auto px-6 h-20 flex justify-between items-center">
 
-    <!-- Icônes et actions (search, account, cart) -->
-    <div class="flex gap-6 items-center">
-      <!-- Search button -->
-      <button aria-label="Search" class="text-xl text-gray-700 hover:text-blue-500 transition-colors">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
+		<div class="flex-shrink-0">
+			<a href="{{ site.url }}" class="flex items-center gap-2 group">
+				{% if header.logo %}
+					<img src="{{ get_attachment(header.logo).src }}" alt="{{ site.name }}" class="h-10 w-auto transition-transform duration-300 group-hover:scale-105"/>
+				{% else %}
+					<span class="font-bold text-2xl tracking-tighter">{{ site.name }}</span>
+				{% endif %}
+			</a>
+		</div>
 
-      <!-- Account link -->
-      <a href="/mon-compte" class="text-xl text-gray-700 hover:text-blue-500 transition-colors" aria-label="Mon compte">
-        <i class="fa-solid fa-circle-user"></i>
-      </a>
-
-      <!-- Cart link with item count -->
-      <a href="/panier" class="relative text-xl text-gray-700 hover:text-blue-500 transition-colors" aria-label="Panier">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span class="absolute top-[-6px] right-[-8px] text-xs font-semibold bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">3</span>
-      </a>
-    </div>
-
-    <!-- Mobile burger menu button -->
-    <div class="md:hidden">
-      <button aria-label="Ouvrir le menu mobile" class="text-2xl text-gray-700 hover:text-blue-500">
-        ☰
-      </button>
-    </div>
-
-  </div>
-
-  <!-- Mobile menu (hidden by default) -->
-  <div class="md:hidden mt-4 bg-white shadow-md rounded-lg p-4">
-    <nav class="flex flex-col gap-4">
-      {{ function('wp_nav_menu', {
-        theme_location: 'primary',
-        menu_class: 'flex flex-col gap-4 text-gray-700 hover:text-blue-500 transition-all duration-300',
-        container: false,
-        echo: false
-      }) | raw }}
-    </nav>
-  </div>
+		{% include 'partials/navigation.twig' %}
+	</div>
 </header>
