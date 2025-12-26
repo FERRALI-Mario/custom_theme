@@ -11,16 +11,17 @@ class Context
         $context['site'] = new \Timber\Site();
 
         $context['menu'] = Timber::get_menu('primary');
+        $context['menu_footer'] = Timber::get_menu('footer');
 
         if (function_exists('get_fields')) {
             $context['options'] = get_fields('option') ?: [];
 
-            $context['header'] = [
-                'logo' => get_field('header_logo', 'option'),
-            ];
+            $header_logo = get_field('header_logo', 'option');
+            $footer_logo = get_field('footer_logo', 'option');
 
-            $context['footer'] = [
-                'logo' => get_field('footer_text', 'option'), // ou footer_logo
+            $context['logos'] = [
+                'header' => $header_logo,
+                'footer' => $footer_logo ?: $header_logo
             ];
         }
 

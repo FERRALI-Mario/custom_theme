@@ -1,20 +1,103 @@
-<footer class="bg-gray-900 text-white py-8">
-  <div class="container mx-auto px-4">
+{# On définit la map au début du fichier ou juste avant la boucle #}
+{% set icon_map = {
+    'facebook':  'fa-brands fa-facebook-f',
+    'instagram': 'fa-brands fa-instagram',
+    'snapchat':  'fa-brands fa-snapchat-ghost',
+    'tiktok':    'fa-brands fa-tiktok',
+    'pinterest': 'fa-brands fa-pinterest-p',
+    'github':    'fa-brands fa-github',
+    'linkedin':  'fa-brands fa-linkedin-in',
+    'twitter':   'fa-brands fa-x-twitter',
+    'youtube':   'fa-brands fa-youtube'
+} %}
 
-    {# Menu du footer #}
-    <nav class="mb-4">
-      {{ function('wp_nav_menu', {
-        theme_location: 'footer',
-        menu_class: 'flex flex-wrap gap-4 text-sm',
-        container: false,
-        echo: false
-      }) | raw }}
-    </nav>
+<footer class="bg-gray-900 text-white border-t border-gray-800 pt-16 pb-8">
+	<div class="container mx-auto px-6">
 
-    {# Texte personnalisé depuis ACF #}
-    {% if footer.text %}
-      <p class="text-xs text-gray-400">{{ footer.text }}</p>
-    {% endif %}
+		<div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
 
-  </div>
+			<div class="md:w-1/3 space-y-4">
+				<a href="{{ site.url }}" class="inline-block">
+					{% if logos.footer %}
+						<img src="{{ get_attachment(logos.footer).src }}" alt="{{ site.name }}" class="h-8 w-auto grayscale brightness-200"/>
+					{% else %}
+						<span class="text-2xl font-bold tracking-tighter text-white">{{ site.name }}</span>
+					{% endif %}
+				</a>
+				<p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+					{{ site.description }}
+				</p>
+
+				{% if options.social_networks %}
+					<div class="flex gap-4 pt-4">
+						{% for network in options.social_networks %}
+
+							{# On récupère la clé (ex: 'facebook') #}
+							{% set platform = network.icon %}
+
+							<a
+								href="{{ network.url }}" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition-colors transform hover:-translate-y-1 duration-300">
+
+								{# On vérifie si la clé existe dans la map, sinon icône par défaut #}
+								{% if icon_map[platform] is defined %}
+									<i class="{{ icon_map[platform] }} text-xl"></i>
+								{% else %}
+									<i class="fa-solid fa-link text-xl"></i>
+								{% endif %}
+
+							</a>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+
+			<div class="flex flex-col sm:flex-row gap-10 sm:gap-20 md:w-auto">
+
+				{% if menu %}
+					<div>
+						{# TITRE DYNAMIQUE #}
+						<h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">
+							{{ options.footer_title_menu|default('Menu') }}
+						</h3>
+						<ul class="space-y-3">
+							{% for item in menu.items %}
+								<li>
+									<a href="{{ item.link }}" class="text-sm text-gray-300 hover:text-white transition-colors">
+										{{ item.title }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+
+				{% if menu_footer %}
+					<div>
+						{# TITRE DYNAMIQUE #}
+						<h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">
+							{{ options.footer_title_infos|default('Informations') }}
+						</h3>
+						<ul class="space-y-3">
+							{% for item in menu_footer.items %}
+								<li>
+									<a href="{{ item.link }}" class="text-sm text-gray-300 hover:text-white transition-colors">
+										{{ item.title }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+
+			</div>
+		</div>
+
+		<div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600">
+			<p>&copy;
+				{{ "now"|date("Y") }}
+				{{ site.name }}. Tous droits réservés.</p>
+			<p>Conçu avec passion.</p>
+		</div>
+
+	</div>
 </footer>

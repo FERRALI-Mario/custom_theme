@@ -114,17 +114,33 @@ class Theme
 
     public static function registerGlobalConfig(): void
     {
+        // 1. CRÉATION DE LA PAGE D'OPTIONS PRINCIPALE
+        if (function_exists('acf_add_options_page')) {
+            acf_add_options_page([
+                'page_title'    => 'Réglages du Thème',
+                'menu_title'    => 'Thème', // Le nom dans le menu
+                'menu_slug'     => 'acf-options-generale', // L'ID pour relier les champs
+                'capability'    => 'edit_posts',
+                'redirect'      => false, // false = on peut mettre des champs sur cette page
+                'position'      => 22, // 20 = Pages, 25 = Commentaires. Donc 22 = Juste en dessous de Pages.
+                'icon_url'      => 'dashicons-layout', // Icône
+            ]);
+        }
+
+        // 2. SOUS-PAGE STRIPE (Optionnel, si vous voulez le garder séparé)
         if (function_exists('acf_add_options_sub_page')) {
             acf_add_options_sub_page([
                 'page_title'  => 'Réglages Stripe',
                 'menu_title'  => 'Stripe',
-                'parent_slug' => 'options-general.php',
+                'parent_slug' => 'acf-options-generale', // On le met en enfant de "Thème" pour ranger
                 'menu_slug'   => 'acf-options-stripe',
-                'capability'  => 'manage_options',
             ]);
         }
 
+        // 3. DÉFINITION DES CHAMPS
         if (function_exists('acf_add_local_field_group')) {
+
+            // --- CHAMPS STRIPE ---
             acf_add_local_field_group([
                 'key' => 'group_stripe_configuration',
                 'title' => 'Configuration Stripe',
@@ -153,7 +169,83 @@ class Theme
                         'conditional_logic' => [[['field' => 'field_stripe_mode', 'operator' => '==', 'value' => 'live']]],
                     ],
                 ],
+                // On attache Stripe à la sous-page Stripe
                 'location' => [[['param' => 'options_page', 'operator' => '==', 'value' => 'acf-options-stripe']]],
+            ]);
+
+            // --- CHAMPS FOOTER ---
+            acf_add_local_field_group([
+                'key' => 'group_footer_settings',
+                'title' => 'Réglages du Pied de page (Footer)',
+                'fields' => [
+                    // Onglet Colonnes
+                    [
+                        'key' => 'field_tab_footer_columns',
+                        'label' => 'Colonnes',
+                        'type' => 'tab',
+                    ],
+                    [
+                        'key' => 'field_footer_title_menu_1',
+                        'label' => 'Titre colonne 1 (Menu principal)',
+                        'name' => 'footer_title_menu',
+                        'type' => 'text',
+                        'default_value' => 'Menu',
+                    ],
+                    [
+                        'key' => 'field_footer_title_menu_2',
+                        'label' => 'Titre colonne 2 (Infos)',
+                        'name' => 'footer_title_infos',
+                        'type' => 'text',
+                        'default_value' => 'Informations',
+                    ],
+
+                    // Onglet Réseaux Sociaux
+                    [
+                        'key' => 'field_tab_footer_social',
+                        'label' => 'Réseaux Sociaux',
+                        'type' => 'tab',
+                    ],
+                    [
+                        'key' => 'field_footer_socials',
+                        'label' => 'Liste des réseaux',
+                        'name' => 'social_networks',
+                        'type' => 'repeater',
+                        'layout' => 'table',
+                        'button_label' => 'Ajouter un réseau',
+                        'sub_fields' => [
+                            [
+                                'key' => 'field_social_icon',
+                                'label' => 'Réseau',
+                                'name' => 'icon', // On garde le nom 'icon'
+                                'type' => 'select', // On passe en SELECT comme votre bloc
+                                'choices' => [
+                                    'facebook'  => 'Facebook',
+                                    'instagram' => 'Instagram',
+                                    'snapchat'  => 'Snapchat',
+                                    'tiktok'    => 'TikTok',
+                                    'pinterest' => 'Pinterest',
+                                    'github'    => 'GitHub',
+                                    'linkedin'  => 'LinkedIn',
+                                    'twitter'   => 'X (Twitter)',
+                                    'youtube'   => 'YouTube',
+                                ],
+                                'default_value' => 'instagram',
+                            ],
+                            [
+                                'key' => 'field_social_url',
+                                'label' => 'Lien URL',
+                                'name' => 'url',
+                                'type' => 'url',
+                            ],
+                        ],
+                    ],
+                ],
+                // On attache le Footer à la page principale "Thème"
+                'location' => [
+                    [
+                        ['param' => 'options_page', 'operator' => '==', 'value' => 'acf-options-generale'],
+                    ],
+                ],
             ]);
         }
     }
