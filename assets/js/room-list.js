@@ -34,3 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   });
 });
+
+function scrollTrack(btn, direction) {
+  const container = btn.closest(".relative").querySelector(".carousel-track");
+  if (container) {
+    const scrollAmount = container.clientWidth;
+    container.scrollBy({
+      left: direction * scrollAmount,
+      behavior: "smooth",
+    });
+  }
+}

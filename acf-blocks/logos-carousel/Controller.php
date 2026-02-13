@@ -55,6 +55,6 @@ class Controller extends BlockFactory
 
     public function getIcon(): string
     {
-        return 'slides'; 
+        return 'slides';
     }
 }

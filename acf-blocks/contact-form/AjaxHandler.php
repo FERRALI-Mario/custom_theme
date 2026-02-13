@@ -7,59 +7,48 @@ class AjaxHandler
     public static function register(): void
     {
         $handler = new self();
-        add_action('wp_ajax_contact_form_submit', [$handler, 'handleSubmission']);
-        add_action('wp_ajax_nopriv_contact_form_submit', [$handler, 'handleSubmission']);
+        add_action('wp_ajax_contact_form_submit', [$handler, 'handle']);
+        add_action('wp_ajax_nopriv_contact_form_submit', [$handler, 'handle']);
     }
 
-    public function handleSubmission()
+    public function handle(): void
     {
-        // 1. Sécurité
-        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'contact_form_action')) {
-            wp_send_json_error(['message' => 'Erreur de sécurité. Rechargez la page.']);
+        if (!isset($_POST['_token']) || !wp_verify_nonce($_POST['_token'], 'contact_form_action')) {
+            wp_send_json_error(['message' => 'Session expirée, veuillez recharger la page.']);
         }
 
-        $messageBody = "Nouveau message depuis le site web :\n\n";
-        $replyTo = '';
-        $recipient = sanitize_email($_POST['recipient'] ?? get_option('admin_email'));
+        $name    = sanitize_text_field($_POST['name'] ?? '');
+        $email   = sanitize_email($_POST['email'] ?? '');
+        $subject = sanitize_text_field($_POST['subject'] ?? 'Nouveau contact depuis le site');
+        $message = sanitize_textarea_field($_POST['message'] ?? '');
 
-        // Compteur de champs remplis
-        $filledFields = 0;
-
-        foreach ($_POST as $key => $value) {
-            if (in_array($key, ['action', '_wpnonce', 'recipient'])) continue;
-
-            $cleanValue = sanitize_textarea_field($value);
-
-            // Si le champ n'est pas vide, on incrémente
-            if (!empty(trim($cleanValue))) {
-                $filledFields++;
-            }
-
-            $cleanKey = preg_replace('/^field_\d+_/', '', $key);
-            $cleanKey = str_replace('-', ' ', $cleanKey);
-            $cleanKey = ucfirst($cleanKey); // Ex: "Votre nom"
-
-            if (is_email($cleanValue) && empty($replyTo)) {
-                $replyTo = $cleanValue;
-            }
-
-            $messageBody .= "$cleanKey : \n$cleanValue\n\n";
+        if (empty($name) || empty($email) || empty($message)) {
+            wp_send_json_error(['message' => 'Veuillez remplir tous les champs obligatoires.']);
         }
 
-        // 2. VÉRIFICATION : Si aucun champ n'est rempli, on arrête tout
-        if ($filledFields === 0) {
-            wp_send_json_error(['message' => 'Veuillez remplir au moins un champ.']);
+        if (!is_email($email)) {
+            wp_send_json_error(['message' => 'L’adresse e-mail n’est pas valide.']);
         }
 
-        // 3. Envoi
-        $headers = ['Content-Type: text/plain; charset=UTF-8'];
-        $headers[] = 'From: Site Web <' . get_option('admin_email') . '>';
-        if ($replyTo) $headers[] = 'Reply-To: ' . $replyTo;
+        $admin_email = get_option('admin_email');
+        $headers     = [
+            'Content-Type: text/html; charset=UTF-8',
+            "Reply-To: $name <$email>"
+        ];
 
-        if (wp_mail($recipient, 'Nouveau contact', $messageBody, $headers)) {
-            wp_send_json_success(['message' => 'Message envoyé avec succès !']);
+        $body = "
+            <h3>Nouveau message de contact</h3>
+            <p><strong>Nom :</strong> $name</p>
+            <p><strong>Email :</strong> $email</p>
+            <p><strong>Sujet :</strong> $subject</p>
+            <hr>
+            <p><strong>Message :</strong><br>" . nl2br($message) . "</p>
+        ";
+
+        if (wp_mail($admin_email, "Contact : $subject", $body, $headers)) {
+            wp_send_json_success(['message' => 'Merci ! Votre message a bien été envoyé.']);
         } else {
-            wp_send_json_error(['message' => "Erreur technique lors de l'envoi."]);
+            wp_send_json_error(['message' => 'Une erreur technique est survenue lors de l’envoi.']);
         }
     }
 }

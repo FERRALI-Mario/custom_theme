@@ -7,9 +7,7 @@
 		{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
 	{% endif %}
 
-	<div
-		class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8">
-		{# ... (Partie En-tête calendrier inchangée) ... #}
+	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8">
 		<div class="flex flex-col items-center gap-6 lg:flex-row lg:items-end lg:justify-between">
 			<div class="flex items-center gap-2">
 				<button type="button" class="brc-prev inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition">
@@ -45,7 +43,6 @@
 			</div>
 		</div>
 
-		{# ... (Tableau Calendrier inchangé) ... #}
 		<div class="grid gap-6 md:grid-cols-1 mt-6 select-none">
 			{% for m in months %}
 				<table class="w-full border-collapse rounded-lg overflow-hidden border border-gray-200">
@@ -56,9 +53,7 @@
 							{% endfor %}
 						</tr>
 					</thead>
-					<tbody
-						class="brc-body">
-						{# Rempli par JS #}
+					<tbody class="brc-body">
 						{% for row in 0..5 %}
 							<tr>
 								{% for col in 0..6 %}

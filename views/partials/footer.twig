@@ -31,14 +31,8 @@
 				{% if options.social_networks %}
 					<div class="flex gap-4 pt-4">
 						{% for network in options.social_networks %}
-
-							{# On récupère la clé (ex: 'facebook') #}
 							{% set platform = network.icon %}
-
-							<a
-								href="{{ network.url }}" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition-colors transform hover:-translate-y-1 duration-300">
-
-								{# On vérifie si la clé existe dans la map, sinon icône par défaut #}
+							<a href="{{ network.url }}" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition-colors transform hover:-translate-y-1 duration-300">
 								{% if icon_map[platform] is defined %}
 									<i class="{{ icon_map[platform] }} text-xl"></i>
 								{% else %}
@@ -55,7 +49,6 @@
 
 				{% if menu %}
 					<div>
-						{# TITRE DYNAMIQUE #}
 						<h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">
 							{{ options.footer_title_menu|default('Menu') }}
 						</h3>
@@ -73,7 +66,6 @@
 
 				{% if menu_footer %}
 					<div>
-						{# TITRE DYNAMIQUE #}
 						<h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-6">
 							{{ options.footer_title_infos|default('Informations') }}
 						</h3>

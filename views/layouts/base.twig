@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ site.name }}{% if title %} | {{ title }}{% endif %}</title>
-  {{ function('wp_head') }}
-</head>
-<body class="antialiased text-gray-900">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>{{ site.name }}
+			{% if title %}
+				|
+				{{ title }}
+			{% endif %}
+		</title>
+		{{ function('wp_head') }}
+	</head>
+	<body class="min-h-screen flex flex-col antialiased text-gray-900">
 
-  {% block header %}
-    {{ include('partials/header.twig') }}
-  {% endblock %}
+		{% block header %}
+			{{ include('partials/header.twig') }}
+		{% endblock %}
 
-  <main id="content" role="main">
-    {% block content %}
-      {{ content | default(post.content) }}
-    {% endblock %}
-  </main>
+		<main id="content" role="main" class="flex-grow w-full flex flex-col justify-center">
+			{% block content %}
+				{{ content | default(post.content) }}
+			{% endblock %}
+		</main>
 
-  {% block footer %}
-    {{ include('partials/footer.twig') }}
-  {% endblock %}
+		{% block footer %}
+			{{ include('partials/footer.twig') }}
+		{% endblock %}
 
-  {{ function('wp_footer') }}
-</body>
+		{{ function('wp_footer') }}
+	</body>
 </html>

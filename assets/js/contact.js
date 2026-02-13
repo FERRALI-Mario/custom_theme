@@ -3,7 +3,6 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Vérification de sécurité
     if (!window.CONTACT_FORM) return;
 
     const root = $("#custom-contact-form");
@@ -15,10 +14,7 @@
     const btnLoading = $(".btn-loading", submitBtn);
     const originalText = btnText ? btnText.innerText : "Envoyer";
 
-    // Regex Email (Standard)
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-
-    // --- Gestion de l'affichage (Feedback UI) ---
 
     function showFeedback(msg, type = "error") {
       if (!messageBox) return;
@@ -54,8 +50,6 @@
       }
     }
 
-    // --- Validation Simplifiée ---
-
     function validateForm() {
       let errorMsg = null;
       const inputs = $$("input, textarea", root);
@@ -64,21 +58,15 @@
         input.classList.remove("border-red-500", "bg-red-50"); // Reset
         const val = input.value.trim();
 
-        // 1. Vérif si vide (Champs requis)
         if (input.hasAttribute("required") && !val) {
           input.classList.add("border-red-500", "bg-red-50");
           if (!errorMsg)
             errorMsg = "Veuillez remplir tous les champs obligatoires.";
-        }
-
-        // 2. Vérif spécifique Email (si rempli)
-        else if (val && input.type === "email" && !emailRegex.test(val)) {
+        } else if (val && input.type === "email" && !emailRegex.test(val)) {
           input.classList.add("border-red-500", "bg-red-50");
-          // Ce message écrase le message générique car il est plus important
           errorMsg = "L'adresse email n'est pas valide.";
         }
 
-        // Nettoyage visuel quand on écrit
         input.addEventListener(
           "input",
           () => {
@@ -91,20 +79,16 @@
       return errorMsg; // Renvoie null si tout est bon, sinon le message
     }
 
-    // --- Soumission ---
-
     root.addEventListener("submit", (e) => {
       e.preventDefault();
       hideFeedback();
 
-      // 1. Validation
       const error = validateForm();
       if (error) {
         showFeedback(error, "error");
         return;
       }
 
-      // 2. Envoi AJAX
       setLoading(true);
       const formData = new FormData(root);
       formData.append("action", "contact_form_submit");

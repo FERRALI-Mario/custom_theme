@@ -1,10 +1,10 @@
-{# ====== AMENITIES / ÉQUIPEMENTS ====== #}
+{# ====== AMENITIES / ÉQUIPEMENTS (Style Amélioré) ====== #}
 
 {# Données #}
 {% set f = fields ?? {} %}
 {% set categories = f.categories ?? [] %}
 
-{# Métadonnées des catégories (libellé + icône Font Awesome 6 Free) #}
+{# Métadonnées des catégories #}
 {% set CAT_META = {
   'ideal_stay':          {'label':'Idéal pour votre séjour','icon':'fa-person'},
   'parking':             {'label':'Parking','icon':'fa-square-parking'},
@@ -14,22 +14,22 @@
   'vue':                 {'label':'Vue','icon':'fa-eye'},
   'exterieur':           {'label':'En extérieur','icon':'fa-tree'},
   'cuisine':             {'label':'Cuisine','icon':'fa-mug-saucer'},
-  'equipements_chambre': {'label':'Équipements en chambre','icon':'fa-plug'},
+  'equipements_chambre': {'label':'Équipements','icon':'fa-plug'},
   'coin_salon':          {'label':'Coin salon','icon':'fa-couch'},
   'high_tech':           {'label':'High-tech','icon':'fa-microchip'},
   'restauration':        {'label':'Restauration','icon':'fa-utensils'},
   'internet':            {'label':'Internet','icon':'fa-wifi'},
   'reception':           {'label':'Réception','icon':'fa-concierge-bell'},
-  'services_nettoyage':  {'label':'Services de nettoyage','icon':'fa-broom'},
-  'services_affaires':   {'label':'Services d’affaires','icon':'fa-briefcase'},
+  'services_nettoyage':  {'label':'Ménage','icon':'fa-broom'},
+  'services_affaires':   {'label':'Affaires','icon':'fa-briefcase'},
   'securite':            {'label':'Sécurité','icon':'fa-shield-halved'},
   'general':             {'label':'Général','icon':'fa-circle-info'},
   'accessibilite':       {'label':'Accessibilité','icon':'fa-universal-access'},
   'bien_etre':           {'label':'Bien-être','icon':'fa-spa'},
-  'langues_parlees':     {'label':'Langues parlées','icon':'fa-language'},
+  'langues_parlees':     {'label':'Langues','icon':'fa-language'},
 } %}
 
-{# Dé-duplication côté rendu #}
+{# Dé-duplication #}
 {% set seen = [] %}
 {% set normalized = [] %}
 	{% for cat in categories %}
@@ -42,20 +42,14 @@
 
 	{% if normalized|length %}
 
-	{# Nombre de catégories #}
+	{# Calcul des colonnes #}
 	{% set count = normalized|length %}
+	{% set columnClasses = count == 1 ? 'columns-1' : (count == 2 ? 'columns-2' : 'columns-1 md:columns-2 lg:columns-3') %}
 
+	{# Largeur max #}
+	{% set colsMax = count >= 3 ? 'max-w-7xl' : (count == 2 ? 'max-w-4xl' : 'max-w-2xl') %}
 
-	{% set columnClasses = count == 1 ? 'columns-1' : (count == 2 ? 'columns-2' : 'columns-1 sm:columns-2 lg:columns-3')
-  %}
-
-	{# Largeur max du bloc de colonnes (centrage propre sur desktop) #}
-	{% set colsMax =
-    count >= 3 ? 'max-w-7xl'
-    : (count == 2 ? 'max-w-5xl' : 'max-w-3xl')
-  %}
-
-		<section class="amenities py-12 lg:py-16"> <div
+		<section class="amenities py-16 lg:py-24 bg-white"> <div
 			class="mx-auto max-w-7xl px-6">
 
 			{# Titre / sous-titre #}
@@ -63,40 +57,63 @@
 				{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
 			{% endif %}
 
-			<div class="mx-auto {{ colsMax }} max-w-sm md:max-w-xl lg:max-w-5xl lg:ml-[150px]">
-				<div class="{{ columnClasses }} [column-gap:2rem] md:[column-gap:2.5rem]">
+			{# Conteneur principal centré #}
+			<div class="mx-auto {{ colsMax }} mt-12">
+				<div class="{{ columnClasses }} gap-x-12 space-y-12">
 
 					{% for cat in normalized %}
 						{% set key   = cat.category_key %}
 						{% set meta  = CAT_META[key] ?? null %}
 						{% set items = cat.items ?? [] %}
 
-						<div class="mb-8 break-inside-avoid [break-inside:avoid-column]">
+						{# Bloc Catégorie (break-inside-avoid évite que le bloc soit coupé entre 2 colonnes) #}
+						<div
+							class="break-inside-avoid bg-white rounded-xl">
 
-							<div class="flex items-center gap-2 mb-2">
+							{# En-tête de catégorie #}
+							<div class="flex items-center gap-4 mb-5 border-b border-gray-100 pb-3">
 								{% if meta %}
-									<i class="fa-solid {{ meta.icon }} text-gray-700" aria-hidden="true"></i>
-									<h3 class="text-2xl font-bold tracking-tight text-gray-900">{{ meta.label }}</h3>
+									{# Icône dans un cercle #}
+									<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-900">
+										<i class="fa-solid {{ meta.icon }} text-lg" aria-hidden="true"></i>
+									</div>
+									<h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">{{ meta.label }}</h3>
 								{% else %}
-									<h3 class="text-2xl font-bold tracking-tight text-gray-900">{{ key }}</h3>
+									<h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">{{ key }}</h3>
 								{% endif %}
 							</div>
 
+							{# Description optionnelle #}
 							{% if cat.category_description %}
-								<p class="text-[15px] sm:text-base leading-relaxed text-gray-700 mb-2">
+								<p class="text-sm text-gray-500 mb-4 italic">
 									{{ cat.category_description }}
 								</p>
 							{% endif %}
 
+							{# Liste des équipements #}
 							{% if items|length %}
-								<ul class="space-y-2">
+								<ul class="space-y-3">
 									{% for it in items %}
 										{% set present = it.item_present ?? false %}
-										<li class="flex items-start gap-3 {{ not present ? 'opacity-60' }}">
-											<span class="shrink-0 leading-none text-gray-700" aria-hidden="true">
-												<span class="text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800">{{ present ? '✓' : '✗' }}</span>
+
+										<li
+											class="flex items-start gap-3 text-sm sm:text-base {{ not present ? 'text-gray-400 decoration-gray-300' : 'text-gray-700' }}">
+
+											{# Puce icône (Coche ou Croix) #}
+											<span class="shrink-0 mt-1" aria-hidden="true">
+												{% if present %}
+													{# Coche verte #}
+													<i class="fa-solid fa-check text-emerald-500"></i>
+												{% else %}
+													{# Croix grise (ou fa-minus si vous préférez) #}
+													<i class="fa-solid fa-xmark text-gray-300 text-xs"></i>
+												{% endif %}
 											</span>
-											<span class="text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800">{{ it.item_label }}</span>
+
+											{# Libellé #}
+											<span class="leading-relaxed">
+												{{ it.item_label }}
+											</span>
 										</li>
 									{% endfor %}
 								</ul>
@@ -107,7 +124,6 @@
 
 				</div>
 			</div>
-			{# /Wrapper centré #}
 
 		</div>
 	</section>

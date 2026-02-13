@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Point d’entrée du thème
  */
@@ -13,4 +14,4 @@ require_once __DIR__ . '/vendor/autoload.php';
 use App\Core\Theme;
 
 // Démarrage du thème
-Theme::init();
+add_action('after_setup_theme', [Theme::class, 'init']);

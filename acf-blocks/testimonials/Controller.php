@@ -19,21 +19,6 @@ class Controller extends BlockFactory
      */
     public function render(array $block): void
     {
-        $context = Timber::context();
-        $context['block']   = $block;
-        $context['fields']  = $this->getFields();
-
-        $original = $context['fields']['testimonials'] ?? [];
-        $extended = $this->repeatToMin($original, self::MIN_TRACK_ITEMS);
-
-        $context['testimonials'] = $extended;
-
-        // Durée proportionnelle au nombre de cartes (après extension)
-        // Ajuste le ratio si tu veux une vitesse différente.
-        $count    = count($extended);
-        $duration = max(8, (int)ceil(($count / 6) * 13)); // base : ~13s par 6 cartes
-        $context['marquee_duration'] = $duration;
-
         // Aperçu ACF si disponible
         $previewPath = $this->getPreviewPath();
         if ($this->isPreview($block) && $previewPath) {
@@ -42,6 +27,7 @@ class Controller extends BlockFactory
             return;
         }
 
+        $context = $this->prepareContext($block);
         Timber::render($this->getTemplatePath(), $context);
     }
 
@@ -68,6 +54,29 @@ class Controller extends BlockFactory
     public function getIcon(): string
     {
         return 'star-filled';
+    }
+
+    /**
+     * Prépare le contexte pour la vue Twig.
+     */
+    protected function prepareContext(array $block): array
+    {
+        $context = Timber::context();
+        $context['block']   = $block;
+        $context['fields']  = $this->getFields();
+
+        $original = $context['fields']['testimonials'] ?? [];
+        $extended = $this->repeatToMin($original, self::MIN_TRACK_ITEMS);
+
+        $context['testimonials'] = $extended;
+
+        // Durée proportionnelle au nombre de cartes (après extension)
+        // Ajuste le ratio si tu veux une vitesse différente.
+        $count    = count($extended);
+        $duration = max(8, (int)ceil(($count / 6) * 13)); // base : ~13s par 6 cartes
+        $context['marquee_duration'] = $duration;
+
+        return $context;
     }
 
     /**

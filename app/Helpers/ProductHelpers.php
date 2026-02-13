@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers; // ou App\Support pour uniformiser
 
 class ProductHelpers
 {
+    /**
+     * Retourne les choix de filtres pour WooCommerce.
+     * Static car pas d'état interne.
+     */
     public static function getFilterChoices(): array
     {
         return [

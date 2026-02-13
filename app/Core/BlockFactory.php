@@ -4,9 +4,6 @@ namespace App\Core;
 
 use Timber\Timber;
 
-/**
- * Base class for all ACF Blocks.
- */
 abstract class BlockFactory
 {
     protected string $slug;
@@ -15,14 +12,19 @@ abstract class BlockFactory
     {
         $this->slug = $slug;
 
-        // Chargement automatique des champs ACF si fichier présent
-        $fieldsPath = get_template_directory() . "/acf-blocks/{$slug}/fields.php";
+        add_action('acf/init', [$this, 'registerFields']);
+
+        $this->loadAjaxHandler();
+
+        add_action('acf/init', [$this, 'register']);
+    }
+
+    public function registerFields(): void
+    {
+        $fieldsPath = get_template_directory() . "/acf-blocks/{$this->slug}/fields.php";
         if (file_exists($fieldsPath)) {
             require_once $fieldsPath;
         }
-
-        // Enregistrement automatique du bloc
-        add_action('acf/init', [$this, 'register']);
     }
 
     /**
@@ -75,15 +77,29 @@ abstract class BlockFactory
             return;
         endif;
 
+        $context = $this->prepareContext($context);
+
         Timber::render($this->getTemplatePath(), $context);
     }
 
-    /**
-     * Charge automatiquement le JS du bloc s'il existe dans assets/js/{slug}.js
-     */
+    protected function loadAjaxHandler(): void
+    {
+        $handlerPath = get_template_directory() . "/acf-blocks/{$this->slug}/AjaxHandler.php";
+
+        if (file_exists($handlerPath)) {
+            require_once $handlerPath;
+
+            $namespaceSlug = str_replace(' ', '', ucwords(str_replace('-', ' ', $this->slug)));
+            $className = "\\AcfBlocks\\{$namespaceSlug}\\AjaxHandler";
+
+            if (class_exists($className) && method_exists($className, 'register')) {
+                $className::register();
+            }
+        }
+    }
+
     protected function enqueueAssets(): void
     {
-        // Chemin vers votre dossier JS compilé/final
         $js_path = "/assets/js/{$this->slug}.js";
         $abs_path = get_template_directory() . $js_path;
 
@@ -99,6 +115,14 @@ abstract class BlockFactory
     }
 
     /**
+     * Méthode destinée à être surchargée par les Controllers enfants.
+     */
+    protected function prepareContext(array $context): array
+    {
+        return $context;
+    }
+
+    /**
      * Retourne les champs ACF (ou [] si vide).
      */
     protected function getFields(): array
@@ -109,10 +133,12 @@ abstract class BlockFactory
     /**
      * Récupère une image via Timber (helper).
      */
-    protected function getImage(string $field): ?\Timber\Image
+    protected function getImage(array $fields, string $key): ?\Timber\Image
     {
-        $image = get_field($field);
-        return $image ? new \Timber\Image($image) : null;
+        if (!empty($fields[$key])) {
+            return Timber::get_image($fields[$key]);
+        }
+        return null;
     }
 
     /**

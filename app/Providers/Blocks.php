@@ -2,72 +2,67 @@
 
 namespace App\Providers;
 
-use App\Core\BlockFactory;
+use App\Core\ServiceProvider;
 
-class Blocks
+class Blocks extends ServiceProvider
 {
     protected const NAMESPACE = 'AcfBlocks';
 
-    public static function register(): void
+    public function register(): void
     {
         $jsonPath = get_template_directory() . '/active-blocks.json';
         $blocksToLoad = [];
 
+        // Gestion du fallback si le fichier JSON n'existe pas
         if (file_exists($jsonPath)) {
             $blocksToLoad = json_decode(file_get_contents($jsonPath), true);
         } else {
-            $config = include get_template_directory() . '/config/blocks.php';
-            $blocksToLoad = $config['core'];
+            // Assure-toi que ce fichier existe ou gère le cas vide
+            $configPath = get_template_directory() . '/config/blocks.php';
+            if (file_exists($configPath)) {
+                $config = include $configPath;
+                $blocksToLoad = $config['core'] ?? [];
+            }
         }
 
+        // Boucle optimisée
+        foreach ($blocksToLoad as $slug) {
+            $this->loadBlock($slug);
+        }
+    }
+
+    protected function loadBlock(string $slug): void
+    {
         $blocksDir = get_template_directory() . '/acf-blocks/';
 
-        foreach ($blocksToLoad as $slug) {
-            $path = $blocksDir . $slug . '/fields.php';
-            $classPath = get_template_directory() . "/acf-blocks/{$slug}/Controller.php";
-
-            if (!is_dir($blocksDir . $slug)) {
-                continue;
-            }
-
-            $namespace = "AcfBlocks\\" . self::dashesToCamelCase($slug) . "\\Controller";
-
-            if (file_exists($classPath)) {
-                require_once $classPath;
-                if (class_exists($namespace)) {
-                    new $namespace();
-                }
-            } elseif (file_exists($path)) {
-                require_once $path;
-            }
+        // Sécurité : On vérifie que le dossier du bloc existe
+        if (!is_dir($blocksDir . $slug)) {
+            return;
         }
-    }
 
-    private static function dashesToCamelCase($string, $capitalizeFirstCharacter = true)
-    {
-        $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
-        if (!$capitalizeFirstCharacter) {
-            $str[0] = strtolower($str[0]);
-        }
-        return $str;
-    }
-
-    protected static function loadBlock(string $slug): void
-    {
-        $className = self::resolveClassName($slug);
-        $controllerPath = get_template_directory() . "/acf-blocks/{$slug}/Controller.php";
-
+        // 1. On charge le Controller s'il existe
+        $controllerPath = $blocksDir . "{$slug}/Controller.php";
         if (file_exists($controllerPath)) {
             require_once $controllerPath;
+
+            $className = $this->resolveClassName($slug);
+            if (class_exists($className)) {
+                new $className(); // Le constructeur du Controller lancera le BlockFactory::register
+                return; // Si on a un Controller, on s'arrête là (BlockFactory gère le reste)
+            }
         }
 
-        if (class_exists($className)) {
-            $instance = new $className();
+        // 2. Fallback : Si pas de Controller, on charge juste fields.php (mode legacy)
+        // Note: C'est rare avec ton architecture BlockFactory, mais on garde par sécurité
+        $fieldsPath = $blocksDir . "{$slug}/fields.php";
+        if (file_exists($fieldsPath)) {
+            require_once $fieldsPath;
         }
     }
 
-    protected static function resolveClassName(string $slug): string
+    protected function resolveClassName(string $slug): string
     {
+        // Transformation : "contact-form" -> "ContactForm"
         $formatted = str_replace(' ', '', ucwords(str_replace('-', ' ', $slug)));
         return self::NAMESPACE . "\\{$formatted}\\Controller";
     }

@@ -6,6 +6,9 @@ export default defineConfig({
   root: './',
   server: {
     // Assure la détection des changements sur tous les fichiers PHP/Twig
+    // `usePolling` est nécessaire dans certains environnements comme Docker sur Windows/macOS
+    // où le système de surveillance de fichiers natif ne fonctionne pas correctement.
+    // Attention, cela peut consommer plus de CPU.
     watch: {
       usePolling: true,
     },

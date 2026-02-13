@@ -3,44 +3,27 @@
 namespace App\Core;
 
 use Timber\Timber;
-use Timber\Post;
-use Timber\PostQuery;
-
-use App\Paiement\PaymentController;
 
 class Router
 {
+    private static array $routes = [];
+
+    public static function setRoutes(array $routes): void
+    {
+        self::$routes = $routes;
+    }
+
+    /**
+     * Point d'entrée principal (hooké sur template_redirect).
+     */
     public static function run(): void
     {
-        $context = Timber::context();
-        $context['post']  = Timber::get_post();
-        $context['posts'] = Timber::get_posts([
-            'post_type'      => 'post',
-            'post_status'    => 'publish',
-            'posts_per_page' => 10,
-        ]);
-
-        $uri = $_SERVER['REQUEST_URI'] ?? '/';
-
-        if (strpos($uri, '/paiement') !== false || is_page('paiement')) {
-            if (class_exists(PaymentController::class)) {
-                PaymentController::viewPayment();
-                exit;
-            }
+        if (self::handleCustomRoutes()) {
+            exit;
         }
 
-        if (strpos($uri, '/success') !== false || is_page('success')) {
-            if (class_exists(PaymentController::class)) {
-                PaymentController::viewSuccess();
-                exit;
-            }
-        }
-
-        // 2. Contexte global Timber
         $context = Timber::context();
-        $context['post']  = Timber::get_post();
 
-        // Gestion minimale : front, page, 404, index
         if (is_front_page()) {
             Timber::render('views/pages/front-page.twig', $context);
             exit;
@@ -56,7 +39,27 @@ class Router
             exit;
         }
 
-        // Fallback global
         Timber::render('views/pages/index.twig', $context);
+        exit;
+    }
+
+    /**
+     * Gère les routes qui dépendent de modules optionnels.
+     * Retourne true si une route a été trouvée et affichée.
+     */
+    private static function handleCustomRoutes(): bool
+    {
+        if (empty(self::$routes)) {
+            return false;
+        }
+
+        foreach (self::$routes as $slug => $callback) {
+            if (is_page($slug) && is_callable($callback)) {
+                call_user_func($callback);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

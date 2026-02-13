@@ -2,15 +2,10 @@
 
 namespace AcfBlocks\Calendar;
 
-/**
- * Gère la logique métier (Disponibilités, Prix) et les requêtes AJAX.
- */
+use DateTime;
+
 class AjaxHandler
 {
-    /**
-     * Enregistre les hooks AJAX.
-     * À appeler UNE SEULE FOIS dans Theme::init().
-     */
     public static function register(): void
     {
         $handler = new self();
@@ -18,7 +13,7 @@ class AjaxHandler
         add_action('wp_ajax_nopriv_booking_request_submit', [$handler, 'handleRequest']);
     }
 
-    public function handleRequest()
+    public function handleRequest(): void
     {
         if (!isset($_POST['_brc_nonce']) || !wp_verify_nonce($_POST['_brc_nonce'], 'brc_request')) {
             wp_send_json_error(['message' => 'Session expirée. Rechargez la page.']);
@@ -36,8 +31,8 @@ class AjaxHandler
         }
 
         $tz = wp_timezone();
-        $cin  = \DateTime::createFromFormat('Y-m-d', $checkin, $tz);
-        $cout = \DateTime::createFromFormat('Y-m-d', $checkout, $tz);
+        $cin  = DateTime::createFromFormat('Y-m-d', $checkin, $tz);
+        $cout = DateTime::createFromFormat('Y-m-d', $checkout, $tz);
 
         if (!$cin || !$cout || $cin >= $cout) {
             wp_send_json_error(['message' => 'Les dates sélectionnées sont invalides.']);
@@ -67,56 +62,13 @@ class AjaxHandler
         $iter = clone $cin;
         while ($iter < $cout) {
             if (isset($blockedSet[$iter->format('Y-m-d')])) {
-                wp_send_json_error(['message' => 'Désolé, ces dates ne sont plus disponibles.']);
+                wp_send_json_error(['message' => 'Désolé, ces dates ne sont plus disponibles (réservées à l\'instant).']);
             }
             $iter->modify('+1 day');
         }
 
         $rules = json_decode(stripslashes($_POST['pricing_rules'] ?? '{}'), true);
-        $defaultPrice = isset($rules['default']) ? (float)$rules['default'] : 0;
-        $seasons      = isset($rules['seasonal']) ? $rules['seasonal'] : [];
-
-        $totalPrice = 0;
-        $iter = clone $cin;
-
-        while ($iter < $cout) {
-            $currentMD = $iter->format('m-d');
-            $nightPrice = 0;
-            $seasonFound = false;
-
-            if (!empty($seasons) && is_array($seasons)) {
-                foreach ($seasons as $season) {
-                    $startMD = substr($season['start_date'], 5);
-                    $endMD   = substr($season['end_date'], 5);
-
-                    $inSeason = false;
-                    // Gestion hiver (cheval sur année)
-                    if ($startMD > $endMD) {
-                        if ($currentMD >= $startMD || $currentMD <= $endMD) $inSeason = true;
-                    } else {
-                        if ($currentMD >= $startMD && $currentMD <= $endMD) $inSeason = true;
-                    }
-
-                    if ($inSeason) {
-                        $p = (float)$season['price'];
-                        if ($p <= 0) {
-                            wp_send_json_error(['message' => 'Réservation impossible sur cette période (Tarif non défini).']);
-                        }
-                        $nightPrice = $p;
-                        $seasonFound = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!$seasonFound) {
-                wp_send_json_error(['message' => "L'établissement est fermé à ces dates."]);
-            }
-
-            $totalPrice += $nightPrice;
-            $iter->modify('+1 day');
-        }
-
+        $totalPrice = $this->calculatePrice($cin, $cout, $rules);
         $depositAmount = $totalPrice * 0.40;
 
         $booking_title = sprintf('%s - %s (%s)', $name, $cin->format('d/m/Y'), $nights . ' nuits');
@@ -124,13 +76,14 @@ class AjaxHandler
         $booking_id = wp_insert_post([
             'post_type'   => 'booking',
             'post_title'  => $booking_title,
-            'post_status' => 'publish', // Publié = visible admin (mais privé site)
+            'post_status' => 'publish',
         ]);
 
-        if (!$booking_id) {
-            wp_send_json_error(['message' => "Erreur technique lors de la création de la réservation."]);
+        if (!$booking_id || is_wp_error($booking_id)) {
+            wp_send_json_error(['message' => "Erreur technique lors de la création."]);
         }
 
+        // Métadonnées
         update_post_meta($booking_id, '_brc_client_name', $name);
         update_post_meta($booking_id, '_brc_client_email', $email);
         update_post_meta($booking_id, '_brc_phone', $phone);
@@ -139,12 +92,44 @@ class AjaxHandler
         update_post_meta($booking_id, '_brc_end_date', $cout->format('Y-m-d'));
         update_post_meta($booking_id, '_brc_total_price', $totalPrice);
         update_post_meta($booking_id, '_brc_deposit_amount', $depositAmount);
-
         update_post_meta($booking_id, '_brc_payment_status', 'pending');
 
+        // 8. Envoi Emails
         $paymentLink = home_url('/paiement/') . '?booking_id=' . $booking_id;
-
         $this->sendEmails($name, $email, $phone, $message, $paymentLink, $cin, $cout, $nights, $totalPrice, $depositAmount);
+    }
+
+    private function calculatePrice($start, $end, array $rules): float
+    {
+        $defaultPrice = isset($rules['default']) ? (float)$rules['default'] : 0;
+        $seasons      = isset($rules['seasonal']) ? $rules['seasonal'] : [];
+        $totalPrice   = 0;
+        $iter         = clone $start;
+
+        while ($iter < $end) {
+            $currentMD = $iter->format('m-d');
+            $nightPrice = $defaultPrice; // Prix par défaut si pas de saison
+
+            if (!empty($seasons) && is_array($seasons)) {
+                foreach ($seasons as $season) {
+                    $startMD = substr($season['start_date'], 5);
+                    $endMD   = substr($season['end_date'], 5);
+
+                    $inSeason = ($startMD > $endMD)
+                        ? ($currentMD >= $startMD || $currentMD <= $endMD)
+                        : ($currentMD >= $startMD && $currentMD <= $endMD);
+
+                    if ($inSeason) {
+                        $p = (float)$season['price'];
+                        if ($p > 0) $nightPrice = $p;
+                        break;
+                    }
+                }
+            }
+            $totalPrice += $nightPrice;
+            $iter->modify('+1 day');
+        }
+        return $totalPrice;
     }
 
     private function sendEmails($name, $email, $phone, $message, $paymentLink, $cin, $cout, $nights, $totalPrice, $depositAmount)
@@ -171,8 +156,6 @@ class AjaxHandler
             wp_send_json_error(['message' => "Erreur technique lors de l'envoi."]);
         }
     }
-
-    // --- Helpers Publics (utilisés par le Controller du bloc) ---
 
     public function getBlockedDates($url, $cacheMinutes)
     {
