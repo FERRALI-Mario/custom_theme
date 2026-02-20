@@ -21,15 +21,13 @@
       messageBox.classList.remove(
         "hidden",
         "text-red-600",
-        "bg-red-50",
         "text-green-600",
-        "bg-green-50"
       );
 
       if (type === "error") {
-        messageBox.classList.add("text-red-600", "bg-red-50");
+        messageBox.classList.add("text-red-600");
       } else {
-        messageBox.classList.add("text-green-600", "bg-green-50");
+        messageBox.classList.add("text-green-600");
       }
       messageBox.innerHTML = msg;
     }
@@ -55,22 +53,22 @@
       const inputs = $$("input, textarea", root);
 
       inputs.forEach((input) => {
-        input.classList.remove("border-red-500", "bg-red-50"); // Reset
+        input.classList.remove("border-red-500"); // Reset
         const val = input.value.trim();
 
         if (input.hasAttribute("required") && !val) {
-          input.classList.add("border-red-500", "bg-red-50");
+          input.classList.add("border-red-500");
           if (!errorMsg)
             errorMsg = "Veuillez remplir tous les champs obligatoires.";
         } else if (val && input.type === "email" && !emailRegex.test(val)) {
-          input.classList.add("border-red-500", "bg-red-50");
+          input.classList.add("border-red-500");
           errorMsg = "L'adresse email n'est pas valide.";
         }
 
         input.addEventListener(
           "input",
           () => {
-            input.classList.remove("border-red-500", "bg-red-50");
+            input.classList.remove("border-red-500");
           },
           { once: true }
         );

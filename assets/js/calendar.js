@@ -61,6 +61,7 @@
     const modal = $("#brc-modal", root);
     const form = $("#brc-form", modal);
     const closeBtn = $(".brc-close", modal);
+    const closeBtnCross = $(".brc-close-button", modal);
     const formError = $("#brc-form-error", form);
     const inDisplay = $("#brc-checkin-input", root);
     const outDisplay = $("#brc-checkout-input", root);
@@ -120,7 +121,7 @@
             <span class="text-sm font-semibold">${d.getDate()}</span>
             ${
               !isBlocked
-                ? `<span class="text-gray-500 font-normal leading-none -mt-0.5">${dayPrice}€</span>`
+                ? `<span class="text-white-500 font-normal leading-none -mt-0.5">${dayPrice}€</span>`
                 : ""
             }
           </button>
@@ -415,6 +416,11 @@
       if (e.target === modal) closeModal();
     });
 
+    if (closeBtnCross) closeBtnCross.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+    
     // --- SOUMISSION DU FORMULAIRE (LOGIQUE MODIFIÉE) ---
     form.addEventListener("submit", (e) => {
       e.preventDefault();
