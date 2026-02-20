@@ -1,22 +1,18 @@
 {# components/breadcrumb.twig #}
-<nav class="text-sm sm:text-base md:text-sm text-gray-600" aria-label="Breadcrumb">
+<nav class="text-sm" aria-label="Fil d'Ariane">
 	<ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
 		{% for item in breadcrumb %}
-			{% set is_last = loop.last or not item.url %}
-			<li
-				class="flex items-center">
-				{# séparateur, pas avant le premier #}
+			<li class="flex items-center">
 				{% if not loop.first %}
-					<span class="mx-1 text-gray-400 select-none">/</span>
+					<i class="fa-solid fa-chevron-right mx-2 text-gray-400 text-xs" aria-hidden="true"></i>
 				{% endif %}
 
-				{% if is_last %}
-					<span class="font-medium text-gray-500 max-w-[24ch] md:max-w-[28ch] truncate" aria-current="page">
+				{% if not loop.last and item.url %}
+					<a href="{{ item.url }}" class="text-gray-600 hover:text-primary transition-colors duration-200 hover:underline max-w-[28ch] truncate">
 						{{ item.title }}
 					</span>
 				{% else %}
-					<a href="{{ item.url }}" class="inline-flex items-center font-semibold text-gray-800 hover:text-gray-900
-							                    max-w-[24ch] md:max-w-[28ch] truncate">
+					<span class="font-medium text-gray-800 max-w-[28ch] truncate" aria-current="page">
 						{{ item.title }}
 					</a>
 				{% endif %}
@@ -25,25 +21,22 @@
 	</ol>
 </nav>
 
-{# JSON-LD SEO #}
 <script type="application/ld+json">
 	{
-	  "@context": "https://schema.org",
-	  "@type": "BreadcrumbList",
-	  "itemListElement": [
-	{% for item in breadcrumb %}
+						  "@context": "https://schema.org",
+						  "@type": "BreadcrumbList",
+						  "itemListElement": [
+	{%- for item in breadcrumb -%}
 		{
-		        "@type": "ListItem",
-		        "position":
+														"@type": "ListItem",
+														"position":
 		{{ loop.index }},
-		        "name": "{{ item.title|e('js') }}"
-		{% if item.url %},
-			        "item": "{{ item.url }}"
-		{% endif %}
+														"name": "{{ item.title|e('js') }}"
+		{%- if item.url %},"item": "{{ item.url }}"
+		{% endif -%}
 		}
-		{% if not loop.last %},
-		{% endif %}
-	{% endfor %}
+		{{- not loop.last ? ',' : '' -}}
+	{%- endfor -%}
 	]
-	}
+						}
 </script>
