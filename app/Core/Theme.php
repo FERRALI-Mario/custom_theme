@@ -22,7 +22,7 @@ class Theme
         PostTypes::class,   // CPT (Booking)
         Blocks::class,      // Découverte des blocs ACF
         Editor::class,      // Restrictions Gutenberg
-        //PaiementServiceProvider::class, // Décommenter pour activer le module de paiement
+        PaiementServiceProvider::class, // Décommenter pour activer le module de paiement
     ];
 
     public static function init(): void
