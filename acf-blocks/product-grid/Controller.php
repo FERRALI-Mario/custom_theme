@@ -126,18 +126,28 @@ class Controller extends BlockFactory
         $wpq = new WP_Query($args);
         $products = Timber::get_posts($wpq->posts);
 
-        // Enrichissement WooCommerce (pas de foreach par référence)
-        foreach ($products as $product) {
-            $wc = wc_get_product($product->ID);
-            if ($wc instanceof WC_Product) {
-                $product->price_html      = $wc->get_price_html();
-                $product->in_stock        = $wc->is_in_stock();
-                $product->regular_price   = $wc->get_regular_price();
-                $product->sale_price      = $wc->get_sale_price();
-                $product->add_to_cart_url = $wc->add_to_cart_url();
-                $product->sku             = $wc->get_sku();
-                $product->average_rating  = $wc->get_average_rating();
-                $product->_wc_product     = $wc;
+        $product_ids = wp_list_pluck($products, 'ID');
+
+        if (!empty($product_ids)) {
+            $wc_products_raw = wc_get_products([
+                'include' => $product_ids,
+                'limit'   => $posts_per_page,
+                'orderby' => 'include',
+            ]);
+
+            $wc_products_map = [];
+            foreach ($wc_products_raw as $wc_product) {
+                $wc_products_map[$wc_product->get_id()] = $wc_product;
+            }
+
+            foreach ($products as $product) {
+                if (isset($wc_products_map[$product->ID])) {
+                    $wc = $wc_products_map[$product->ID];
+                    $product->price_html      = $wc->get_price_html();
+                    $product->add_to_cart_url = $wc->add_to_cart_url();
+                    $product->average_rating  = $wc->get_average_rating();
+                    $product->_wc_product     = $wc;
+                }
             }
         }
 
@@ -149,6 +159,8 @@ class Controller extends BlockFactory
             'format'    => '?paged=%#%',
             'prev_text' => 'Précédent',
             'next_text' => 'Suivant',
+            'prev_text' => __('Précédent', 'ferrali-theme'),
+            'next_text' => __('Suivant', 'ferrali-theme'),
         ]);
         $context['shop_url']        = get_permalink(wc_get_page_id('shop'));
         $context['selected']        = $selected;
@@ -164,6 +176,7 @@ class Controller extends BlockFactory
         // Aperçu ACF
         if ($this->isPreview($block) && $this->getPreviewPath()) {
             echo sprintf('<img src="%s" alt="Aperçu du bloc" style="width:100%%;height:auto;" />', esc_url(get_template_directory_uri() . '/' . $this->getPreviewPath()));
+            echo sprintf('<img src="%s" alt="%s" style="width:100%%;height:auto;" />', esc_url(get_template_directory_uri() . '/' . $this->getPreviewPath()), esc_attr__('Aperçu du bloc', 'ferrali-theme'));
             return;
         }
 
@@ -175,13 +188,18 @@ class Controller extends BlockFactory
      */
     protected function getPriceBounds(): array
     {
-        // MAX
-        $qMax = new WP_Query([
+        // On essaie de récupérer les bornes depuis le cache
+        $cached_bounds = get_transient('ferrali_product_price_bounds');
+        if ($cached_bounds !== false && is_array($cached_bounds)) {
+            return $cached_bounds;
+        }
+
+        // Si le cache est vide, on exécute les requêtes
+        $query_args = [
             'post_type'      => 'product',
             'post_status'    => 'publish',
             'posts_per_page' => 1,
             'orderby'        => 'meta_value_num',
-            'order'          => 'DESC',
             'meta_key'       => '_price',
             'fields'         => 'ids',
             'no_found_rows'  => true,
@@ -191,28 +209,17 @@ class Controller extends BlockFactory
                 'type'    => 'NUMERIC',
                 'compare' => '>',
             ]],
-        ]);
-        $max = $qMax->posts ? (float) get_post_meta($qMax->posts[0], '_price', true) : 0.0;
+        ];
+
+        // MAX
+        $qMax = new WP_Query(array_merge($query_args, ['order' => 'DESC']));
+        $max = $qMax->posts ? (float) get_post_meta($qMax->posts[0], '_price', true) : 1000.0;
 
         // MIN (>0)
-        $qMin = new WP_Query([
-            'post_type'      => 'product',
-            'post_status'    => 'publish',
-            'posts_per_page' => 1,
-            'orderby'        => 'meta_value_num',
-            'order'          => 'ASC',
-            'meta_key'       => '_price',
-            'fields'         => 'ids',
-            'no_found_rows'  => true,
-            'meta_query'     => [[
-                'key'     => '_price',
-                'value'   => 0,
-                'type'    => 'NUMERIC',
-                'compare' => '>',
-            ]],
-        ]);
+        $qMin = new WP_Query(array_merge($query_args, ['order' => 'ASC']));
         $min = $qMin->posts ? (float) get_post_meta($qMin->posts[0], '_price', true) : 0.0;
 
+        // Fallbacks logiques
         if ($max <= 0) {
             $max = 1000.0;
         }
@@ -220,6 +227,11 @@ class Controller extends BlockFactory
             $min = 0.0;
         }
 
-        return ['min' => $min, 'max' => $max];
+        $bounds = ['min' => floor($min), 'max' => ceil($max)];
+
+        // Stocke le résultat dans le cache pour 24 heures
+        set_transient('ferrali_product_price_bounds', $bounds, DAY_IN_SECONDS);
+
+        return $bounds;
     }
 }

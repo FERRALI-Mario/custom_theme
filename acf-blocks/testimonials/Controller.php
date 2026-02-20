@@ -73,7 +73,7 @@ class Controller extends BlockFactory
         // Durée proportionnelle au nombre de cartes (après extension)
         // Ajuste le ratio si tu veux une vitesse différente.
         $count    = count($extended);
-        $duration = max(8, (int)ceil(($count / 6) * 13)); // base : ~13s par 6 cartes
+        $duration = max(8, (int)ceil(($count / 6) * 19)); // base : ~13s par 6 cartes
         $context['marquee_duration'] = $duration;
 
         return $context;
