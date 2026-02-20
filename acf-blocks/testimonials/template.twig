@@ -1,5 +1,5 @@
-<section class="relative overflow-hidden bg-white py-12 lg:py-20">
-	<div class="container mx-auto text-center px-4">
+<section class="relative overflow-hidden bg-white py-16 md:py-24">
+	<div class="container mx-auto text-center px-4 md:px-6 max-w-7xl">
 
 		{% if fields.title or fields.subtitle %}
 			{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
@@ -7,20 +7,18 @@
 
 		{% if testimonials is not empty %}
 			<div class="relative w-full overflow-hidden group">
-				<div
-					class="flex animate-marquee w-fit gap-4 group-hover:[animation-play-state:paused]" style="animation-duration: {{ marquee_duration }}s;">
-					{# Deux copies consécutives de la même piste étendue #}
+				<div class="flex animate-marquee w-fit gap-6 md:gap-12 group-hover:[animation-play-state:paused]" style="animation-duration: {{ marquee_duration }}s;">
 					{% for i in 1..2 %}
 						{% for testimonial in testimonials %}
-							<figure class="w-64 shrink-0 inline-block rounded-xl border p-4 bg-gray-50 hover:bg-gray-100 transition-all text-left">
+							<figure class="w-64 shrink-0 inline-block rounded-xl border border-gray-100 p-6 bg-gray-50 hover:bg-gray-100 transition-all text-left">
 								<div class="flex items-center gap-3 mb-3">
 									{% if testimonial.client_photo %}
-										<img src="{{ testimonial.client_photo.url }}" alt="{{ testimonial.client_name }}" class="w-10 h-10 rounded-full">
+										<img src="{{ testimonial.client_photo.url }}" alt="{{ testimonial.client_name }}" class="w-10 h-10 rounded-full object-cover">
 									{% endif %}
 									<div class="text-left">
-										<figcaption class="text-sm font-semibold">{{ testimonial.client_name }}</figcaption>
+										<figcaption class="text-base font-semibold text-gray-900">{{ testimonial.client_name }}</figcaption>
 										{% if testimonial.client_job %}
-											<p class="text-xs text-gray-500">{{ testimonial.client_job }}</p>
+											<p class="text-sm text-gray-600">{{ testimonial.client_job }}</p>
 										{% endif %}
 									</div>
 								</div>
@@ -37,7 +35,7 @@
 									</div>
 								{% endif %}
 
-								<blockquote class="text-sm text-gray-800 whitespace-normal">
+								<blockquote class="text-sm text-gray-600">
 									{{ testimonial.testimonial_text }}
 								</blockquote>
 							</figure>

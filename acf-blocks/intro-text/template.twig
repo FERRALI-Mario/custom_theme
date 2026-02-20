@@ -1,21 +1,18 @@
-<section class="intro-text-block py-12 lg:py-16">
-	<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+<section class="intro-text-block py-16 md:py-24">
+	<div class="container mx-auto px-4 md:px-6 max-w-7xl">
 		{% set align = (fields.alignment ?? 'left')|lower %}
-		{# on aligne TOUT le bloc (titre + paragraphe) dans la même colonne #}
-		{% set colAlign =
-      align == 'center' ? 'mx-auto text-center' :
-      (align == 'right' ? 'ml-auto text-right' : 'mr-auto text-left')
-    %}
+		{% set textAlign = align == 'center' ? 'text-center' : (align == 'right' ? 'text-right' : 'text-left') %}
+		{% set marginClass = align == 'center' ? 'mx-auto' : (align == 'right' ? 'ml-auto' : 'mr-auto') %}
 
-		<div class="w-full md:max-w-3xl {{ colAlign }}">
+		<div class="w-full md:max-w-3xl {{ marginClass }} {{ textAlign }}">
 			{% if fields.title %}
-				<h2 class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight text-gray-900 mb-4 sm:mb-5 lg:mb-6">
+				<h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-8 text-gray-900">
 					{{ fields.title }}
 				</h2>
 			{% endif %}
 
 			{% if fields.paragraph %}
-				<p class="text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800">
+				<p class="text-base md:text-lg text-gray-600 leading-relaxed">
 					{{ fields.paragraph }}
 				</p>
 			{% endif %}

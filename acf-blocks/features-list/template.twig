@@ -1,38 +1,35 @@
-<section class="features-list-block py-12 lg:py-16">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+<section class="features-list py-16 md:py-24 px-4">
+	<div class="container mx-auto px-4 md:px-6 max-w-7xl">
 		{% set items = fields.features_list ?? [] %}
-		{% set count = items|length %}
 
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-14 justify-items-center md:justify-items-stretch items-stretch">
-			{% for feature in items %}
-				{% set isLastSingleMd  = (count % 2 == 1) and loop.last %}
-				{% set isLastSingleLg  = (count % 3 == 1) and loop.last %}
-				{% set isLastRowPairLg = (count % 3 == 2) and (loop.index == count - 1) %}
-
-				<article class="w-full min-w-0 h-full flex flex-col max-w-md md:max-w-md lg:max-w-none mx-auto md:mx-0 {{ isLastSingleMd ? 'md:col-span-2 md:max-w-xl md:mx-auto lg:col-span-1 lg:mx-0' : '' }} {{ isLastSingleLg ? 'lg:col-span-3 lg:max-w-3xl lg:mx-auto' : '' }} {{ isLastRowPairLg ? 'lg:col-start-2' : '' }}">
-					{% if feature.icon %}
-						<figure class="w-full">
-							<div class="relative aspect-[16/9] overflow-hidden rounded-2xl shadow-lg">
-								<img src="{{ feature.icon }}" alt="{{ feature.title|default('')|e }}" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async">
-							</div>
-						</figure>
-					{% endif %}
-
-					<div class="flex-1 flex flex-col">
-						{% if feature.title %}
-							<h3 class="mt-5 text-2xl font-bold tracking-tight text-gray-900">
-								{{ feature.title }}
-							</h3>
+		{% if items %}
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
+				{% for feature in items %}
+					<article class="w-full min-w-0 h-full flex flex-col max-w-md md:max-w-md lg:max-w-none mx-auto md:mx-0 {{ isLastSingleMd ? 'md:col-span-2 md:max-w-xl md:mx-auto lg:col-span-1 lg:mx-0' : '' }} {{ isLastSingleLg ? 'lg:col-span-3 lg:max-w-3xl lg:mx-auto' : '' }} {{ isLastRowPairLg ? 'lg:col-start-2' : '' }}">
+						{% if feature.icon %}
+							<figure class="mb-6 flex-shrink-0">
+								<div class="relative w-full rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+									<img src="{{ feature.icon }}" alt="{{ feature.title|default('')|e }}" class="w-full h-auto object-cover aspect-video" loading="lazy" decoding="async">
+								</div>
+							</figure>
 						{% endif %}
 
-						{% if feature.description %}
-							<p class="mt-4 text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800">
-								{{ feature.description }}
-							</p>
-						{% endif %}
-					</div>
-				</article>
-			{% endfor %}
-		</div>
+						<div class="flex-1 flex flex-col">
+							{% if feature.title %}
+								<h3 class="text-xl md:text-2xl font-semibold mb-3 text-gray-900">
+									{{ feature.title }}
+								</h3>
+							{% endif %}
+
+							{% if feature.description %}
+								<p class="text-base md:text-lg text-gray-600 leading-relaxed">
+									{{ feature.description }}
+								</p>
+							{% endif %}
+						</div>
+					</article>
+				{% endfor %}
+			</div>
+		{% endif %}
 	</div>
 </section>

@@ -1,6 +1,6 @@
 {# acf-blocks/logos-carousel/template.twig #}
-<section class="logos-carousel py-16 lg:py-20 px-4 bg-white overflow-hidden">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+<section class="logos-carousel py-16 md:py-24 bg-white overflow-hidden">
+	<div class="container mx-auto px-4 md:px-6 max-w-7xl text-center">
 
 		{% if fields.title or fields.subtitle %}
 			{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
@@ -10,7 +10,7 @@
 			{% set speed = marquee_duration ?? 30 %}
 
 			<div class="relative w-full overflow-hidden mx-auto max-w-6xl">
-				<div class="flex w-fit gap-10 animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none" style="animation-duration: {{ speed }}s;">
+				<div class="flex w-fit gap-6 md:gap-12 animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none" style="animation-duration: {{ speed }}s;">
 					{% for _ in 1..2 %}
 						{% for logo in fields.logos %}
 							{% set url = logo.logo_url ?? '' %}

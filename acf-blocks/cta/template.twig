@@ -1,26 +1,34 @@
-<section class="cta-block relative py-16 md:py-20 lg:py-24 text-white text-center bg-fixed bg-cover bg-center" style="background-image: url('{{ fields.background }}');" role="region" aria-labelledby="cta-title">
-	<div class="absolute inset-0 bg-black/55 md:bg-black/50 z-0"></div>
+<section
+	class="cta-block relative py-16 md:py-24 text-white text-center overflow-hidden" role="region" aria-labelledby="cta-title">
+	<!-- Background Image Overlay -->
+	<div class="absolute inset-0 w-full h-full object-cover" style="background-image: url('{{ fields.background }}'); background-attachment: fixed; background-size: cover; background-position: center;"></div>
+	<div class="absolute inset-0 bg-black/50 md:bg-black/45 z-1"></div>
 
-	<div class="relative z-10 mx-auto max-w-7xl px-6">
-		{% if fields.title %}
-			<h2 id="cta-title" class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight mb-4 sm:mb-5 lg:mb-6">
-				{{ fields.title }}
-			</h2>
-		{% endif %}
+	<!-- Content -->
+	<div class="relative z-2 container mx-auto px-4 md:px-6 max-w-7xl">
+		<div class="max-w-3xl mx-auto">
+			{% if fields.title %}
+				<h2 id="cta-title" class="text-3xl md:text-4xl font-bold tracking-tight mb-8 text-white">
+					{{ fields.title }}
+				</h2>
+			{% endif %}
 
-		{% if fields.subtitle %}
-			<p class="mx-auto max-w-3xl text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-100/95 mb-8 lg:mb-10">
-				{{ fields.subtitle }}
-			</p>
-		{% endif %}
+			{% if fields.subtitle %}
+				<p class="text-base md:text-lg text-gray-100 leading-relaxed mb-12">
+					{{ fields.subtitle }}
+				</p>
+			{% endif %}
 
-		{% if fields.button_text and fields.button_url %}
-			{% include 'components/button.twig' with {
-        button_text: fields.button_text,
-        button_url:  fields.button_url,
-        open_in_new_tab: fields.open_in_new_tab,
-        variant: 'solid-light'
-      } %}
-		{% endif %}
+			{% if fields.button_text and fields.button_url %}
+				<div class="flex justify-center">
+					{% include 'components/button.twig' with {
+						button_text: fields.button_text,
+						button_url: fields.button_url,
+						open_in_new_tab: fields.open_in_new_tab,
+						variant: 'solid-light'
+					} %}
+				</div>
+			{% endif %}
+		</div>
 	</div>
 </section>

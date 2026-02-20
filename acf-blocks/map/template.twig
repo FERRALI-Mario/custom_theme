@@ -1,9 +1,13 @@
-<section class="py-12 px-4">
-	<div class="container mx-auto">
+<section class="py-16 md:py-24">
+	<div class="container mx-auto px-4 md:px-6 max-w-7xl">
 		{% set lat = fields.map_latitude|default(0) %}
 		{% set lng = fields.map_longitude|default(0) %}
 		{% set zoom = fields.map_zoom|default(14) %}
 
-		<div id="map" class="w-full rounded shadow" style="height: 400px;" data-lat="{{ fields.map_latitude }}" data-lng="{{ fields.map_longitude }}" data-zoom="{{ fields.map_zoom|default(14) }}" data-label="{{ fields.map_label|default('Localisation') }}"></div>
+		{% if lat and lng %}
+			<div id="map" class="w-full rounded shadow" style="height: 400px;" data-lat="{{ lat }}" data-lng="{{ lng }}" data-zoom="{{ zoom }}" data-label="{{ fields.map_label|default('Localisation') }}"></div>
+		{% else %}
+			<p class="text-center text-gray-400 italic">Coordonnées non définies.</p>
+		{% endif %}
 	</div>
 </section>

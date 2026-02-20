@@ -6,47 +6,46 @@
 {% set imgAlt  = (image.alt ?? fields.title ?? 'Hero image')|trim %}
 {% set imgId   = image.id ?? image.ID ?? null %}
 {% set srcset  = imgId ? function('wp_get_attachment_image_srcset', imgId, 'full') : null %}
-{% set sizes   = '(min-width: 1024px) 40vw, 0px' %}
-{# image cachée < md #}
+{% set sizes   = '(min-width: 1024px) 40vw, 100vw' %}
 {% set fetchprio = fields.is_lcp ? 'high' : 'auto' %}
 
-<section class="relative min-h-screen text-white" {% if bgUrl %} style="background-image:url('{{ bgUrl }}'); background-size:cover; background-position:center;" {% endif %}>
-	<div class="absolute inset-0 bg-black/50 md:bg-gradient-to-r md:from-black/60 md:via-black/40 md:to-transparent"></div>
+<section class="relative min-h-screen text-white overflow-hidden" {% if bgUrl %} style="background-image: url('{{ bgUrl }}'); background-size: cover; background-position: center;" {% endif %}>
+	<div class="absolute inset-0 bg-black/50 md:bg-gradient-to-r md:from-black/60 md:via-black/40 md:to-transparent z-1"></div>
 
-	<div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 min-h-screen flex items-center">
+	<div class="relative z-2 container mx-auto px-4 md:px-6 max-w-7xl min-h-screen flex items-center">
 		<div
-			class="grid w-full items-center gap-10 lg:gap-16 md:grid-cols-12">
+			class="w-full grid md:grid-cols-2 gap-6 md:gap-12 items-center">
 
-			{# --- TEXTE --- #}
-			<div class="md:col-span-6">
+			<!-- Text Content -->
+			<div>
 				{% if fields.title %}
-					<h1 class="text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-4xl font-bold tracking-tight mb-4 sm:mb-5 lg:mb-6">
+					<h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-6 text-white">
 						{{ fields.title }}
 					</h1>
 				{% endif %}
 
 				{% if fields.subtitle %}
-					<p class="text-gray-100/95 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mb-6 lg:mb-8">
+					<p class="text-base md:text-lg text-gray-100/95 leading-relaxed mb-8 max-w-2xl">
 						{{ fields.subtitle }}
 					</p>
 				{% endif %}
 
 				{% if fields.cta_text and fields.cta_url %}
 					{% include 'components/button.twig' with {
-            button_text: fields.cta_text,
-            button_url:  fields.cta_url,
-            open_in_new_tab: fields.open_in_new_tab,
-            variant: 'solid-light'  # plein clair (pas outline) pour fond sombre
-          } %}
+						button_text: fields.cta_text,
+						button_url: fields.cta_url,
+						open_in_new_tab: fields.open_in_new_tab,
+						variant: 'solid-light'
+					} %}
 				{% endif %}
 			</div>
 
-			{# --- IMAGE (cachée en mobile) --- #}
-			<div class="md:col-span-6 hidden md:block">
+			<!-- Image (Hidden on mobile) -->
+			<div class="hidden md:block">
 				{% if imgUrl %}
-					<figure class="md:ml-auto w-full max-w-lg lg:max-w-2xl xl:max-w-3xl">
-						<div class="relative aspect-[3/2] lg:aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/15">
-							<img src="{{ imgUrl }}" {% if srcset %} srcset="{{ srcset }}" {% endif %} sizes="{{ sizes }}" alt="{{ imgAlt|e }}" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" fetchpriority="{{ fetchprio }}">
+					<figure>
+						<div class="relative w-full rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/15">
+							<img src="{{ imgUrl }}" {% if srcset %} srcset="{{ srcset }}" {% endif %} sizes="{{ sizes }}" alt="{{ imgAlt|e }}" class="w-full h-auto object-cover aspect-video" loading="lazy" decoding="async" fetchpriority="{{ fetchprio }}">
 						</div>
 					</figure>
 				{% endif %}

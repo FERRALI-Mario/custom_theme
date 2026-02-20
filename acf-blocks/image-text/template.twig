@@ -1,70 +1,67 @@
 {# components/image-text.twig #}
 {% set image           = fields.image %}
 {% set imagePosition   = fields.image_position ?? 'right' %}
-{# 'left' | 'right' #}
 {% set title           = fields.title %}
 {% set paragraph       = fields.paragraph %}
 {% set button_text     = fields.button_text %}
 {% set button_url      = fields.button_url %}
 {% set open_in_new_tab = fields.open_in_new_tab %}
 
-{# ACF image: string (URL) ou array #}
+{# données image #}
 {% set imgUrl    = image.url ?? image %}
 {% set imgAlt    = (image.alt ?? title ?? '')|trim %}
 {% set imgId     = image.id ?? image.ID ?? null %}
 {% set imgSrcset = imgId ? function('wp_get_attachment_image_srcset', imgId, 'full') : null %}
-{# 50vw sur desktop (2 colonnes), 90vw sinon #}
 {% set imgSizes  = '(min-width: 1024px) 50vw, 90vw' %}
-{# Si la section est “au-dessus de la ligne de flottaison”, on peut forcer high. Par défaut: auto #}
 {% set fetchprio = fields.is_lcp ? 'high' : 'auto' %}
 
-<section class="py-12 lg:py-16">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div
-			class="grid items-center gap-10 lg:gap-16 md:grid-cols-12">
-
-			{# --- TEXTE --- #}
+<section class="py-16 md:py-24">
+	<div class="container mx-auto px-4 md:px-6 max-w-7xl">
+		<div class="grid items-center gap-6 md:gap-12 md:grid-cols-12">
 			<div class="{{ imagePosition == 'right' ? 'md:col-span-6' : 'md:col-span-6 md:order-2' }}">
+				{% if imgId %}
+					{{ function(
+                        'wp_get_attachment_image',
+                        imgId,
+                        'large',
+                        false,
+                        {
+                            class: 'w-full h-auto object-cover',
+                            alt:   imgAlt|default('')
+                        }
+                    ) }}
+				{% elseif imgUrl %}
+					<figure class="w-full">
+						<div class="relative overflow-hidden rounded-xl">
+							<img src="{{ imgUrl }}" {% if imgSrcset %} srcset="{{ imgSrcset }}" {% endif %} sizes="{{ imgSizes }}" alt="{{ imgAlt|e }}" class="w-full h-auto object-cover" loading="lazy" decoding="async" fetchpriority="{{ fetchprio }}">
+						</div>
+					</figure>
+				{% endif %}
+			</div>
+			<div class="{{ imagePosition == 'right' ? 'md:col-span-6' : 'md:col-span-6 md:order-1' }}">
 				{% if title %}
-					{# Taille figée après ~md, plus petite en md/lg #}
-					<h2 class="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-3xl font-bold tracking-tight text-gray-900 mb-4 sm:mb-5 lg:mb-6">
+					<h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-8 text-gray-900">
 						{{ title }}
 					</h2>
 				{% endif %}
 
 				{% if paragraph %}
-					<div
-						class="max-w-2xl">
-						{# Paragraphe plus petit en lg + interlignage ajusté #}
-						<p class="text-base sm:text-lg lg:text-[1.125rem] leading-7 text-gray-800 mb-6 lg:mb-8">
-							{{ paragraph }}
-						</p>
-					</div>
+					<p class="text-base md:text-lg text-gray-600 leading-relaxed mb-6">
+						{{ paragraph }}
+					</p>
 				{% endif %}
 
 				{% if button_text %}
 					<div class="flex justify-center md:justify-start">
 						{% include 'components/button.twig' with {
-              button_text: button_text,
-              button_url:  button_url,
-              open_in_new_tab: open_in_new_tab,
-              variant: 'outline'
-            } %}
+                            button_text:      button_text,
+                            button_url:       button_url,
+                            open_in_new_tab:  open_in_new_tab,
+                            variant:          'outline'
+                        } %}
 					</div>
 				{% endif %}
 			</div>
-
-			{# --- IMAGE --- #}
-			<div class="{{ imagePosition == 'right' ? 'md:col-span-6' : 'md:col-span-6 md:order-1' }}">
-				{% if imgUrl %}
-					<figure class="mx-auto w-full max-w-lg md:max-w-none lg:max-w-3xl">
-						<div class="relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[3/2] lg:aspect-[16/9] overflow-hidden rounded-2xl shadow-lg">
-							<img src="{{ imgUrl }}" {% if imgSrcset %} srcset="{{ imgSrcset }}" {% endif %} sizes="{{ imgSizes }}" alt="{{ imgAlt|e }}" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" fetchpriority="{{ fetchprio }}">
-						</div>
-					</figure>
-				{% endif %}
-			</div>
-
 		</div>
 	</div>
 </section>

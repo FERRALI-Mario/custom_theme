@@ -3,32 +3,26 @@
 
 {% if links|length %}
 	{% set icon_map = {
-    'facebook':  'fa-brands fa-facebook-f',
-    'instagram': 'fa-brands fa-instagram',
-    'snapchat':  'fa-brands fa-snapchat-ghost',
-    'tiktok':    'fa-brands fa-tiktok',
-    'pinterest': 'fa-brands fa-pinterest-p',
-    'github':    'fa-brands fa-github',
-    'linkedin':  'fa-brands fa-linkedin-in'
-  } %}
+        'facebook':  'fa-brands fa-facebook-f',
+        'instagram': 'fa-brands fa-instagram',
+        'snapchat':  'fa-brands fa-snapchat-ghost',
+        'tiktok':    'fa-brands fa-tiktok',
+        'pinterest': 'fa-brands fa-pinterest-p',
+        'github':    'fa-brands fa-github',
+        'linkedin':  'fa-brands fa-linkedin-in'
+    } %}
 
-	<section class="py-6">
-		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+	<section class="py-16 md:py-24">
+		<div class="container mx-auto px-4 md:px-6 max-w-7xl">
 			<nav class="text-center" aria-label="Réseaux sociaux">
-				<ul class="inline-flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+				<ul class="inline-flex flex-wrap items-center justify-center gap-6 md:gap-12">
 					{% for item in links %}
 						{% if item.url %}
 							{% set platform = (item.icon|default('link'))|lower %}
 							{% set label    = item.label|default(platform|capitalize) %}
 
 							<li>
-								<a href="{{ item.url }}" {% if item.new_tab %} target="_blank" rel="noopener noreferrer me" {% else %} rel="me" {% endif %} aria-label="{{ label }}" class="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition
-																														                         focus-visible:outline-none focus-visible:ring-2
-																														                         {% if on_dark %}
-																														                           text-white/80 hover:text-white hover:bg-white/10 focus-visible:ring-white
-																														                         {% else %}
-																														                           text-gray-600 hover:text-gray-900 hover:bg-black/5 focus-visible:ring-gray-900
-																														                         {% endif %}">
+								<a href="{{ item.url }}" {% if item.new_tab %} target="_blank" rel="noopener noreferrer me" {% else %} rel="me" {% endif %} aria-label="{{ label }}" class="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 {% if on_dark %}text-white/80 hover:text-white hover:bg-white/10 focus-visible:ring-white{% else %}text-gray-600 hover:text-gray-900 hover:bg-black/5 focus-visible:ring-gray-900{% endif %}">
 									{% if icon_map[platform] is defined %}
 										<i class="{{ icon_map[platform] }} text-lg sm:text-xl" aria-hidden="true"></i>
 									{% else %}

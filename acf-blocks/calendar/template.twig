@@ -1,148 +1,181 @@
+{# --- Standard UI Component Classes (Design System) --- #}
 {% set fields = fields ?? {} %}
 {% set months = months ?? [] %}
 {% set weekdays = weekdays ?? [] %}
+{# Ajout de 'border' et 'bg-white' pour corriger l'affichage des inputs #}
+{% set input_class = 'block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm px-3 py-2' %}
+{% set button_class = 'inline-flex items-center justify-center px-6 py-2 text-base font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-md shadow-sm transition-all duration-200' %}
 
-<section class="calendar-block py-12 lg:py-16">
-	{% if fields.title or fields.subtitle %}
-		{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
-	{% endif %}
+<section class="calendar-block bg-gray-50 py-16 md:py-24" aria-labelledby="calendar-heading">
+	<div class="container mx-auto px-4 md:px-6 max-w-7xl">
+		{% if fields.title or fields.subtitle %}
+			<header class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+				{% if fields.title %}
+					<h2 id="calendar-heading" class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">{{ fields.title }}</h2>
+				{% endif %}
+				{% if fields.subtitle %}
+					<p class="text-base md:text-lg text-gray-600 leading-relaxed">{{ fields.subtitle }}</p>
+				{% endif %}
+			</header>
+		{% endif %}
 
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8">
-		<div class="flex flex-col items-center gap-6 lg:flex-row lg:items-end lg:justify-between">
-			<div class="flex items-center gap-2">
-				<button type="button" class="brc-prev inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition">
-					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-width="2"/></svg>
-				</button>
-				<div class="brc-current-month text-lg font-semibold text-gray-900 w-48 text-center select-none">
-					{{ months|first.label }}
+		<div
+			class="max-w-4xl mx-auto">
+			{# --- Calendar Controls & Summary --- #}
+			<div
+				class="relative flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between mb-8">
+
+				{# Navigation Mois #}
+				<div class="flex items-center gap-3">
+					<button type="button" class="brc-prev flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200" aria-label="Mois précédent">
+						<i class="fa-solid fa-chevron-left text-sm" aria-hidden="true"></i>
+					</button>
+					<div class="brc-current-month text-lg font-semibold text-gray-900 w-48 text-center select-none">
+						{{ months|first.label }}
+					</div>
+					<button type="button" class="brc-next flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200" aria-label="Mois suivant">
+						<i class="fa-solid fa-chevron-right text-sm" aria-hidden="true"></i>
+					</button>
 				</div>
-				<button type="button" class="brc-next inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition">
-					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke-width="2"/></svg>
-				</button>
+
+				{# Prix Total Flottant #}
+				<div id="brc-top-summary" class="hidden lg:absolute lg:left-1/2 lg:-translate-x-1/2 flex-col items-center justify-center transition-all duration-300">
+					<span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+						Total Séjour
+					</span>
+					<div class="flex items-baseline">
+						<span id="brc-top-price" class="text-3xl font-bold text-gray-900 tracking-tight">0</span>
+						<span class="text-2xl font-semibold text-gray-800 ml-1">€</span>
+					</div>
+				</div>
+
+				{# Inputs Dates (Readonly) #}
+				<div class="grid grid-cols-2 gap-3 w-full lg:w-auto">
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-1">Arrivée</label>
+						<input id="brc-checkin-input" class="block w-full rounded-md border border-gray-300 px-3 py-2 bg-white cursor-pointer shadow-sm sm:text-sm" type="text" placeholder="jj/mm/aaaa" readonly>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-1">Départ</label>
+						<input id="brc-checkout-input" class="block w-full rounded-md border border-gray-300 px-3 py-2 bg-white cursor-pointer shadow-sm sm:text-sm" type="text" placeholder="jj/mm/aaaa" readonly>
+					</div>
+				</div>
 			</div>
 
-			<div id="brc-top-summary" class="hidden lg:absolute lg:left-1/2 lg:-translate-x-1/2 flex-col items-center justify-center transition-all duration-300">
-				<span class="text-[10px] font-semibold text-gray-400 uppercase tracking-[0.2em] mb-0.5 font-sans">
-					Total Séjour
-				</span>
-				<div class="flex items-center">
-					<span id="brc-top-price" class="text-3xl font-bold text-gray-900 tracking-tight">0</span>
-					<span class="text-2xl font-light text-gray-400 ml-1">€</span>
-				</div>
-			</div>
-
-			<div class="grid grid-cols-2 gap-3 w-full lg:w-auto">
-				<div>
-					<label class="block text-sm font-medium text-gray-700">Arrivée</label>
-					<input id="brc-checkin-input" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 bg-gray-50 cursor-pointer" type="text" placeholder="jj/mm/aaaa" readonly>
-				</div>
-				<div>
-					<label class="block text-sm font-medium text-gray-700">Départ</label>
-					<input id="brc-checkout-input" class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 bg-gray-50 cursor-pointer" type="text" placeholder="jj/mm/aaaa" readonly>
-				</div>
-			</div>
-		</div>
-
-		<div class="grid gap-6 md:grid-cols-1 mt-6 select-none">
-			{% for m in months %}
-				<table class="w-full border-collapse rounded-lg overflow-hidden border border-gray-200">
-					<thead class="bg-gray-50">
-						<tr>
-							{% for w in weekdays %}
-								<th class="px-2 py-2 text-xs font-medium text-gray-600 uppercase text-center w-[14.28%]">{{ w }}</th>
-							{% endfor %}
-						</tr>
-					</thead>
-					<tbody class="brc-body">
-						{% for row in 0..5 %}
+			{# --- Calendar Grids --- #}
+			<div class="grid gap-8 md:grid-cols-1 select-none">
+				{% for m in months %}
+					<table class="w-full border-collapse">
+						<thead class="border-b border-gray-200">
 							<tr>
-								{% for col in 0..6 %}
-									<td class="px-1 py-1">
-										<div class="h-10 w-10 mx-auto"></div>
-									</td>
+								{% for w in weekdays %}
+									<th class="pb-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center w-[14.28%]">{{ w }}</th>
 								{% endfor %}
 							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			{% endfor %}
-		</div>
-		<div id="brc-feedback" class="mt-6 text-center text-sm font-medium hidden"></div>
+						</thead>
+						<tbody
+							class="brc-body">
+							{# JS will populate this #}
+							{% for row in 0..5 %}
+								<tr>
+									{% for col in 0..6 %}
+										<td class="p-1">
+											<div class="h-10 w-10 mx-auto rounded-full"></div>
+										</td>
+									{% endfor %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% endfor %}
+			</div>
 
-		<div class="text-center mt-6">
-			<button type="button" id="brc-open-modal" class="hidden inline-flex items-center rounded-md px-4 py-2 font-medium text-white bg-gray-900 hover:bg-gray-800 transition">
-				{{ fields.button_label|default('Demander une réservation') }}
-			</button>
-		</div>
-		<div id="brc-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6">
-			<div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
-			<div class="relative w-full max-w-lg rounded-lg bg-white shadow-xl transform transition-all flex flex-col max-h-[90vh]">
-				<div class="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
-					<h3 class="text-lg font-bold text-gray-900">Finaliser la demande</h3>
-					<button type="button" class="brc-close text-gray-400 hover:text-gray-600 text-2xl leading-none p-2 rounded-md hover:bg-gray-100 transition">&times;</button>
-				</div>
+			<div id="brc-feedback" class="mt-6 text-center text-sm font-medium hidden"></div>
 
-				<div class="p-6 overflow-y-auto">
-					<div id="brc-summary" class="bg-gray-50 p-4 rounded-md mb-6 text-sm text-gray-700 hidden border border-gray-200">
-						<div class="mb-2 border-b border-gray-200 pb-2">
-							<strong>Détails du séjour :</strong>
-							<ul id="brc-price-breakdown" class="mt-1 space-y-1 text-gray-600 list-disc list-inside"></ul>
+			<div class="text-center mt-8">
+				<button type="button" id="brc-open-modal" class="hidden {{ button_class }}">
+					{{ fields.button_label|default('Demander une réservation') }}
+				</button>
+			</div>
+		</div>
+
+		<div id="brc-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+			<div class="brc-close absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" aria-hidden="true"></div>
+			<div class="relative flex flex-col max-h-[90vh] w-full max-w-lg bg-white rounded-xl shadow-2xl border border-gray-800 overflow-hidden transform transition-all">
+				<header class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200 shrink-0 bg-gray-50">
+					<h3 id="modal-title" class="text-xl font-bold text-gray-900">Finaliser la demande</h3>
+					<button type="button" class="brc-close-button flex items-center justify-center h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-200 transition-colors" aria-label="Fermer">
+						<i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+					</button>
+				</header>
+
+				<div class="p-4 md:p-6 overflow-y-auto">
+
+					<div id="brc-summary" class="bg-gray-100 p-4 rounded-lg mb-6 text-sm text-gray-800 hidden border border-gray-100">
+						<div class="mb-3 border-b border-gray-200 pb-3">
+							<p class="font-semibold mb-2 text-gray-900">Détails du séjour :</p>
+							<ul id="brc-price-breakdown" class="space-y-1 text-gray-800 list-disc list-inside"></ul>
 						</div>
-
-						<div class="flex justify-between items-center mb-2 text-base">
-							<span>Prix total :</span>
-							<strong>
+						<div class="flex justify-between items-center text-base font-bold text-gray-900 mb-1">
+							<span>Prix total</span>
+							<span>
 								<span id="brc-total">0</span>
-								€</strong>
+								€</span>
 						</div>
-
-						<div class="mt-2 text-xs text-gray-500">
-							<p>Un acompte de
-								<strong>40% (<span id="brc-deposit">0</span>
-									€)</strong>
-								vous sera demandé pour confirmer.</p>
-						</div>
+						<p class="text-xs text-gray-700 mt-2">
+							Un acompte de
+							<strong>40% (<span id="brc-deposit">0</span>
+								€)</strong>
+							vous sera demandé pour confirmer.
+						</p>
 					</div>
 
-					<form id="brc-form" class="space-y-4" novalidate>
-						{{ function('wp_nonce_field','brc_request','_brc_nonce')|raw }}
+					{# Form #}
+					<form
+						id="brc-form" class="space-y-4" novalidate>
+						{# Correction Timber : ajout de 'true, false' pour éviter l'echo immédiat #}
+						{{ function('wp_nonce_field', 'brc_request', '_brc_nonce', true, false)|raw }}
+
 						<input type="hidden" name="action" value="booking_request_submit">
 						<input type="hidden" name="checkin" value="">
 						<input type="hidden" name="checkout" value="">
 						<input type="hidden" name="ical" value="{{ fields.ical_url }}">
 						<input type="hidden" name="cache" value="{{ fields.cache_minutes }}">
-						<input type="hidden" name="fallback_json" value="{{ (fields.fallback|default([]))|json_encode }}">
+						<input type="hidden" name="fallback_json" value="{{ (fields.fallback|default([]))|json_encode|e('html_attr') }}">
 						{% set rules = { 'default': fields.price_per_night|default(0), 'seasonal': fields.seasonal_prices|default([]) } %}
 						<input type="hidden" name="pricing_rules" value="{{ rules|json_encode|e('html_attr') }}">
 						<input type="hidden" name="post_id" value="{{ post.id }}">
 
 						<div>
-							<label class="block text-sm font-medium text-gray-700">Nom complet
+							<label for="brc-name" class="block text-sm font-medium text-gray-700 mb-1">Nom complet
 								<span class="text-red-500">*</span>
 							</label>
-							<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="text" name="name" required>
-						</div>
-						<div>
-							<label class="block text-sm font-medium text-gray-700">Téléphone
-								<span class="text-red-500">*</span>
-							</label>
-							<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="tel" name="phone" required>
-						</div>
-						<div>
-							<label class="block text-sm font-medium text-gray-700">E-mail
-								<span class="text-red-500">*</span>
-							</label>
-							<input class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" type="email" name="email" required>
-						</div>
-						<div>
-							<label class="block text-sm font-medium text-gray-700">Message</label>
-							<textarea class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm border px-3 py-2" name="message" rows="3"></textarea>
+							<input id="brc-name" class="{{ input_class }}" type="text" name="name" required>
 						</div>
 
-						<div id="brc-form-error" class="text-red-600 text-sm text-center hidden"></div>
+						<div>
+							<label for="brc-phone" class="block text-sm font-medium text-gray-700 mb-1">Téléphone
+								<span class="text-red-500">*</span>
+							</label>
+							<input id="brc-phone" class="{{ input_class }}" type="tel" name="phone" required>
+						</div>
+
+						<div>
+							<label for="brc-email" class="block text-sm font-medium text-gray-700 mb-1">E-mail
+								<span class="text-red-500">*</span>
+							</label>
+							<input id="brc-email" class="{{ input_class }}" type="email" name="email" required>
+						</div>
+
+						<div>
+							<label for="brc-message" class="block text-sm font-medium text-gray-700 mb-1">Message (optionnel)</label>
+							<textarea id="brc-message" class="{{ input_class }}" name="message" rows="3"></textarea>
+						</div>
+
+						<div id="brc-form-error" class="text-red-600 text-sm text-center hidden pt-2 font-medium"></div>
 
 						<div class="pt-2">
-							<button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent bg-gray-900 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 sm:text-sm transition">
+							<button type="submit" class="w-full {{ button_class }}">
 								Envoyer la demande
 							</button>
 						</div>
@@ -150,5 +183,6 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
 </section>

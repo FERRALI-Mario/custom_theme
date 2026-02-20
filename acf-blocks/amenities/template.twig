@@ -1,117 +1,120 @@
-{# ====== AMENITIES / ÉQUIPEMENTS (Style Amélioré) ====== #}
+{# ====== AMENITIES / ÉQUIPEMENTS (Refonte Design System) ====== #}
 
-{# Données #}
+{# --- Données --- #}
 {% set f = fields ?? {} %}
 {% set categories = f.categories ?? [] %}
+{% set title = f.title %}
+{% set subtitle = f.subtitle %}
 
-{# Métadonnées des catégories #}
+{# --- Métadonnées des catégories (inchangé) --- #}
 {% set CAT_META = {
-  'ideal_stay':          {'label':'Idéal pour votre séjour','icon':'fa-person'},
-  'parking':             {'label':'Parking','icon':'fa-square-parking'},
-  'activities':          {'label':'Activités','icon':'fa-person-running'},
-  'salle_de_bains':      {'label':'Salle de bains','icon':'fa-bath'},
-  'chambre':             {'label':'Chambre','icon':'fa-bed'},
-  'vue':                 {'label':'Vue','icon':'fa-eye'},
-  'exterieur':           {'label':'En extérieur','icon':'fa-tree'},
-  'cuisine':             {'label':'Cuisine','icon':'fa-mug-saucer'},
-  'equipements_chambre': {'label':'Équipements','icon':'fa-plug'},
-  'coin_salon':          {'label':'Coin salon','icon':'fa-couch'},
-  'high_tech':           {'label':'High-tech','icon':'fa-microchip'},
-  'restauration':        {'label':'Restauration','icon':'fa-utensils'},
-  'internet':            {'label':'Internet','icon':'fa-wifi'},
-  'reception':           {'label':'Réception','icon':'fa-concierge-bell'},
-  'services_nettoyage':  {'label':'Ménage','icon':'fa-broom'},
-  'services_affaires':   {'label':'Affaires','icon':'fa-briefcase'},
-  'securite':            {'label':'Sécurité','icon':'fa-shield-halved'},
-  'general':             {'label':'Général','icon':'fa-circle-info'},
-  'accessibilite':       {'label':'Accessibilité','icon':'fa-universal-access'},
-  'bien_etre':           {'label':'Bien-être','icon':'fa-spa'},
-  'langues_parlees':     {'label':'Langues','icon':'fa-language'},
+    'ideal_stay':          {'label':'Idéal pour votre séjour','icon':'fa-person'},
+    'parking':             {'label':'Parking','icon':'fa-square-parking'},
+    'activities':          {'label':'Activités','icon':'fa-person-running'},
+    'salle_de_bains':      {'label':'Salle de bains','icon':'fa-bath'},
+    'chambre':             {'label':'Chambre','icon':'fa-bed'},
+    'vue':                 {'label':'Vue','icon':'fa-eye'},
+    'exterieur':           {'label':'En extérieur','icon':'fa-tree'},
+    'cuisine':             {'label':'Cuisine','icon':'fa-mug-saucer'},
+    'equipements_chambre': {'label':'Équipements','icon':'fa-plug'},
+    'coin_salon':          {'label':'Coin salon','icon':'fa-couch'},
+    'high_tech':           {'label':'High-tech','icon':'fa-microchip'},
+    'restauration':        {'label':'Restauration','icon':'fa-utensils'},
+    'internet':            {'label':'Internet','icon':'fa-wifi'},
+    'reception':           {'label':'Réception','icon':'fa-concierge-bell'},
+    'services_nettoyage':  {'label':'Ménage','icon':'fa-broom'},
+    'services_affaires':   {'label':'Affaires','icon':'fa-briefcase'},
+    'securite':            {'label':'Sécurité','icon':'fa-shield-halved'},
+    'general':             {'label':'Général','icon':'fa-circle-info'},
+    'accessibilite':       {'label':'Accessibilité','icon':'fa-universal-access'},
+    'bien_etre':           {'label':'Bien-être','icon':'fa-spa'},
+    'langues_parlees':     {'label':'Langues','icon':'fa-language'}
 } %}
 
-{# Dé-duplication #}
+{# --- Logique de dé-duplication (inchangée) --- #}
 {% set seen = [] %}
-{% set normalized = [] %}
+{% set normalized_categories = [] %}
 	{% for cat in categories %}
 	{% set key = cat.category_key ?? null %}
 		{% if key and (key not in seen) %}
 		{% set seen = seen|merge([key]) %}
-	{% set normalized = normalized|merge([cat]) %}
+	{% set normalized_categories = normalized_categories|merge([cat]) %}
 {% endif %}
 {% endfor %}
 
-	{% if normalized|length %}
+{# --- Rendu du bloc --- #}
+	{% if normalized_categories is not empty %}
 
-	{# Calcul des colonnes #}
-	{% set count = normalized|length %}
-	{% set columnClasses = count == 1 ? 'columns-1' : (count == 2 ? 'columns-2' : 'columns-1 md:columns-2 lg:columns-3') %}
+	{# Calcul des colonnes et largeur max #}
+	{% set count = normalized_categories|length %}
+	{% set columnClasses = count == 1 ? '' : (count == 2 ? 'md:columns-2' : 'md:columns-2 lg:columns-3') %}
+	{% set maxWidthClass = count >= 3 ? 'max-w-7xl' : (count == 2 ? 'max-w-5xl' : 'max-w-3xl') %}
 
-	{# Largeur max #}
-	{% set colsMax = count >= 3 ? 'max-w-7xl' : (count == 2 ? 'max-w-4xl' : 'max-w-2xl') %}
+		<section class="amenities bg-white py-16 md:py-24" aria-labelledby="amenities-heading"> <div
+			class="container mx-auto px-4 md:px-6">
 
-		<section class="amenities py-16 lg:py-24 bg-white"> <div
-			class="mx-auto max-w-7xl px-6">
-
-			{# Titre / sous-titre #}
-			{% if fields.title or fields.subtitle %}
-				{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
+			{# --- En-tête de section (standardisé) --- #}
+			{% if title or subtitle %}
+				<header class="text-center max-w-4xl mx-auto">
+					{% if title %}
+						<h2 id="amenities-heading" class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">{{ title }}</h2>
+					{% endif %}
+					{% if subtitle %}
+						<p class="text-base md:text-lg text-gray-600 leading-relaxed">{{ subtitle }}</p>
+					{% endif %}
+				</header>
 			{% endif %}
 
-			{# Conteneur principal centré #}
-			<div class="mx-auto {{ colsMax }} mt-12">
-				<div class="{{ columnClasses }} gap-x-12 space-y-12">
+			{# --- Grille des équipements --- #}
+			<div class="mx-auto {{ maxWidthClass }} {% if title or subtitle %}mt-12 md:mt-16{% endif %}">
+				<div class="columns-1 {{ columnClasses }} gap-x-8 md:gap-x-12 space-y-12">
 
-					{% for cat in normalized %}
+					{% for cat in normalized_categories %}
 						{% set key   = cat.category_key %}
 						{% set meta  = CAT_META[key] ?? null %}
 						{% set items = cat.items ?? [] %}
 
-						{# Bloc Catégorie (break-inside-avoid évite que le bloc soit coupé entre 2 colonnes) #}
+						{# --- Bloc Catégorie (standardisé) --- #}
 						<div
-							class="break-inside-avoid bg-white rounded-xl">
+							class="break-inside-avoid">
 
 							{# En-tête de catégorie #}
-							<div class="flex items-center gap-4 mb-5 border-b border-gray-100 pb-3">
-								{% if meta %}
-									{# Icône dans un cercle #}
-									<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-900">
-										<i class="fa-solid {{ meta.icon }} text-lg" aria-hidden="true"></i>
+							<div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-5">
+								{% if meta and meta.icon %}
+									<div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-100 text-primary">
+										<i class="fa-solid {{ meta.icon }} text-xl" aria-hidden="true"></i>
 									</div>
-									<h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">{{ meta.label }}</h3>
-								{% else %}
-									<h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">{{ key }}</h3>
 								{% endif %}
+								<h3 class="text-xl font-semibold text-gray-900">{{ meta.label ?? key|replace({'_': ' '})|title }}</h3>
 							</div>
 
-							{# Description optionnelle #}
+							{# Description optionnelle (standardisée) #}
 							{% if cat.category_description %}
-								<p class="text-sm text-gray-500 mb-4 italic">
+								<p class="mb-5 text-base text-gray-600 leading-relaxed">
 									{{ cat.category_description }}
 								</p>
 							{% endif %}
 
-							{# Liste des équipements #}
-							{% if items|length %}
-								<ul class="space-y-3">
+							{# Liste des équipements (standardisée) #}
+							{% if items is not empty %}
+								<ul class="space-y-3 text-base text-gray-700">
 									{% for it in items %}
 										{% set present = it.item_present ?? false %}
 
 										<li
-											class="flex items-start gap-3 text-sm sm:text-base {{ not present ? 'text-gray-400 decoration-gray-300' : 'text-gray-700' }}">
+											class="flex items-start gap-3 {{ not present ? 'text-gray-400' : '' }}">
 
 											{# Puce icône (Coche ou Croix) #}
-											<span class="shrink-0 mt-1" aria-hidden="true">
+											<span class="shrink-0 mt-1 text-lg" aria-hidden="true">
 												{% if present %}
-													{# Coche verte #}
 													<i class="fa-solid fa-check text-emerald-500"></i>
 												{% else %}
-													{# Croix grise (ou fa-minus si vous préférez) #}
-													<i class="fa-solid fa-xmark text-gray-300 text-xs"></i>
+													<i class="fa-solid fa-minus text-gray-300"></i>
 												{% endif %}
 											</span>
 
 											{# Libellé #}
-											<span class="leading-relaxed">
+											<span class="leading-relaxed {{ not present ? 'line-through' : '' }}">
 												{{ it.item_label }}
 											</span>
 										</li>
@@ -124,7 +127,6 @@
 
 				</div>
 			</div>
-
 		</div>
 	</section>
 {% endif %}

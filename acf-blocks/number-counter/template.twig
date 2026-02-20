@@ -1,24 +1,34 @@
 {% set items = fields.counters|slice(0, 4) %}
 {% set count = items|length %}
 
-<section class="number-counter-block py-12 lg:py-16">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 {{ count == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4' }} place-items-center">
-			{% for counter in items %}
-				<figure class="w-full max-w-[260px] rounded-xl bg-gray-50 ring-1 ring-black/5 px-6 py-6 text-center shadow-sm transition-shadow duration-200 hover:shadow-md">
-					<div class="number text-gray-900 font-extrabold tracking-tight text-4xl mb-1" data-count="{{ counter.number }}" data-duration="{{ counter.duration ?? 1200 }}">0</div>
+<section class="number-counter-block py-16 md:py-24">
+	<div class="container mx-auto px-4 md:px-6 max-w-7xl">
+		{% if fields.title or fields.subtitle %}
+			<header class="mb-12 text-center">
+				{% include 'components/section-header.twig' with { title: fields.title, text: fields.subtitle } %}
+			</header>
+		{% endif %}
 
-					<figcaption class="font-semibold text-base sm:text-lg md:text-[1.0625rem] text-gray-900">
-						{{ counter.title }}
-					</figcaption>
+		{% if count > 0 %}
+			<div class="grid grid-cols-1 sm:grid-cols-2 {{ count == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4' }} gap-6 md:gap-12 place-items-center">
+				{% for counter in items %}
+					<article class="w-full max-w-[260px] bg-gray-50 ring-1 ring-black/5 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden px-6 py-6 text-center">
+						<div class="number text-gray-900 font-extrabold tracking-tight text-4xl mb-1" data-count="{{ counter.number }}" data-duration="{{ counter.duration ?? 1200 }}">0</div>
 
-					{% if counter.description %}
-						<p class="mt-2 text-gray-600 text-sm md:text-[0.9375rem] leading-6">
-							{{ counter.description }}
-						</p>
-					{% endif %}
-				</figure>
-			{% endfor %}
-		</div>
+						<h3 class="text-xl md:text-2xl font-semibold mb-3 text-gray-900">
+							{{ counter.title }}
+						</h3>
+
+						{% if counter.description %}
+							<p class="text-base md:text-lg text-gray-600 leading-relaxed mt-2">
+								{{ counter.description }}
+							</p>
+						{% endif %}
+					</article>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="text-center text-gray-400 italic">Aucun compteur renseigné.</p>
+		{% endif %}
 	</div>
 </section>
