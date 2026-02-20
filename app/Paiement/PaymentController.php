@@ -103,6 +103,9 @@ class PaymentController
                 $booking_id = (int) $session->metadata->booking_id;
                 update_post_meta($booking_id, '_brc_payment_status', 'paid');
                 update_post_meta($booking_id, '_brc_stripe_intent', $session->payment_intent);
+
+                // Envoi d'un email de confirmation HTML au client
+                self::sendPaymentConfirmation($booking_id);
             }
 
             $context = Timber::context();
@@ -111,5 +114,70 @@ class PaymentController
         } catch (\Exception $e) {
             wp_die("Erreur lors de la vérification du paiement : " . $e->getMessage());
         }
+    }
+
+    /**
+     * Envoie un email HTML de confirmation de paiement au client et à l'admin.
+     *
+     * @param int $booking_id
+     */
+    private static function sendPaymentConfirmation(int $booking_id): void
+    {
+        $email = get_post_meta($booking_id, '_brc_client_email', true);
+        if (!$email) {
+            return; // pas d'adresse email renseignée
+        }
+
+        $name   = get_post_meta($booking_id, '_brc_client_name', true);
+        $phone  = get_post_meta($booking_id, '_brc_phone', true);
+        $amount = (float) get_post_meta($booking_id, '_brc_deposit_amount', true);
+        $total  = (float) get_post_meta($booking_id, '_brc_total_price', true);
+        $start  = date('d/m/Y', strtotime(get_post_meta($booking_id, '_brc_start_date', true)));
+        $end    = date('d/m/Y', strtotime(get_post_meta($booking_id, '_brc_end_date', true)));
+
+        $blogname    = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+        $admin_email = get_option('admin_email');
+
+        // ===== Email au CLIENT =====
+        $client_subject = "Confirmation de paiement – Réservation #{$booking_id}";
+
+        $client_body  = "<p>Bonjour " . esc_html($name) . ",</p>";
+        $client_body .= "<p>Nous avons bien reçu votre paiement de <strong>" . esc_html(number_format(
+            $amount,
+            2,
+            ',',
+            ' '
+        )) . " €</strong> pour la réservation <strong>" . esc_html('#' . $booking_id) . "</strong>.</p>";
+        $client_body .= "<p>Votre séjour du <strong>{$start}</strong> au <strong>{$end}</strong> a été confirmé.</p>";
+        $client_body .= "<p>Merci de votre confiance.</p>";
+        $client_body .= "<p>Cordialement,<br>{$blogname}</p>";
+
+        $client_headers = [
+            'Content-Type: text/html; charset=UTF-8',
+            "From: \"{$blogname}\" <{$admin_email}>"
+        ];
+
+        wp_mail($email, $client_subject, $client_body, $client_headers);
+
+        // ===== Email à L'ADMIN =====
+        $admin_subject = "✅ Paiement confirmé – Réservation #{$booking_id}";
+
+        $admin_body  = "<p>Bonjour,</p>";
+        $admin_body .= "<p><strong>Un paiement a été reçu !</strong></p>";
+        $admin_body .= "<p><strong>Client :</strong> " . esc_html($name) . "<br>";
+        $admin_body .= "<strong>Email :</strong> " . esc_html($email) . "<br>";
+        $admin_body .= "<strong>Téléphone :</strong> " . esc_html($phone) . "</p>";
+        $admin_body .= "<p><strong>Détails de la réservation :</strong><br>";
+        $admin_body .= "Dates : " . esc_html($start) . " → " . esc_html($end) . "<br>";
+        $admin_body .= "Acompte payé : " . esc_html(number_format($amount, 2, ',', ' ')) . " €<br>";
+        $admin_body .= "Prix total : " . esc_html(number_format($total, 2, ',', ' ')) . " €</p>";
+        $admin_body .= "<p><a href=\"" . esc_url(admin_url("post.php?post={$booking_id}&action=edit")) . "\">Voir la réservation</a></p>";
+
+        $admin_headers = [
+            'Content-Type: text/html; charset=UTF-8',
+            "From: \"Site Web\" <{$admin_email}>"
+        ];
+
+        wp_mail($admin_email, $admin_subject, $admin_body, $admin_headers);
     }
 }
