@@ -16,19 +16,26 @@
 		{% endfor %}
 
 		{% if rooms|length %}
+			{% set allPhotos = [] %}
+			{% set photoIndex = 0 %}
+
 			<div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
-
 				{% for room in rooms %}
-
 					<article class="w-full max-w-[382px] mx-auto flex flex-col h-full bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 group">
-
 						<div class="relative aspect-[4/3] bg-gray-200 select-none overflow-hidden">
-
 							<div class="carousel-track flex h-full w-full overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 								{% for img in room.photos %}
-									{% set src = img.url ?? (img.id ? function('wp_get_attachment_image_url', img.id, 'large') : null) %}
+									{% set src = img.url
+                                                ?? (img.id ? function('wp_get_attachment_image_url', img.id, 'large') : null) %}
 									{% if src %}
-										<img src="{{ src }}" loading="lazy" class="h-full w-full shrink-0 snap-center object-cover" alt="{{ room.room_type }}">
+										{# on enrichit la liste globale et on assigne un index #}
+										{% set allPhotos = allPhotos|merge([{
+                                            src: img.url
+                                                 ?? (img.id ? function('wp_get_attachment_image_url', img.id, 'full') : ''),
+                                            alt: img.alt|default(room.room_type)
+                                        }]) %}
+										<img src="{{ src }}" loading="lazy" class="h-full w-full shrink-0 snap-center object-cover cursor-pointer" alt="{{ room.room_type }}" data-lightbox-index="{{ photoIndex }}">
+										{% set photoIndex = photoIndex + 1 %}
 									{% endif %}
 								{% endfor %}
 							</div>
@@ -64,15 +71,32 @@
 							</div>
 
 							{% if room.description %}
-								<p class="text-base md:text-lg text-gray-600 leading-relaxed mb-4 line-clamp-3">
+								<p class="text-base md:text-lg text-gray-600 leading-relaxed mb-4 line-clamp-5">
 									{{ room.description|nl2br }}
 								</p>
 							{% endif %}
 						</div>
-
 					</article>
 				{% endfor %}
 			</div>
+
+			<div id="lightbox" class="fixed inset-0 z-[100] hidden bg-black/95 backdrop-blur-sm w-full h-full">
+
+				<button id="lb-close" class="absolute top-6 right-6 md:top-8 md:right-8 text-white text-7xl z-[110] cursor-pointer hover:scale-110 transition-transform focus:outline-none leading-none p-2">&times;</button>
+
+				<button id="lb-prev" class="absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2 text-white text-7xl z-[110] cursor-pointer hover:scale-110 transition-transform focus:outline-none p-3">‹</button>
+
+				<button id="lb-next" class="absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2 text-white text-7xl z-[110] cursor-pointer hover:scale-110 transition-transform focus:outline-none p-3">›</button>
+
+				<div class="flex items-center justify-center w-full h-full p-4 md:p-16 pointer-events-none">
+					<img id="lb-img" src="" alt="" class="max-w-full max-h-full object-contain drop-shadow-2xl pointer-events-auto select-none"/>
+				</div>
+
+			</div>
+
+			<script>
+				window.rlLightboxPhotos = {{ allPhotos|json_encode|raw }};
+			</script>
 		{% endif %}
 	</div>
 </section>
