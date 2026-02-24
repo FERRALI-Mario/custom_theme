@@ -33,6 +33,38 @@ document.addEventListener("DOMContentLoaded", () => {
         show(i);
       });
   });
+
+  // lightbox initialization using global variable exported from Twig
+  const photos = window.rlLightboxPhotos || [];
+  if (photos.length) {
+    let current = 0;
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-img');
+    const open = idx => {
+      current = idx;
+      lbImg.src = photos[idx].src;
+      lbImg.alt = photos[idx].alt;
+      lb.classList.remove('hidden');
+    };
+    document.querySelectorAll('[data-lightbox-index]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        open(parseInt(el.dataset.lightboxIndex, 10));
+      });
+    });
+    document.getElementById('lb-close').addEventListener('click', () => lb.classList.add('hidden'));
+    document.getElementById('lb-prev').addEventListener('click', () => {
+      current = (current - 1 + photos.length) % photos.length;
+      open(current);
+    });
+    document.getElementById('lb-next').addEventListener('click', () => {
+      current = (current + 1) % photos.length;
+      open(current);
+    });
+    lb.addEventListener('click', e => {
+      if (e.target === lb) lb.classList.add('hidden');
+    });
+  }
 });
 
 function scrollTrack(btn, direction) {
