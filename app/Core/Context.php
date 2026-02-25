@@ -10,7 +10,7 @@ class Context
     {
         $context['site'] = new \Timber\Site();
 
-        $context['menu'] = Timber::get_menu('primary');
+        $context['menu'] = Timber::get_menu('header');
         $context['menu_footer'] = Timber::get_menu('footer');
 
         if (function_exists('get_fields')) {
