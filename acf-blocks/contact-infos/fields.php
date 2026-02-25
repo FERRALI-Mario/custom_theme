@@ -39,6 +39,8 @@ if (function_exists('acf_add_local_field_group')) :
                             'telephone' => 'Téléphone',
                             'email'    => 'Email',
                             'horaire'  => 'Horaire',
+                            'arrivee'  => 'Arrivée',
+                            'depart'   => 'Départ',
                         ],
                         'required' => 1,
                     ],

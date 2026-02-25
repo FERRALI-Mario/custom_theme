@@ -28,6 +28,14 @@ if (function_exists('acf_add_local_field_group')) :
                 'required' => 1,
             ],
             [
+                'key' => 'field_brc_free_cancellation_date',
+                'label' => 'Nombre de jours avant la date limite pour l\'annulation gratuite',
+                'name' => 'free_cancellation_date',
+                'type' => 'number',
+                'default_value' => 5,
+                'min' => 0,
+            ],
+            [
                 'key' => 'field_brc_min_stay',
                 'label' => 'Séjour minimum (nuits)',
                 'name' => 'min_stay',
