@@ -1,7 +1,7 @@
 {% set f = fields ?? {} %}
 {% set items = f.rooms ?? [] %}
 
-<section class="room-list-block py-16 md:py-24 bg-gray-50">
+<section id="room-list" class="room-list-block py-16 md:py-24 bg-gray-50">
 	<div class="container mx-auto px-4 md:px-6 max-w-7xl">
 
 		{% if f.title or f.subtitle %}

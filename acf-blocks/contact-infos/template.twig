@@ -19,7 +19,9 @@
 						'adresse'  : 'fa-location-dot',
 						'telephone': 'fa-phone',
 						'email'    : 'fa-envelope',
-						'horaire'  : 'fa-clock'
+						'horaire'  : 'fa-clock',
+						'arrivee'  : 'fa-calendar-check',
+						'depart'   : 'fa-calendar-xmark'
 					}[item.type]|default('fa-circle-info') %}
 
 					{% set label = (item.type|default('info'))|capitalize %}
