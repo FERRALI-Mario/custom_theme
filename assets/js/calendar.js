@@ -71,6 +71,17 @@
     const topSummary = $("#brc-top-summary", root);
     const topPriceEl = $("#brc-top-price", root);
 
+    // cleaning fee from context
+    const cleaningFee =
+      window.BRC_CONTEXT && !isNaN(parseFloat(window.BRC_CONTEXT.cleaning_fee))
+        ? parseFloat(window.BRC_CONTEXT.cleaning_fee)
+        : 0;
+    // deposit percentage from context (convert 0-100 to 0-1)
+    const depositPct =
+      window.BRC_CONTEXT && !isNaN(parseFloat(window.BRC_CONTEXT.deposit_pct))
+        ? Math.max(0, Math.min(1, parseFloat(window.BRC_CONTEXT.deposit_pct) / 100))
+        : 0.4;
+
     function renderMonth() {
       const ml = monthsFr[current.month - 1];
       monthLabel.textContent = `${ml.charAt(0).toUpperCase() + ml.slice(1)} ${
@@ -283,7 +294,12 @@
         iter.setDate(iter.getDate() + 1);
       }
 
-      const deposit = total * 0.4;
+      // apply cleaning fee once per reservation
+      if (cleaningFee && cleaningFee > 0) {
+        total += cleaningFee;
+      }
+
+      const deposit = total * depositPct;
       const listEl = $("#brc-price-breakdown");
       if (listEl) {
         listEl.innerHTML = "";
@@ -294,15 +310,26 @@
           }</strong> à ${price}€`;
           listEl.appendChild(li);
         }
+        if (cleaningFee && cleaningFee > 0) {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>Frais de ménage</strong> : ${cleaningFee}€`;
+          listEl.appendChild(li);
+        }
       }
       if ($("#brc-total")) $("#brc-total").innerText = total;
       if ($("#brc-deposit")) $("#brc-deposit").innerText = deposit.toFixed(2);
+      if ($("#brc-deposit-pct")) $("#brc-deposit-pct").innerText = (depositPct * 100).toFixed(0) + "%";
       if ($("#brc-summary")) $("#brc-summary").classList.remove("hidden");
 
       if (topSummary && topPriceEl) {
         topPriceEl.innerText = total;
         topSummary.classList.remove("hidden");
         topSummary.classList.add("flex");
+      }
+
+      // update hidden price field so backend can use it if needed
+      if (priceInput) {
+        priceInput.value = total;
       }
     }
 
@@ -487,6 +514,9 @@
       btn.innerText = "Envoi en cours...";
 
       const formData = new FormData(form);
+      // append cleaning fee and deposit percentage for transparency/back-end
+      formData.append("cleaning_fee", cleaningFee);
+      formData.append("deposit_pct", depositPct);
       formData.append("action", "booking_request_submit");
 
       fetch(BRC.ajaxurl, { method: "POST", body: formData })

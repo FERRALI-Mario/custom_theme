@@ -69,7 +69,9 @@ class AjaxHandler
 
         $rules = json_decode(stripslashes($_POST['pricing_rules'] ?? '{}'), true);
         $totalPrice = $this->calculatePrice($cin, $cout, $rules);
-        $depositAmount = $totalPrice * 0.40;
+        $cleaningFee = isset($rules['cleaning_fee']) ? (float)$rules['cleaning_fee'] : 0;
+        $depositPct = isset($rules['deposit_pct']) ? (float)$rules['deposit_pct'] / 100 : 0.5;
+        $depositAmount = $totalPrice * $depositPct;
 
         $booking_title = sprintf('%s - %s (%s)', $name, $cin->format('d/m/Y'), $nights . ' nuits');
 
@@ -91,24 +93,31 @@ class AjaxHandler
         update_post_meta($booking_id, '_brc_start_date', $cin->format('Y-m-d'));
         update_post_meta($booking_id, '_brc_end_date', $cout->format('Y-m-d'));
         update_post_meta($booking_id, '_brc_total_price', $totalPrice);
+        if ($cleaningFee) {
+            update_post_meta($booking_id, '_brc_cleaning_fee', $cleaningFee);
+        }
+        if (isset($depositPct)) {
+            update_post_meta($booking_id, '_brc_deposit_pct', $depositPct);
+        }
         update_post_meta($booking_id, '_brc_deposit_amount', $depositAmount);
         update_post_meta($booking_id, '_brc_payment_status', 'pending');
 
         // 8. Envoi Emails
         $paymentLink = home_url('/paiement/') . '?booking_id=' . $booking_id;
-        $this->sendEmails($name, $email, $phone, $message, $paymentLink, $cin, $cout, $nights, $totalPrice, $depositAmount);
+        $this->sendEmails($name, $email, $phone, $message, $paymentLink, $cin, $cout, $nights, $totalPrice, $depositAmount, $cleaningFee, $depositPct);
     }
 
     private function calculatePrice($start, $end, array $rules): float
     {
         $defaultPrice = isset($rules['default']) ? (float)$rules['default'] : 0;
         $seasons      = isset($rules['seasonal']) ? $rules['seasonal'] : [];
+        $cleaningFee  = isset($rules['cleaning_fee']) ? (float)$rules['cleaning_fee'] : 0;
         $totalPrice   = 0;
         $iter         = clone $start;
 
         while ($iter < $end) {
             $currentMD = $iter->format('m-d');
-            $nightPrice = $defaultPrice; // Prix par défaut si pas de saison
+            $nightPrice = $defaultPrice;
 
             if (!empty($seasons) && is_array($seasons)) {
                 foreach ($seasons as $season) {
@@ -129,31 +138,58 @@ class AjaxHandler
             $totalPrice += $nightPrice;
             $iter->modify('+1 day');
         }
+        // add cleaning fee once
+        if ($cleaningFee && $cleaningFee > 0) {
+            $totalPrice += $cleaningFee;
+        }
         return $totalPrice;
     }
 
-    private function sendEmails($name, $email, $phone, $message, $paymentLink, $cin, $cout, $nights, $totalPrice, $depositAmount)
+    private function sendEmails($name, $email, $phone, $message, $paymentLink, $cin, $cout, $nights, $totalPrice, $depositAmount, $cleaningFee = 0, $depositPct = 0.4)
     {
         $blogname    = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
         $admin_email = get_option('admin_email');
+        $global_phone = get_field('global_phone', 'option');
 
         // Mail Client (Confirmation réception)
         if ($email) {
             $headers = ['Content-Type: text/plain; charset=UTF-8', "From: \"$blogname\" <$admin_email>", "Reply-To: $admin_email"];
-            $body = "Bonjour $name,\n\nNous avons bien reçu votre demande pour du " . $cin->format('d/m/Y') . " au " . $cout->format('d/m/Y') . ".\nTotal: $totalPrice €.\n\nNous reviendrons vers vous rapidement pour validation.\n\nCordialement,\n$blogname";
-            wp_mail($email, "Votre demande - $blogname", $body, $headers);
+
+            $body = "Bonjour $name,\n\n" .
+                "Un grand merci pour votre demande de réservation ! \n\n" .
+                "Je vous confirme avoir bien reçu votre demande pour les dates suivantes :\n" .
+                "- Arrivée : " . $cin->format('d/m/Y') . "\n" .
+                "- Départ : " . $cout->format('d/m/Y') . "\n" .
+                "- Montant total estimé : $totalPrice €\n" .
+                ($depositPct ? "- Acompte demandé (" . ($depositPct * 100) . "%) : $depositAmount €\n" : "") .
+                "\n" .
+                "Ceci est un e-mail automatique pour vous confirmer la bonne réception de votre demande. Je vais consulter mon calendrier et je reviens vers vous au plus vite pour valider votre séjour de manière définitive et vous donner les instructions pour l'acompte.\n\n" .
+                "Si vous avez la moindre question en attendant, n'hésitez pas à répondre directement à ce message.\n\n" .
+                "À très vite sous le soleil de Provence,\n\n" .
+                "Estelle\n";
+            if ($global_phone) {
+                $body .= "$global_phone";
+            }
+            $body .= "\n$blogname";
+
+
+
+            wp_mail($email, "Votre demande de réservation - $blogname", $body, $headers);
         }
 
         // Mail Admin (Action requise)
-        $admin_subject = "🔔 Demande : $name ($nights nuits)";
-        $admin_body = "Nouvelle demande :\n\nClient : $name\nEmail : $email\nTél : $phone\n\nDates : " . $cin->format('d/m/Y') . " - " . $cout->format('d/m/Y') . "\nPrix Total : $totalPrice €\nAcompte (40%) : $depositAmount €\n\nMessage : " . ($message ?: 'Aucun') . "\n\n------------------\nLIEN DE PAIEMENT À ENVOYER APRÈS VALIDATION :\n$paymentLink\n------------------";
+        $admin_subject = "🔔 Nouvelle demande de réservation : $name ($nights nuits)";
+        $admin_body = "Nouvelle demande :\n\nClient : $name\nEmail : $email\nTél : $phone\n\nDates : " . $cin->format('d/m/Y') . " - " . $cout->format('d/m/Y') . "\n" .
+            "Prix Total : $totalPrice €\n" .
+            ($depositPct ? "Acompte (" . ($depositPct * 100) . "%) : $depositAmount €\n" : "") .
+            "\nMessage : " . ($message ?: 'Aucun') . "\n\n------------------\nLIEN DE PAIEMENT À ENVOYER APRÈS VALIDATION :\n$paymentLink\n------------------";
         $admin_headers = ['Content-Type: text/plain; charset=UTF-8', "From: \"Site Web\" <$admin_email>"];
         if ($email) $admin_headers[] = "Reply-To: $name <$email>";
 
         if (wp_mail($admin_email, $admin_subject, $admin_body, $admin_headers)) {
-            wp_send_json_success(['message' => 'Votre demande a bien été envoyée !']);
+            wp_send_json_success(['message' => "Super ! Votre demande a bien été envoyée."]);
         } else {
-            wp_send_json_error(['message' => "Erreur technique lors de l'envoi."]);
+            wp_send_json_error(['message' => "Oups, une petite erreur technique s'est produite."]);
         }
     }
 

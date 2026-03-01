@@ -67,12 +67,32 @@ if (function_exists('acf_add_local_field_group')) :
                 'endpoint' => 0,
             ],
             [
+                'key' => 'field_brc_cleaning_fee',
+                'label' => 'Frais de ménage',
+                'name' => 'cleaning_fee',
+                'type' => 'number',
+                'required' => 0,
+                'min' => 0,
+                'append' => '€',
+                'default_value' => 0,
+            ],
+            [
+                'key' => 'field_brc_deposit_pct',
+                'label' => 'Pourcentage d\'acompte (%)',
+                'name' => 'deposit_pct',
+                'type' => 'number',
+                'required' => 0,
+                'min' => 0,
+                'max' => 100,
+                'append' => '%',
+                'default_value' => 50,
+            ],
+            [
                 'key' => 'field_brc_seasonal_prices',
                 'label' => 'Tarifs Saisonniers',
                 'name' => 'seasonal_prices',
                 'type' => 'repeater',
-                'instructions' => 'Définissez des prix spécifiques pour certaines périodes (ex: Juillet/Août). Si une date n\'est pas dans ces périodes, le prix par défaut sera utilisé.',
-                'layout' => 'block', // 'block' est souvent plus lisible que 'table' dans un onglet
+                'layout' => 'block',
                 'button_label' => 'Ajouter une période',
                 'sub_fields' => [
                     [
@@ -83,7 +103,7 @@ if (function_exists('acf_add_local_field_group')) :
                         'display_format' => 'd/m/Y',
                         'return_format' => 'Y-m-d',
                         'required' => 1,
-                        'wrapper' => ['width' => '33'], // Mise en page sur une ligne
+                        'wrapper' => ['width' => '33'],
                     ],
                     [
                         'key' => 'field_brc_season_end',
@@ -128,7 +148,6 @@ if (function_exists('acf_add_local_field_group')) :
                 'name' => 'cache_minutes',
                 'type' => 'number',
                 'default_value' => 60,
-                'instructions' => 'Temps avant de re-télécharger le calendrier externe.',
             ],
             [
                 'key' => 'field_brc_fallback',

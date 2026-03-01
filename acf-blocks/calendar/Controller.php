@@ -94,8 +94,12 @@ class Controller extends BlockFactory
             ]);
 
             wp_localize_script($handle, 'BRC_CONTEXT', [
-                'defaultPrice' => (float)($fields['price_per_night'] ?? 0),
-                'seasonal'     => $fields['seasonal_prices'] ?? [],
+                'defaultPrice'  => (float)($fields['price_per_night'] ?? 0),
+                'seasonal'      => $fields['seasonal_prices'] ?? [],
+                // cleaning fee per booking (fixed)
+                'cleaning_fee'  => (float)($fields['cleaning_fee'] ?? 0),
+                // deposit percentage (0-100)
+                'deposit_pct'   => (float)($fields['deposit_pct'] ?? 40),
             ]);
         }
     }
