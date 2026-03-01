@@ -13,11 +13,12 @@ class Admin extends ServiceProvider
 
     public function registerGlobalConfig(): void
     {
+        // Unified options page
         if (function_exists('acf_add_options_page')) {
             acf_add_options_page([
-                'page_title'    => 'Réglages du Thème',
-                'menu_title'    => 'Thème',
-                'menu_slug'     => 'acf-options-generale',
+                'page_title'    => 'Réglages du thème',
+                'menu_title'    => 'Réglages thème',
+                'menu_slug'     => 'acf-theme-settings',
                 'capability'    => 'edit_posts',
                 'redirect'      => false,
                 'position'      => 22,
@@ -25,58 +26,34 @@ class Admin extends ServiceProvider
             ]);
         }
 
-        if (function_exists('acf_add_options_sub_page')) {
-            acf_add_options_sub_page([
-                'page_title'  => 'Réglages Stripe',
-                'menu_title'  => 'Stripe',
-                'parent_slug' => 'acf-options-generale',
-                'menu_slug'   => 'acf-options-stripe',
-            ]);
-        }
-
         if (function_exists('acf_add_local_field_group')) {
-
-            // --- CHAMPS STRIPE ---
+            // Single unified field group with tabs
             acf_add_local_field_group([
-                'key' => 'group_stripe_configuration',
-                'title' => 'Configuration Stripe',
+                'key' => 'group_theme_settings',
+                'title' => 'Réglages du thème',
                 'fields' => [
+                    // --- TAB CHAMPS GLOBAUX ---
                     [
-                        'key' => 'field_stripe_mode',
-                        'label' => 'Mode',
-                        'name' => 'stripe_mode',
-                        'type' => 'radio',
-                        'choices' => ['test' => 'Mode Test', 'live' => 'Mode Live'],
-                        'default_value' => 'test',
-                        'layout' => 'horizontal',
-                    ],
-                    [
-                        'key' => 'field_stripe_test_key',
-                        'label' => 'Clé Secrète (Test)',
-                        'name' => 'stripe_test_key',
-                        'type' => 'text',
-                        'conditional_logic' => [[['field' => 'field_stripe_mode', 'operator' => '==', 'value' => 'test']]],
-                    ],
-                    [
-                        'key' => 'field_stripe_live_key',
-                        'label' => 'Clé Secrète (Live)',
-                        'name' => 'stripe_live_key',
-                        'type' => 'text',
-                        'conditional_logic' => [[['field' => 'field_stripe_mode', 'operator' => '==', 'value' => 'live']]],
-                    ],
-                ],
-                'location' => [[['param' => 'options_page', 'operator' => '==', 'value' => 'acf-options-stripe']]],
-            ]);
-
-            // --- CHAMPS FOOTER ---
-            acf_add_local_field_group([
-                'key' => 'group_footer_settings',
-                'title' => 'Réglages du Pied de page (Footer)',
-                'fields' => [
-                    [
-                        'key' => 'field_tab_footer_columns',
-                        'label' => 'Colonnes',
+                        'key' => 'field_tab_global',
+                        'label' => 'Champs globaux',
                         'type' => 'tab',
+                        'placement' => 'top',
+                        'endpoint' => 0,
+                    ],
+                    [
+                        'key' => 'field_global_phone',
+                        'label' => 'Téléphone',
+                        'name' => 'global_phone',
+                        'type' => 'text',
+                        'placeholder' => '+33 X XX XX XX XX',
+                    ],
+                    // --- TAB MENUS ---
+                    [
+                        'key' => 'field_tab_menus',
+                        'label' => 'Menus',
+                        'type' => 'tab',
+                        'placement' => 'top',
+                        'endpoint' => 0,
                     ],
                     [
                         'key' => 'field_footer_title_menu_1',
@@ -93,13 +70,8 @@ class Admin extends ServiceProvider
                         'default_value' => 'Informations',
                     ],
                     [
-                        'key' => 'field_tab_footer_social',
-                        'label' => 'Réseaux Sociaux',
-                        'type' => 'tab',
-                    ],
-                    [
                         'key' => 'field_footer_socials',
-                        'label' => 'Liste des réseaux',
+                        'label' => 'Réseaux sociaux',
                         'name' => 'social_networks',
                         'type' => 'repeater',
                         'layout' => 'table',
@@ -131,12 +103,39 @@ class Admin extends ServiceProvider
                             ],
                         ],
                     ],
-                ],
-                'location' => [
+                    // --- TAB STRIPE ---
                     [
-                        ['param' => 'options_page', 'operator' => '==', 'value' => 'acf-options-generale'],
+                        'key' => 'field_tab_stripe',
+                        'label' => 'Stripe',
+                        'type' => 'tab',
+                        'placement' => 'top',
+                        'endpoint' => 0,
+                    ],
+                    [
+                        'key' => 'field_stripe_mode',
+                        'label' => 'Mode',
+                        'name' => 'stripe_mode',
+                        'type' => 'radio',
+                        'choices' => ['test' => 'Mode Test', 'live' => 'Mode Live'],
+                        'default_value' => 'test',
+                        'layout' => 'horizontal',
+                    ],
+                    [
+                        'key' => 'field_stripe_test_key',
+                        'label' => 'Clé Secrète (Test)',
+                        'name' => 'stripe_test_key',
+                        'type' => 'text',
+                        'conditional_logic' => [[['field' => 'field_stripe_mode', 'operator' => '==', 'value' => 'test']]],
+                    ],
+                    [
+                        'key' => 'field_stripe_live_key',
+                        'label' => 'Clé Secrète (Live)',
+                        'name' => 'stripe_live_key',
+                        'type' => 'text',
+                        'conditional_logic' => [[['field' => 'field_stripe_mode', 'operator' => '==', 'value' => 'live']]],
                     ],
                 ],
+                'location' => [[['param' => 'options_page', 'operator' => '==', 'value' => 'acf-theme-settings']]],
             ]);
         }
     }
