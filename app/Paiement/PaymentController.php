@@ -137,20 +137,22 @@ class PaymentController
 
         $blogname    = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
         $admin_email = get_option('admin_email');
+        $global_phone = get_field('global_phone', 'option');
 
         // ===== Email au CLIENT =====
-        $client_subject = "Confirmation de paiement – Réservation #{$booking_id}";
+        $client_subject = "Votre réservation en Provence est confirmée ! (#{$booking_id})";
 
         $client_body  = "<p>Bonjour " . esc_html($name) . ",</p>";
-        $client_body .= "<p>Nous avons bien reçu votre paiement de <strong>" . esc_html(number_format(
-            $amount,
-            2,
-            ',',
-            ' '
-        )) . " €</strong> pour la réservation <strong>" . esc_html('#' . $booking_id) . "</strong>.</p>";
-        $client_body .= "<p>Votre séjour du <strong>{$start}</strong> au <strong>{$end}</strong> a été confirmé.</p>";
-        $client_body .= "<p>Merci de votre confiance.</p>";
-        $client_body .= "<p>Cordialement,<br>{$blogname}</p>";
+        $client_body .= "<p>C'est officiel ! J'ai le plaisir de vous annoncer que j'ai bien reçu votre paiement de <strong>" . esc_html(number_format($amount, 2, ',', ' ')) . " €</strong> correspondant à votre réservation (<strong>#" . esc_html($booking_id) . "</strong>).</p>";
+        $client_body .= "<p>Votre séjour dans notre petit cocon provençal est donc définitivement validé du <strong>{$start}</strong> au <strong>{$end}</strong>.</p>";
+        $client_body .= "<p>Je reviendrai vers vous quelques jours avant votre arrivée pour vous transmettre toutes les informations pratiques (itinéraire exact, code de la boîte à clés, etc.).</p>";
+        $client_body .= "<p>D'ici là, n'hésitez pas à me contacter si vous avez la moindre question pour préparer vos vacances dans le Sud.</p>";
+        $client_body .= "<p>Merci de votre confiance et à très vite !</p>";
+        $client_body .= "<p>Chaleureusement,<br>Estelle<br>";
+        if ($global_phone) :
+            $client_body .= "<br>" . esc_html($global_phone) . "</br>";
+        endif;
+        $client_body .= "<em>{$blogname}</em></p>";
 
         $client_headers = [
             'Content-Type: text/html; charset=UTF-8',
@@ -160,10 +162,10 @@ class PaymentController
         wp_mail($email, $client_subject, $client_body, $client_headers);
 
         // ===== Email à L'ADMIN =====
-        $admin_subject = "✅ Paiement confirmé – Réservation #{$booking_id}";
+        $admin_subject = "💰 Paiement validé pour " . esc_html($name) . " (#{$booking_id})";
 
-        $admin_body  = "<p>Bonjour,</p>";
-        $admin_body .= "<p><strong>Un paiement a été reçu !</strong></p>";
+        $admin_body  = "<p>Coucou Estelle,</p>";
+        $admin_body .= "<p>L'acompte vient d'être réglé avec succès !</p>";
         $admin_body .= "<p><strong>Client :</strong> " . esc_html($name) . "<br>";
         $admin_body .= "<strong>Email :</strong> " . esc_html($email) . "<br>";
         $admin_body .= "<strong>Téléphone :</strong> " . esc_html($phone) . "</p>";
