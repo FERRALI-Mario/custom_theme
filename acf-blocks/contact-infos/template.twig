@@ -12,7 +12,7 @@
 			{% set colsSm = count == 1 ? 'sm:grid-cols-1' : 'sm:grid-cols-2' %}
 			{% set colsLg = count >= 4 ? 'lg:grid-cols-4' : (count == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2') %}
 
-			<div class="grid grid-cols-1 {{ colsSm }} {{ colsLg }} gap-6 md:gap-12 mt-12">
+			<div class="grid grid-cols-1 {{ colsSm }} {{ colsLg }} gap-6 md:gap-12 mt-12 justify-items-center">
 
 				{% for item in items %}
 					{% set icon_class = {
@@ -41,7 +41,7 @@
 						{% set rel    = ' rel="noopener noreferrer"' %}
 					{% endif %}
 
-					<article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden p-6 md:p-8 text-center">
+					<article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 overflow-hidden p-6 md:p-8 text-center w-full max-w-sm">
 						<div class="flex justify-center mb-4">
 							<div class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 shadow-sm">
 								<i class="fa-solid {{ icon_class }} text-xl text-primary" aria-hidden="true"></i>

@@ -44,11 +44,11 @@ if (function_exists('acf_add_local_field_group')) :
                 'min' => 1,
             ],
             [
-                'key' => 'field_brc_success_text',
-                'label' => 'Message de confirmation',
-                'name' => 'success_text',
-                'type' => 'text',
-                'default_value' => 'Demande envoyée !',
+                'key' => 'field_brc_info_text',
+                'label' => 'Texte d\'information',
+                'name' => 'info_text',
+                'type' => 'textarea',
+                'rows' => 2,
             ],
             [
                 'key' => 'field_brc_button_label',
@@ -56,6 +56,13 @@ if (function_exists('acf_add_local_field_group')) :
                 'name' => 'button_label',
                 'type' => 'text',
                 'default_value' => 'Réserver',
+            ],
+            [
+                'key' => 'field_brc_success_text',
+                'label' => 'Message de confirmation',
+                'name' => 'success_text',
+                'type' => 'text',
+                'default_value' => 'Demande envoyée !',
             ],
 
             // --- ONGLET 2 : TARIFS ---

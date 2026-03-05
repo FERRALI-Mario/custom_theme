@@ -54,6 +54,7 @@ if (function_exists('acf_add_local_field_group')) :
                             'services_nettoyage'  => 'Services de nettoyage',
                             'services_affaires'   => 'Services d’affaires',
                             'securite'            => 'Sécurité',
+                            'bebe'                => 'Équipements pour bébé',
                             'general'             => 'Général',
                             'accessibilite'       => 'Accessibilité',
                             'bien_etre'           => 'Bien-être',
