@@ -52,5 +52,7 @@ class Theme
                 \App\Console\InitCommand::register();
             }
         }
+
+        add_theme_support('title-tag');
     }
 }
