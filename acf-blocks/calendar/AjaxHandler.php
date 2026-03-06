@@ -19,6 +19,13 @@ class AjaxHandler
             wp_send_json_error(['message' => 'Session expirée. Rechargez la page.']);
         }
 
+        $token = sanitize_text_field($_POST['brc_token'] ?? '');
+        $fields = get_transient('brc_token_' . $token);
+
+        if (empty($fields)) {
+            wp_send_json_error(['message' => 'Session de réservation expirée (ou invalide). Veuillez recharger la page.']);
+        }
+
         $name     = sanitize_text_field($_POST['name'] ?? '');
         $email    = sanitize_email($_POST['email'] ?? '');
         $phone    = sanitize_text_field($_POST['phone'] ?? '');
@@ -43,7 +50,7 @@ class AjaxHandler
             wp_send_json_error(['message' => 'Le séjour est trop court (min 2 nuits).']);
         }
 
-        $icalUrl = isset($_POST['ical']) ? esc_url_raw($_POST['ical']) : '';
+        $icalUrl = $fields['ical_url'] ?? '';
         $cacheMin = (int)($_POST['cache'] ?? 60);
 
         $blocked = [];
@@ -67,10 +74,15 @@ class AjaxHandler
             $iter->modify('+1 day');
         }
 
-        $rules = json_decode(stripslashes($_POST['pricing_rules'] ?? '{}'), true);
-        $totalPrice = $this->calculatePrice($cin, $cout, $rules);
-        $cleaningFee = isset($rules['cleaning_fee']) ? (float)$rules['cleaning_fee'] : 0;
-        $depositPct = isset($rules['deposit_pct']) ? (float)$rules['deposit_pct'] / 100 : 0.5;
+        $pricing_rules = [
+            'default'      => (float)($fields['price_per_night'] ?? 0),
+            'seasonal'     => $fields['seasonal_prices'] ?? [],
+            'cleaning_fee' => (float)($fields['cleaning_fee'] ?? 0),
+        ];
+
+        $totalPrice = $this->calculatePrice($cin, $cout, $pricing_rules);
+        $cleaningFee = $pricing_rules['cleaning_fee'];
+        $depositPct = isset($fields['deposit_pct']) ? (float)$fields['deposit_pct'] / 100 : 0.4;
         $depositAmount = $totalPrice * $depositPct;
 
         $booking_title = sprintf('%s - %s (%s)', $name, $cin->format('d/m/Y'), $nights . ' nuits');

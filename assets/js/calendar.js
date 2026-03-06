@@ -70,6 +70,7 @@
     const priceInput = $('input[name="price"]', form);
     const topSummary = $("#brc-top-summary", root);
     const topPriceEl = $("#brc-top-price", root);
+    const infoBlock = $("#brc-info", root);
 
     // cleaning fee from context
     const cleaningFee =
@@ -81,6 +82,11 @@
       window.BRC_CONTEXT && !isNaN(parseFloat(window.BRC_CONTEXT.deposit_pct))
         ? Math.max(0, Math.min(1, parseFloat(window.BRC_CONTEXT.deposit_pct) / 100))
         : 0.4;
+
+    if (infoBlock && formError) {
+      // On insère le bloc info juste avant la div d'erreur dans le form
+      formError.parentNode.insertBefore(infoBlock, formError);
+    }
 
     function renderMonth() {
       const ml = monthsFr[current.month - 1];
@@ -320,6 +326,7 @@
       if ($("#brc-deposit")) $("#brc-deposit").innerText = deposit.toFixed(2);
       if ($("#brc-deposit-pct")) $("#brc-deposit-pct").innerText = (depositPct * 100).toFixed(0) + "%";
       if ($("#brc-summary")) $("#brc-summary").classList.remove("hidden");
+      if ($("#brc-info")) $("#brc-info").classList.remove("hidden");
 
       if (topSummary && topPriceEl) {
         topPriceEl.innerText = total;

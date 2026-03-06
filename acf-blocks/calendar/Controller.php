@@ -40,6 +40,10 @@ class Controller extends BlockFactory
         $fields  = $this->getFields(); // Utilise le helper du parent
         $handler = new AjaxHandler();
 
+        $block_id = $block['id'] ?? uniqid();
+        $brc_token = md5('brc_fields_' . $post_id . '_' . $block_id);
+        set_transient('brc_token_' . $brc_token, $fields, DAY_IN_SECONDS);
+
         $cacheMin = max(5, (int)($fields['cache_minutes'] ?? 60));
         $icalUrl  = $fields['ical_url'] ?? '';
 
@@ -64,6 +68,7 @@ class Controller extends BlockFactory
         $context['months']   = $months;
         $context['weekdays'] = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
         $context['rules']    = $rules;
+        $context['brc_token'] = $brc_token;
 
         if ($this->isPreview($block) && $this->getPreviewPath()) {
             echo sprintf('<img src="%s" alt="Aperçu du bloc" style="width:100%%;height:auto;" />', esc_url(get_template_directory_uri() . '/' . $this->getPreviewPath()));

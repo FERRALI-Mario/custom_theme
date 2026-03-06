@@ -142,6 +142,17 @@
 						</p>
 					</div>
 
+					{% if fields.info_text %}
+						<div id="brc-info" class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4 flex items-start gap-3 hidden">
+							<span class="text-blue-600 text-xl leading-none">
+								<i class="fa-solid fa-info-circle"></i>
+							</span>
+							<div class="text-sm text-blue-800 leading-relaxed">
+								{{ fields.info_text }}
+							</div>
+						</div>
+					{% endif %}
+
 					{# Form #}
 					<form id="brc-form" class="space-y-4" novalidate>
 						{{ function('wp_nonce_field', 'brc_request', '_brc_nonce', true, false)|raw }}
@@ -149,15 +160,8 @@
 						<input type="hidden" name="action" value="booking_request_submit">
 						<input type="hidden" name="checkin" value="">
 						<input type="hidden" name="checkout" value="">
-						<input type="hidden" name="ical" value="{{ fields.ical_url }}">
-						<input type="hidden" name="cache" value="{{ fields.cache_minutes }}">
-						<input type="hidden" name="fallback_json" value="{{ (fields.fallback|default([]))|json_encode|e('html_attr') }}">
-						{% set rules = { 'default': fields.price_per_night|default(0),
-						                 'seasonal': fields.seasonal_prices|default([]),
-						                 'cleaning_fee': fields.cleaning_fee|default(0) } %}
-						<input type="hidden" name="pricing_rules" value="{{ rules|json_encode|e('html_attr') }}">
-						<input type="hidden" name="free_cancellation_date" value="{{ fields.free_cancellation_date|default('') }}">
 						<input type="hidden" name="post_id" value="{{ post.id }}">
+						<input type="hidden" name="brc_token" value="{{ brc_token }}">
 
 						<div>
 							<label for="brc-name" class="block text-sm font-medium text-gray-700 mb-1">Nom complet
@@ -184,17 +188,6 @@
 							<label for="brc-message" class="block text-sm font-medium text-gray-700 mb-1">Message (optionnel)</label>
 							<textarea id="brc-message" class="{{ input_class }}" name="message" rows="3"></textarea>
 						</div>
-
-						{% if fields.info_text %}
-							<div id="brc-info" class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4 flex items-start gap-3">
-								<span class="text-blue-600 text-xl leading-none">
-									<i class="fa-solid fa-info-circle"></i>
-								</span>
-								<div class="text-sm text-blue-800 leading-relaxed">
-									{{ fields.info_text }}
-								</div>
-							</div>
-						{% endif %}
 
 						<div id="brc-form-error" class="text-red-600 text-sm text-center hidden pt-2 font-medium"></div>
 
